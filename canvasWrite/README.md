@@ -9,3 +9,6 @@ new lineCanvas({
     background:"#fff"//线条背景，选填
 });
 </pre>
+
+* [画布签名(pc浏览)](https://flymie.github.io/practical/canvasWrite/index_pc.html)
+* [画布签名(手机端浏览)](https://flymie.github.io/practical/canvasWrite/)
