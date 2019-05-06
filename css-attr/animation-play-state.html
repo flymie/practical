@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>animation-play-state</title>
+    <style>
+        .box-shadow{
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: red;
+            margin: 200px auto;
+            box-shadow: 0 0 0 10px black,0 0 0 20px green,0 0 0 10px yellow inset;
+            animation: boxShadowAnimate 1s ease infinite alternate;
+            animation-play-state: paused;
+        }
+        .box-shadow:active{
+            animation-play-state: running;
+        }
+        @keyframes boxShadowAnimate{
+            0%{
+                box-shadow: 0 0 0 10px green,0 0 0 20px yellow,0 0 0 10px black inset;
+            }
+            100%{
+                box-shadow: 0 0 0 10px black,0 0 0 20px green,0 0 0 10px yellow inset;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="box-shadow"></div>
+</body>
+</html>
