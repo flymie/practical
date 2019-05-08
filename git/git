@@ -1,0 +1,13 @@
+[git使用手册](https://git-scm.com/)  
+搞砸误删了会用到的：  
+`git log`  
+`git reflog`  
+`git reset --hard {...}`  
+`git branch {branchName} {...}`  
+`git cherry-pick {...}`
+
+如果想要检查你的配置，可以使用 `git config --list` 命令来列出所有 Git 当时能找到的配置。  
+你可以通过输入 `git config <key>`： 来检查 Git 的某一项配置,如：  
+<pre>$ git config user.name</pre>
+`git status`  
+
