@@ -1,4 +1,4 @@
-[git使用手册](https://git-scm.com/)  
+[git使用手册](https://git-scm.com/book/zh/v2)  
 搞砸误删了会用到的：  
 `git log`  
 `git reflog`  
@@ -9,5 +9,6 @@
 如果想要检查你的配置，可以使用 `git config --list` 命令来列出所有 Git 当时能找到的配置。  
 你可以通过输入 `git config <key>`： 来检查 Git 的某一项配置,如：  
 <pre>$ git config user.name</pre>
-`git status`  
+`git status`查看信息，参数另查  
+`git commit --amend`如果`commit`的时候信息写错了，如果自上次提交以来你还未做任何修改（例如，在上次提交后马上执行了此命令），那么快照会保持不变，而你所修改的只是提交信息。  
 
