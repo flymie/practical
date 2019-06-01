@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>品字结构，一屏幕展示，使用flex，配合vh，可响应式</title>
+    <style>
+        body{
+            margin: 0;
+        }
+        .CONTAINER{
+            display: flex;
+            justify-content: stretch;
+            height: 100vh;
+        }
+        .CONTAINERLEFT{
+            width: 180px;
+            background: pink;
+            height: 100vh;
+            overflow: hidden;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        .CONTAINERRIGHT{
+            flex: 1;
+            position: relative;
+        }
+        .CONTAINERRIGHTTOP{
+            position: fixed;
+            width: 100%;
+            height: 45px;
+            background: #000;
+            color: #fff;
+        }
+        .CONTAINERRIGHTCTN{
+            padding-top: 45px;
+            height: 100vh;
+            overflow: hidden;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="CONTAINER">
+    <div class="CONTAINERLEFT">
+        <p>不出意外我是侧边栏导航</p>
+        <p>不出意外我是侧边栏导航</p><p>不出意外我是侧边栏导航</p><p>不出意外我是侧边栏导航</p><p>不出意外我是侧边栏导航</p><p>不出意外我是侧边栏导航</p><p>不出意外我是侧边栏导航</p><p>不出意外我是侧边栏导航</p><p>不出意外我是侧边栏导航</p><p>不出意外我是侧边栏导航</p>
+        <p>不出意外我是侧边栏导航</p><p>不出意外我是侧边栏导航</p><p>不出意外我是侧边栏导航</p><p>不出意外我是侧边栏导航</p><p>不出意外我是侧边栏导航</p><p>不出意外我是侧边栏导航</p><p>不出意外我是侧边栏导航</p><p>不出意外我是侧边栏导航</p><p>不出意外我是侧边栏导航</p>
+        <p>不出意外我是侧边栏导航</p><p>不出意外我是侧边栏导航</p><p>不出意外我是侧边栏导航</p><p>不出意外我是侧边栏导航</p><p>不出意外我是侧边栏导航</p><p>不出意外我是侧边栏导航</p><p>不出意外我是侧边栏导航</p><p>不出意外我是侧边栏导航</p><p>不出意外我是侧边栏导航</p>
+    </div>
+    <div class="CONTAINERRIGHT">
+        <div class="CONTAINERRIGHTTOP">
+            相对于品字结构的头部
+        </div>
+        <div class="CONTAINERRIGHTCTN">
+            <p>我是内容啊</p><p>我是内容啊</p><p>我是内容啊</p><p>我是内容啊</p><p>我是内容啊</p><p>我是内容啊</p><p>我是内容啊</p><p>我是内容啊</p>
+            <p>我是内容啊</p><p>我是内容啊</p><p>我是内容啊</p><p>我是内容啊</p><p>我是内容啊</p><p>我是内容啊</p><p>我是内容啊</p><p>我是内容啊</p>
+            <p>我是内容啊</p><p>我是内容啊</p><p>我是内容啊</p><p>我是内容啊</p><p>我是内容啊</p><p>我是内容啊</p><p>我是内容啊</p><p>我是内容啊</p>
+            <p>我是内容啊</p><p>我是内容啊</p><p>我是内容啊</p><p>我是内容啊</p><p>我是内容啊</p><p>我是内容啊</p><p>我是内容啊</p><p>我是内容啊</p>
+            <p>我是内容啊</p><p>我是内容啊</p><p>我是内容啊</p><p>我是内容啊</p><p>我是内容啊</p><p>我是内容啊</p><p>我是内容啊</p><p>我是内容啊</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
