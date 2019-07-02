@@ -11,4 +11,4 @@
 <pre>$ git config user.name</pre>
 `git status`查看信息，参数另查  
 `git commit --amend`如果`commit`的时候信息写错了，如果自上次提交以来你还未做任何修改（例如，在上次提交后马上执行了此命令），那么快照会保持不变，而你所修改的只是提交信息。  
-
+1
