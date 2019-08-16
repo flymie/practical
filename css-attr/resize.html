@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>拖拽分隔线，可以改变左右两栏尺寸。</title>
+    <style>
+        body{
+            padding: 0;
+            margin: 0;
+        }
+        .column {
+            overflow: hidden;
+        }
+        .column-left {
+            background-color: #fff;
+            position: relative;
+            float: left;
+            height: 100vh;
+        }
+        .column-right {
+            height: 100vh;
+            background-color: #eee;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        .resize-save {
+            position: absolute;
+            top: 0; right: 5px; bottom: 0; left: 0;
+            overflow: auto;
+        }
+        .resize-bar {
+            width: 200px; height: inherit;
+            resize: horizontal;
+            opacity: 0;
+            overflow: scroll;
+        }
+        /* 拖拽线 */
+        .resize-line {
+            position: absolute;
+            right: 0; top: 0; bottom: 0;
+            border-right: 2px solid #eee;
+            border-left: 1px solid #bbb;
+            pointer-events: none;
+        }
+        .resize-bar:hover ~ .resize-line,
+        .resize-bar:active ~ .resize-line {
+            border-left: 1px dashed skyblue;
+        }
+        .resize-bar::-webkit-scrollbar {
+            width: 10px; height: inherit;
+        }
+    </style>
+</head>
+<body>
+<div class="column">
+    <div class="column-left">
+        <div class="resize-bar"></div>
+        <div class="resize-line"></div>
+        <div class="resize-save">
+            <p>左侧的内容，左侧的内容，左侧的内容，左侧的内容</p>
+            <p>左侧的内容，左侧的内容，左侧的内容，左侧的内容</p>
+            <p>左侧的内容，左侧的内容，左侧的内容，左侧的内容</p>
+            <p>左侧的内容，左侧的内容，左侧的内容，左侧的内容</p>
+            <p>左侧的内容，左侧的内容，左侧的内容，左侧的内容</p>
+            <p>左侧的内容，左侧的内容，左侧的内容，左侧的内容</p>
+            <p>左侧的内容，左侧的内容，左侧的内容，左侧的内容</p>
+            <p>左侧的内容，左侧的内容，左侧的内容，左侧的内容</p>
+            <p>左侧的内容，左侧的内容，左侧的内容，左侧的内容</p>
+            <p>左侧的内容，左侧的内容，左侧的内容，左侧的内容</p>
+            <p>左侧的内容，左侧的内容，左侧的内容，左侧的内容</p>
+            <p>左侧的内容，左侧的内容，左侧的内容，左侧的内容</p>
+            <p>左侧的内容，左侧的内容，左侧的内容，左侧的内容</p>
+            <p>左侧的内容，左侧的内容，左侧的内容，左侧的内容</p>
+        </div>
+    </div>
+    <div class="column-right">
+        右侧的内容，右侧的内容，右侧的内容，右侧的内容
+    </div>
+</div>
+</body>
+</html>

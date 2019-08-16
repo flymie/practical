@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>拖拽分隔线，可以改变左右两栏尺寸。</title>
+    <style>
+        body{
+            padding: 0;
+            margin: 0;
+        }
+        .column {
+            overflow: hidden;
+            position: relative;
+        }
+        .column-left {
+            width: 50%;
+            overflow: auto;
+            resize: horizontal;
+            background-color: darkslategrey;
+            position: relative;
+            float: left;
+            padding-bottom: 5000px;
+            margin-bottom: -5000px;
+        }
+        .column-right {
+            background-color: #eee;
+            box-sizing: border-box;
+            padding-bottom: 5000px;
+            margin-bottom: -5000px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<div class="column">
+    <div class="column-left">
+        <div>
+            <p>
+                -webkit-scrollbar 里面的height 只有配合overflow：scroll; 才会生效,
+                如果scroll，和resize: horizontal;一起使用有回出问题。。。。
+                想使用等高布局并且使用css实现拖拽有点难度了，鱼熊掌不可兼得。
+                使用这种拖拽适用于那种固高的布局。
+            </p>
+            <p>我是左边的内容</p>
+            <p>我是左边的内容</p>
+            <p>我是左边的内容</p>
+            <p>我是左边的内容</p>
+            <p>我是左边的内容</p>
+            <p>我是左边的内容</p>
+            <p>我是左边的内容</p>
+            <p>我是左边的内容</p>
+            <p>我是左边的内容</p>
+            <p>我是左边的内容</p>
+            <p>我是左边的内容</p>
+        </div>
+        <div class="resize-bar"></div>
+    </div>
+    <div class="column-right">
+        右侧的内容，右侧的内容，右侧的内容，右侧的内容
+    </div>
+</div>
+</body>
+</html>
