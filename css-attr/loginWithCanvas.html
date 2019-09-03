@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录交互</title>
+    <style>
+        .loginCtn{
+            width: 400px;
+            margin: 50px auto 0;
+            border: 1px solid #999;
+            padding: 20px 10px;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+        .loginLoading{
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: -100;
+        }
+        .loadingAnimal {
+            background-image: linear-gradient(180deg,#00fff3,blue);
+            animation: login 3s linear 0s 1;
+        }
+        @keyframes login {
+            0%{transform: translate3d(0, 100%, 0);}
+            100%{transform: translate3d(0, 0, 0);}
+        }
+    </style>
+</head>
+<body>
+<div class="loginCtn">
+    <div>
+        表单
+        <input />
+    </div>
+    <div>
+        表单
+        <input />
+    </div>
+    <div>
+        表单
+        <input />
+    </div>
+    <div>
+        表单
+        <input />
+    </div>
+    <div>
+        表单
+        <input />
+    </div>
+    <div>
+        表单
+        <input />
+    </div>
+    <button id="submit">提交</button>
+    <div id="loginLoading" class="loginLoading"></div>
+</div>
+<h2>不止是丝滑</h2>
+<script src="js/loginWithCanvas.js"></script>
+<script>
+  const loginCtn = document.querySelector('#loginLoading');
+  document.querySelector('#submit').onclick = function () {
+    loginCtn.classList.add('loadingAnimal');
+    const canvas = loginCtn.querySelector('canvas');
+    if (!canvas) {
+      startRun(loginCtn)
+    }
+  }
+</script>
+</body>
+</html>
