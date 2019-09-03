@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录交互</title>
+    <style>
+        .loginCtn{
+            width: 400px;
+            margin: 50px auto 0;
+            border: 1px solid #999;
+            padding: 20px 10px;
+            border-radius: 4px;
+            position: relative;
+        }
+        .loginLoading{
+            background-image: linear-gradient(180deg, #fff, #fff 50%, #00fff3 50%, blue 100%);
+            background-position: 0 100%;
+            background-size: 100% 200%;
+            animation: login 3s linear 0s 1;
+        }
+        @keyframes login {
+            0%{background-position-y: 0;}
+            100%{background-position-y: 100%;}
+        }
+    </style>
+</head>
+<body>
+<div class="loginCtn">
+    <div>
+        表单
+        <input />
+    </div>
+    <div>
+        表单
+        <input />
+    </div>
+    <div>
+        表单
+        <input />
+    </div>
+    <button id="submit">提交</button>
+</div>
+<h2>点击提交的loading动画，是使用背景图做的，但是看上去不太顺滑，好在简单</h2>
+<script>
+    const loginCtn = document.querySelector('.loginCtn');
+    document.querySelector('#submit').onclick = function () {
+      // setTimeout(() => {
+      //   loginCtn.classList.remove('loginLoading');
+      //   alert('登录成功')
+      // }, 4*1000);
+      loginCtn.classList.add('loginLoading');
+    }
+</script>
+</body>
+</html>
