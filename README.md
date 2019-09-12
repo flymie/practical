@@ -18,3 +18,5 @@
 * [transform形成立体3d正方形](https://flymie.github.io/practical/css-attr/rectangle.html)
 * [shape：字体环绕图片样式](https://flymie.github.io/practical/css-attr/shape.html)
 * [sticky：直播吧app赛程布局，主要是顶针效果](https://flymie.github.io/practical/css-attr/sticky.html)
+* [clip-path：模拟网状扫描效果](https://flymie.github.io/practical/css-attr/clip-path.html)
+
