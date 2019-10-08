@@ -10,4 +10,17 @@
 你可以通过输入 `git config <key>`： 来检查 Git 的某一项配置,如：  
 <pre>$ git config user.name</pre>
 `git status`查看信息，参数另查  
-`git commit --amend`如果`commit`的时候信息写错了，如果自上次提交以来你还未做任何修改（例如，在上次提交后马上执行了此命令），那么快照会保持不变，而你所修改的只是提交信息。  
+`git commit --amend`如果`commit`的时候信息写错了，如果自上次提交以来你还未做任何修改（例如，在上次提交后马上执行了此命令），那么快照会保持不变，而你所修改的只是提交信息。
+
+## 从当前分支新建一个新的仓库
+1、将仓库repo_b的URL添加到工作仓库到remote。  
+`git remote add origin_repo_b git@server_ip:/path/repo_b.git`  
+（origin_repo_b:自己起到名字，不要和现有的remote重名）  
+（git@server_ip:/path/repo_b.git：repo_b的远程路径）  
+2、将代码推送到远程repo_b。  
+`gti push origin_repo_b branch_a`  
+（origin_repo_b：远程仓库repo_b的名字）  
+（branch_a：仓库repo_a的branch_a分支）  
+3、克隆仓库repo_b，检查是否成功  
+`git clone git@server_ip:/path/repo_b.git`  
+
