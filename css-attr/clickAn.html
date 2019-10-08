@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>无意看到谷歌翻译按钮点击效果，简易实现一下</title>
+    <style>
+        .clickEle{
+            display: inline-block;
+            min-width: 200px;
+            min-height: 50px;
+            overflow: hidden;
+            position: relative;
+        }
+        .clickEle:active{
+            background-color: rgba(0,0,0,.15);
+        }
+        .clickEleChild{
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: #4285f4;
+            opacity: .5;
+            transform: scale(0);
+        }
+        .clickAn{
+            animation: clickAn .4s linear;
+        }
+        @keyframes clickAn {
+            100%{
+                opacity: 0;
+                transform: scale(2.5);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="clickEle">
+        点击看一下
+    </div>
+    <div class="clickEle">
+        点击看一下
+    </div>
+    <div class="clickEle">
+        点击看一下
+    </div>
+    <div class="clickEle">
+        点击看一下
+    </div>
+<script>
+    const clickEles = document.querySelectorAll('.clickEle');
+    Array.prototype.forEach.call(clickEles, (el) => {
+      el.addEventListener('click', function (e) {
+        const hasDiv = el.querySelector('.clickEleChild');
+        const left = e.pageX - this.offsetLeft - 100;
+        const top = e.pageY - this.offsetTop - 100;
+        const iStyle = `left: ${left}px; top: ${top}px`;
+        console.log(iStyle)
+        if (!hasDiv) {
+          const div = document.createElement('div');
+          div.className = 'clickEleChild clickAn';
+          div.style.cssText = iStyle;
+          this.appendChild(div);
+        } else {
+          hasDiv.style.cssText = iStyle;
+          hasDiv.classList.remove('clickAn');
+          setTimeout(function () {
+            hasDiv.classList.add('clickAn');
+          },0);
+        }
+      })
+    })
+</script>
+</body>
+</html>
