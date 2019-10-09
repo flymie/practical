@@ -71,9 +71,10 @@
         } else {
           hasDiv.style.cssText = iStyle;
           hasDiv.classList.remove('clickAn');
-          setTimeout(function () {
+          hasDiv.offsetWidth;
+          // setTimeout(function () {
             hasDiv.classList.add('clickAn');
-          },0);
+          // },0);
         }
       })
     })

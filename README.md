@@ -4,7 +4,7 @@
 记录一些比较好玩，简单实用的东西。
 * [文字的流光溢彩](https://flymie.github.io/practical/hue-rotate/)
 * [抛物线小球](https://flymie.github.io/practical/parabola/)
-    * [抛物线小球丝滑](https://flymie.github.io/practical/parabola/index_transform.thml)
+    * [抛物线小球丝滑](https://flymie.github.io/practical/parabola/index_transform.html)
 * [画布签名](https://flymie.github.io/practical/canvasWrite/index_pc.html)
     *   [画布签名(手机端浏览)](https://flymie.github.io/practical/canvasWrite/)
 * [canvas登录动画](https://flymie.github.io/practical/css-attr/loginWithCanvas.html)
@@ -19,4 +19,5 @@
 * [shape：字体环绕图片样式](https://flymie.github.io/practical/css-attr/shape.html)
 * [sticky：直播吧app赛程布局，主要是顶针效果](https://flymie.github.io/practical/css-attr/sticky.html)
 * [clip-path：模拟网状扫描效果](https://flymie.github.io/practical/css-attr/clip-path.html)
+* [无意看到谷歌翻译按钮点击效果，简易实现一下](https://flymie.github.io/practical/css-attr/clickAn.html)
 
