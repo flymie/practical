@@ -12,6 +12,7 @@
             min-height: 50px;
             overflow: hidden;
             position: relative;
+            cursor: pointer;
         }
         .clickEle:active{
             background-color: rgba(0,0,0,.15);
@@ -34,6 +35,10 @@
                 transform: scale(2.5);
             }
         }
+        .test{
+            padding: 500px 0 0 0;
+            position: relative;
+        }
     </style>
 </head>
 <body>
@@ -54,8 +59,8 @@
     Array.prototype.forEach.call(clickEles, (el) => {
       el.addEventListener('click', function (e) {
         const hasDiv = el.querySelector('.clickEleChild');
-        const left = e.pageX - this.offsetLeft - 100;
-        const top = e.pageY - this.offsetTop - 100;
+        const left = e.pageX - this.getBoundingClientRect().left - 100;
+        const top = e.pageY - this.getBoundingClientRect().top - 100;
         const iStyle = `left: ${left}px; top: ${top}px`;
         console.log(iStyle)
         if (!hasDiv) {
@@ -66,9 +71,10 @@
         } else {
           hasDiv.style.cssText = iStyle;
           hasDiv.classList.remove('clickAn');
-          setTimeout(function () {
+          hasDiv.offsetWidth;
+          // setTimeout(function () {
             hasDiv.classList.add('clickAn');
-          },0);
+          // },0);
         }
       })
     })

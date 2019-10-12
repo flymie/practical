@@ -9,7 +9,16 @@
 <script>
     document.querySelector('#k').onclick = function () {
       alert(this.innerText)
+    };
+    let j = 0;
+    for(let i = 0; i < 11; i++) {
+        j += i;
     }
+    const style = "font-size: 40px;" +
+      "display: block;" +
+      "color: #fff;" +
+      "background-image: linear-gradient(90deg, rgb(187 ,255, 255), rgb(118,238,198));";
+    console.log('%c加入我们吧',style)
 </script>
 </body>
 </html>
