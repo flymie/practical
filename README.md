@@ -20,4 +20,6 @@
 * [sticky：直播吧app赛程布局，主要是顶针效果](https://flymie.github.io/practical/css-attr/sticky.html)
 * [clip-path：模拟网状扫描效果](https://flymie.github.io/practical/css-attr/clip-path.html)
 * [无意看到谷歌翻译按钮点击效果，简易实现一下](https://flymie.github.io/practical/css-attr/clickAn.html)
+* [斯人若彩虹](https://flymie.github.io/practical/css-attr/rainbow.html)
+* [单标签实现天气](https://flymie.github.io/practical/css-attr/weather.html)
 
