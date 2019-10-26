@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>图片效果</title>
+    <style type="text/css">
+        img{
+            width: 900px;
+            height: 600px;
+            border: 0;
+        }
+        .clear{
+            zoom: 1;
+        }
+        .clear:after{
+            content: '';
+            clear: both;
+            display: block;
+        }
+        .contain{
+            width: 960px;
+            margin: 0 auto;
+        }
+        #imgShow{
+            width: 900px;
+            height: 600px;
+            position: relative;
+        }
+        #imgShow .mark{
+            width: 900px;
+            height: 600px;
+            background: url(./images/1.jpg);
+            top: 0;
+            left: 0;
+            position: absolute;
+        }
+        .img_fill{
+            width: 100px;
+            height: 100px;
+            background:  no-repeat 0 0;
+            float:left;
+            opacity: 1;
+            filter: alpha(opacity=100);
+        }
+    </style>
+    <script>
+      window.onload =function(){
+        let oMark = document.getElementById('mark');
+        let oNext =document.getElementById('next');
+        let nowImgSrc =0;
+        let aImg =['./images/1.jpg','./images/2.jpg','./images/3.jpg','./images/4.jpg'];
+
+        oNext.onclick =function(){
+          playDiv();
+          nowImgSrc =(nowImgSrc + 1) % 4;
+          let aImg_fill =document.getElementsByClassName('img_fill');
+
+          oMark.style.backgroundImage = 'url('+aImg[nowImgSrc]+')';
+          marli(aImg_fill,0,0,9,6);
+          for(let i = 0; i < aImg_fill.length; i++){
+            aImg_fill[i].style.opacity = 1;
+          }
+        };
+
+        function playDiv(){  //打造方格子
+          let fill ='';
+          for(let i=0;i<6;i++){
+            for(let j=0;j<9;j++){
+              fill += "<div class='img_fill' style="+"'background: url("+aImg[nowImgSrc]+");" +"background-position-y:"+i*(-100)+"px;"+"background-position-x:"+j*(-100)+"px;'"+"></div>"
+            }
+          }
+          oMark.innerHTML =fill;
+        }
+
+        function marli(objArr, i, j, x, y){       //马里奥方格子渐变
+          changeOpacity(objArr[j*x+i],function(){
+            if(i+1 < x){
+              marli(objArr, i+1, j, x, y);
+            }
+            if(j+1<y){
+              marli(objArr, i, j+1, x, y);
+            }
+            if(i+1 < x && j+1 < y){
+              marli(objArr, i+1, j+1, x, y);
+            }
+          });
+        }
+      };
+
+    </script>
+    <script>
+      function getStyle(obj,attr){
+        return obj.currentStyle?obj.currentStyle[attr] : getComputedStyle( obj )[attr];
+      }
+      function changeOpacity(obj,fn){
+        let iOpacity = parseFloat(getStyle(obj,"opacity"));
+        clearInterval(obj.timer);
+        obj.timer= setInterval(function(){
+          obj.style.opacity = iOpacity;
+          iOpacity -=0.1;
+          if(Math.abs(iOpacity)<=0.1){
+            obj.style.opacity = 0;
+            clearInterval(obj.timer);
+          }
+          if(Math.abs(iOpacity) <= 0.5){
+            if(fn&&fn()){
+              fn();
+            }
+          }
+        },20);
+      }
+    </script>
+</head>
+<body>
+<input type="button" value="next" id="next"/>
+<div class="contain">
+    <div id="imgShow">
+        <a href="javascript: void(0)" class="mark clear" id="mark">
+        </a>
+    </div>
+</div>
+</body>
+</html>
