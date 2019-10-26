@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>利用clip-path写一些轮播动画</title>
+    <style type="text/css">
+        .container{
+            width: 600px;
+            margin: 20px auto;
+            position: relative;
+        }
+        .carouselWrap{
+            position: relative;
+        }
+        .item{
+            width: 600px;
+            height: 300px;
+            top: 0;
+            left: 0;
+            position: absolute;
+        }
+        .item img{
+            width: 100%;
+            height: 100%;
+        }
+        .item.active{
+            z-index: 2;
+        }
+        .item.pre{
+            z-index: 1;
+        }
+        .circle {
+            animation: circle 1s ease-in;
+        }
+        @keyframes circle {
+            0%   {
+                clip-path: circle(0);
+            }
+            100% {
+                clip-path: circle(400px);
+            }
+        }
+        .triangle {
+            animation: triangle 1s ease-in;
+        }
+        @keyframes triangle {
+            0%   {
+                clip-path: polygon(50% 50%, 49% 51%, 51% 51%);
+            }
+            100% {
+                clip-path: polygon(50% -100%, -100% 150%, 200% 150%);
+            }
+        }
+        .radius {
+            animation: radius 1s;
+        }
+        @keyframes radius {
+            0%   {
+                clip-path: inset(50% round 50%);
+            }
+            100% {
+                clip-path: inset(0% round 0);
+            }
+        }
+        .polygon {
+            animation: polygon 2s;
+        }
+        @keyframes polygon {
+            0%   {
+                clip-path: polygon(50% 20%, 50% 50%, 20% 50%, 50% 50%, 50% 80%, 50% 50%, 80% 50%, 50% 50%);
+            }
+            100% {
+                clip-path: polygon(50% 0%, 0% 0%, 0% 50%, 0% 100%, 50% 100%, 100% 100%, 100% 50%, 100% 0%);
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <label>
+        <select id="cssEffect">
+            <option value="">请选择效果</option>
+            <option value="circle">圆形</option>
+            <option value="triangle">三角形</option>
+            <option value="radius">圆角</option>
+            <option value="polygon">多边形</option>
+        </select>
+    </label>
+    <button id="pre">上一页</button>
+    <button id="next">下一页</button>
+    <div class="carouselWrap">
+        <div class="item active">
+            <img src="images/1.jpg">
+        </div>
+        <div class="item">
+            <img src="images/2.jpg">
+        </div>
+        <div class="item">
+            <img src="images/3.jpg">
+        </div>
+        <div class="item">
+            <img src="images/4.jpg">
+        </div>
+    </div>
+</div>
+<script>
+    const next = document.querySelector('#next');
+    const pre = document.querySelector('#pre');
+    const items = document.querySelectorAll('.carouselWrap .item');
+    const cssEffect = document.querySelector('#cssEffect');
+    function animalFn(activeIndex, preIndex, cssEffect) {
+      Array.prototype.forEach.call(items, (v, index) => {
+        if (index === activeIndex) {
+          // v.classList.add('active', cssEffect);
+          v.classList = `item active ${cssEffect}`;
+        } else {
+          // v.classList.remove('active', cssEffect);
+          v.classList = `item`;
+        }
+        if (index === preIndex) {
+          v.classList.add('pre');
+        } else {
+          v.classList.remove('pre');
+        }
+      });
+
+    }
+    let activeIndex = 0;
+    let preIndex;
+    let cssEffectText;
+
+    next.onclick = function () {
+      preIndex = activeIndex;
+      activeIndex = (activeIndex + 1) % items.length;
+      animalFn(activeIndex, preIndex, cssEffectText);
+    };
+
+    pre.onclick = function () {
+      preIndex = activeIndex;
+      activeIndex = (activeIndex - 1 + items.length) % items.length;
+      animalFn(activeIndex, preIndex, cssEffectText);
+    };
+
+    cssEffect.addEventListener('change', function () {
+      cssEffectText = this.value;
+    });
+
+</script>
+</body>
+</html>

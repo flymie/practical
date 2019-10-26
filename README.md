@@ -23,4 +23,6 @@
 * [斯人若彩虹](https://flymie.github.io/practical/css-attr/rainbow.html)
 * [单标签实现天气](https://flymie.github.io/practical/css-attr/weather.html)
 * [可交互的矩形](https://flymie.github.io/practical/css-attr/trapezoid.html)
+* [刚开始写的一个动画](https://flymie.github.io/practical/css-attr/carousel.html)
+* [使用clip-path实现ppt动画](https://flymie.github.io/practical/css-attr/carousel2.html)
 
