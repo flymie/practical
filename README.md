@@ -25,4 +25,4 @@
 * [可交互的矩形](https://flymie.github.io/practical/css-attr/trapezoid.html)
 * [刚开始写的一个动画](https://flymie.github.io/practical/css-attr/carousel.html)
 * [使用clip-path实现ppt动画](https://flymie.github.io/practical/css-attr/carousel2.html)
-
+* [svg有相似的clip-path属性](https://flymie.github.io/practical/css-attr/clip-path-svg.html)
