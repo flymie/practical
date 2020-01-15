@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas flower</title>
+    <style>
+        body {
+            background: black;
+        }
+        #flower {
+            width: 500px;
+            height: 500px;
+            margin: 0 auto;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div id="flower"></div>
+    <script>
+        window.requestAnimationFrame = (function() {
+          return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function(callback) {
+            window.setTimeout(callback, 1000 / 60);
+          };
+        })();
+        function Flower(paramObj) {
+          return new Flower.prototype.init(paramObj);
+        }
+        Flower.prototype = {
+          construct: Flower,
+          init: function (paramObj) {
+            this.canvasObj = paramObj.canvasObj;
+            this.data = paramObj.data;
+            this.el = paramObj.el;
+            this.count = paramObj.number;
+            this.color = paramObj.color || 'hsl(179,100%,50%)';
+            // number = 度数° --- this.count = 循环次数
+            this.number = 360 / this.count;
+            this.petals = []; // 花瓣数，存对应的ctx
+            this.colorH = 179;
+          },
+          start: function () {
+            for (let i = 0, j = .1; i < this.count; i++, j += .1) {
+              const canvas = document.createElement('canvas')
+              canvas.height = this.canvasObj.height;
+              canvas.width = this.canvasObj.width;
+              canvas.style.position = 'absolute';
+              canvas.style.transition = j*10 + 's ease';
+              this.el.appendChild(canvas);
+              // 绘图
+              this.painting(canvas, i);
+            }
+            return this;
+          },
+          painting: function (el, i) {
+            const ctx = el.getContext("2d");
+            ctx.beginPath();
+            // 画个花瓣 start　
+            ctx.moveTo(this.data.start.x, this.data.start.y);
+            ctx.quadraticCurveTo(this.data.curve.x, this.data.curve.y, this.data.end.x, this.data.end.y);
+            ctx.moveTo(this.data.start.x, this.data.start.y);
+            ctx.quadraticCurveTo(this.data.start.x + this.data.curve.x, this.data.curve.y, this.data.end.x, this.data.end.y);
+            // 画个花瓣 end　
+            ctx.fillStyle = this.color;
+            ctx.strokeStyle = this.color;
+            ctx.globalAlpha = 0.3;
+            ctx.fill();
+            ctx.stroke();
+            this.petals.push(ctx); // 存起来后面用
+            el.offsetWidth; // 重绘触发动画
+            el.style.transform = 'rotate(' + i * this.number + 'deg)';
+          },
+          other: function () {
+            for (let i = 0, len = this.petals.length; i < len; i++) {
+              this.renderCanvas(this.petals[i]);
+            }
+          },
+          renderCanvas: function (ctx) {
+            this.petalAnimal(ctx);
+            window.requestAnimationFrame(() => this.renderCanvas(ctx));
+          },
+          petalAnimal: function (ctx) {
+            ctx.clearRect(0, 0, this.canvasObj.width, this.canvasObj.height);
+            this.colorH = (this.colorH + 0.05) % 360;
+            ctx.fillStyle = `hsl(${this.colorH},100%,50%)`;
+            ctx.fill();
+          }
+        };
+        Flower.prototype.init.prototype = Flower.prototype;
+
+        new Flower({
+          el: document.querySelector('#flower'),
+          canvasObj: {
+            height: 500,
+            width: 500,
+          },
+          color: 'hsl(179,100%,50%)',
+          data: {
+            // ----起始坐标（x， y）
+            start: {
+              x: 250,
+              y: 0
+            },
+            // ----曲线坐标（x, y）
+            curve: {
+              x: 125,
+              y: 125
+            },
+            // ----结束坐标（x， y）
+            end: {
+              x: 250,
+              y: 250
+            }
+          },
+          // 数量
+          number: 7
+        })
+          .start()
+          .other()
+        ;
+    </script>
+</body>
+</html>
