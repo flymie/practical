@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>call, apply</title>
+</head>
+<body>
+<script>
+    Function.prototype.call2 = function (context) {
+        context = context || window;
+        const args = [];
+        // arguments，如果是apply，这里就是传入的数组。
+        for (let i = 1, len = arguments.length; i < len; i++) {
+          args.push('arguments['+ i +']');
+        }
+        context.fn = this;
+        const result = eval('context.fn(' + args + ')');
+        delete context.fn;
+        return result; // 函数也可能有返回值
+    };
+    function a(name, age) {
+      console.log({name, age});
+      console.log(this.value)
+    }
+    const b = {
+      value: 'b',
+    };
+    a.call2(b, 'name', 18);
+</script>
+</body>
+</html>

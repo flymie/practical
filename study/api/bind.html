@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>bind</title>
+</head>
+<body>
+<script>
+    Function.prototype.bind2 = function (context) {
+      const self = this;
+      const args = Array.prototype.slice.call(arguments, 1);
+      const fNOP = function () {};
+      const fBound =  function () {
+        const args2 = args.concat(Array.prototype.slice.call(arguments));
+        return self.apply(this instanceof fNOP ? this : context, args2)
+      };
+      fNOP.prototype = this.prototype;
+      fBound.prototype = new fNOP();
+      return fBound;
+    };
+    function a(name, age) {
+      this.static = 'static';
+      console.log({name, age})
+      console.log(this.value);
+    }
+    const b = {
+      value: 'bb',
+    };
+    // a.bind2(b, 'name')(18);
+    const bindB = a.bind2(b, 'name');
+    const obj = new bindB(18);
+    console.log(obj.static)
+</script>
+</body>
+</html>

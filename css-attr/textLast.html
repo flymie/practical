@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>记录一些css属性</title>
+    <style>
+    </style>
+</head>
+<body>
+    <textarea id="textarea">
+
+    </textarea>
+    <button id="button">
+        heihei
+    </button>
+<script>
+    const textarea = document.querySelector('#textarea');
+    const button = document.querySelector('#button');
+    let str = '1111dcvbjvksdjlfjsldfjlsdjkf1111dcvbjvksdj';
+    button.onclick = function() {
+      console.log(textarea.scrollHeight,textarea.offsetWidth);
+      str += str;
+      textarea.value = str;
+      textarea.scrollTop = textarea.scrollHeight - textarea.offsetHeight;
+    };
+</script>
+</body>
+</html>
