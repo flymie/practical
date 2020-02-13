@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Promise</title>
+</head>
+<body>
+<script>
+    const p1 = new Promise((resolve, reject) => {
+        resolve('resolve')
+        throw 2
+    }).then((value) => {
+      console.log(value)
+    }).catch(function (data) {
+      console.log(data, 'catch');
+    });
+
+    function myPromise(executor) {
+      const self = this;
+      self.status = 'pending';
+      self.data = undefined;
+      self.onResolveCb = [];
+      self.onRejectCb = [];
+
+      function resolve(value) {
+        if (self.status === 'pending') {
+          self.status = 'resolved';
+          self.data = value;
+          self.onResolveCb.forEach(v => {
+            v(value);
+          });
+        }
+      }
+
+      function reject(reason) {
+        if (self.status === 'pending') {
+          self.status = 'rejected';
+          self.data = reason;
+          self.onRejectCb.forEach(v => {
+            v(reason);
+          });
+        }
+      }
+      try{
+        executor(resolve, reject);
+      } catch (e) {
+        reject(e)
+      }
+    }
+
+    myPromise.prototype.then = function (onResolved, onRejected) {
+      const self = this;
+      let promise2;
+
+      onResolved = typeof onResolved === 'function' ? onResolved : function (value) { return value};
+      onRejected = typeof onRejected === 'function' ? onRejected : function (reason) { throw reason};
+
+      if (self.status === "pending") {
+        return new Promise(function(resolve, reject) {
+          self.onResolveCb.push(function(value) {
+            try {
+              const x = onResolved(value);
+              if (x instanceof Promise) {
+                x.then(resolve, reject)
+              }
+              resolve(x);
+            } catch (e) {
+              reject(e)
+            }
+          });
+
+          self.onRejectCb.push(function(reason) {
+            try {
+              const x = onRejected(reason);
+              if (x instanceof Promise) {
+                x.then(resolve, reject)
+              }
+              reject(x);
+            } catch (e) {
+              reject(e)
+            }
+          })
+        })
+      }
+
+      if (self.status === "resolved") {
+        return new myPromise((resolve, reject) => {
+          try{
+            const x = onResolved(self.data);
+            if (x instanceof myPromise) {
+              x.then(resolve, reject);
+            }
+            resolve(x);
+          } catch (e) {
+            reject(e)
+          }
+        });
+      }
+
+      if (self.status === "rejected") {
+        return new myPromise((resolve, reject) => {
+          try {
+            const x = onRejected(self.data);
+            if (x instanceof myPromise) {
+              x.then(resolve, reject)
+            }
+            reject(x)
+          } catch (e) {
+            reject(e)
+          }
+        });
+      }
+    };
+
+    myPromise.prototype.catch = function(onRejected) {
+      return this.then(null, onRejected)
+    };
+
+    const p2 = new myPromise((resolve, reject) => {
+      throw 2
+    }).then((value) => {
+        console.log(value)
+    }).catch(function (e) {
+      console.log(e)
+    })
+</script>
+</body>
+</html>
