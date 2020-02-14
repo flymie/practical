@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Promise</title>
+</head>
+<body>
+<script>
+    function myPromise(executor) {
+      const self = this;
+      self.status = 'pending';
+      self.data = undefined;
+      self.onResolveCb = [];
+      self.onRejectCb = [];
+
+      function resolve(value) {
+        if (self.status === 'pending') {
+          self.status = 'resolved';
+          self.data = value;
+          self.onResolveCb.forEach(v => {
+            v(value);
+          });
+        }
+      }
+
+      function reject(reason) {
+        if (self.status === 'pending') {
+          self.status = 'rejected';
+          self.data = reason;
+          self.onRejectCb.forEach(v => {
+            v(reason);
+          });
+        }
+      }
+      try{
+        executor(resolve, reject);
+      } catch (e) {
+        reject(e)
+      }
+    }
+
+    myPromise.prototype.then = function (onResolved, onRejected) {
+      const self = this;
+      let promise2;
+
+      onResolved = typeof onResolved === 'function' ? onResolved : function (value) { return value};
+      onRejected = typeof onRejected === 'function' ? onRejected : function (reason) { throw reason};
+
+      if (self.status === "pending") {
+        return new Promise(function(resolve, reject) {
+          self.onResolveCb.push(function(value) {
+            try {
+              const x = onResolved(value);
+              if (x instanceof Promise) {
+                x.then(resolve, reject)
+              }
+              resolve(x);
+            } catch (e) {
+              reject(e)
+            }
+          });
+
+          self.onRejectCb.push(function(reason) {
+            try {
+              const x = onRejected(reason);
+              if (x instanceof Promise) {
+                x.then(resolve, reject)
+              }
+              reject(x);
+            } catch (e) {
+              reject(e)
+            }
+          })
+        })
+      }
+
+      if (self.status === "resolved") {
+        return new myPromise((resolve, reject) => {
+          try{
+            const x = onResolved(self.data);
+            if (x instanceof myPromise) {
+              x.then(resolve, reject);
+            }
+            resolve(x);
+          } catch (e) {
+            reject(e)
+          }
+        });
+      }
+
+      if (self.status === "rejected") {
+        return new myPromise((resolve, reject) => {
+          try {
+            const x = onRejected(self.data);
+            if (x instanceof myPromise) {
+              x.then(resolve, reject)
+            }
+            reject(x)
+          } catch (e) {
+            reject(e)
+          }
+        });
+      }
+    };
+
+    myPromise.prototype.catch = function(onRejected) {
+      return this.then(null, onRejected)
+    };
+
+    myPromise.all = function(iterable) {
+      return new myPromise((resolve, reject) => {
+        const arr = [];
+        let count = 0;
+        iterable.forEach((v, ind) => {
+          if (typeof v === 'object' && typeof v.then === 'function') {
+            v.then(function (res) {
+              arr[ind] = res;
+              if (--count === 0) {
+                resolve(arr);
+              }
+            }, reject);
+            count++
+          } else {
+            arr[ind] = v
+          }
+        });
+      });
+    };
+
+    myPromise.race = function(iterable) {
+      return new myPromise((resolve, reject) => {
+        iterable.forEach(v => {
+          if (typeof v === 'object' && typeof v.then === 'function') {
+            v.then(function (res) {
+              resolve(res);
+            }, reject);
+          } else {
+            resolve(v);
+          }
+        });
+      });
+    };
+
+    const p = new myPromise((resolve, reject) => {
+      throw 2
+    }).then((value) => {
+        console.log(value)
+    }).catch(function (e) {
+      console.log(e)
+    });
+
+    /*
+    //做饭
+    function cook(){
+      console.log('开始做饭。');
+      const p = new myPromise(function(resolve, reject){        //做一些异步操作
+        setTimeout(function(){
+          console.log('做饭完毕！');
+          resolve('鸡蛋炒饭');
+        }, 1000);
+      });
+      return p;
+    }
+
+    //吃饭
+    function eat(data){
+      console.log('开始吃饭：' + data);
+      const p = new myPromise(function(resolve, reject){        //做一些异步操作
+        setTimeout(function(){
+          console.log('吃饭完毕!');
+          resolve('一块碗和一双筷子');
+        }, 2000);
+      });
+      return p;
+    }
+
+    function wash(data){
+      console.log('开始洗碗：' + data);
+      const p = new myPromise(function(resolve, reject){        //做一些异步操作
+        setTimeout(function(){
+          console.log('洗碗完毕!');
+          resolve('干净的碗筷');
+        }, 2000);
+      });
+      return p;
+    }
+    cook()
+      .then(function(data){
+        return eat(data);
+      })
+      .then(function(data){
+        return wash(data);
+      })
+      .then(function(data){
+        console.log(data);
+      });
+      */
+
+    const p1 = new myPromise(function (resolve) { setTimeout(resolve, 1000, 1) });
+    const p2 = new myPromise(function (resolve) { setTimeout(resolve, 2000, 2) });
+    const p3 = 3;
+    const p4 = new myPromise(function () {
+      throw 4;
+    });
+    new myPromise.all([p1, p2, p3, p4]).then((value) => {
+      console.log(value);
+    }).catch(function (e) {
+      console.log(e)
+    });
+    new myPromise.race([p1, p2]).then((value) => {
+      console.log(value);
+    }).catch(function (e) {
+      console.log(e)
+    });
+</script>
+</body>
+</html>
