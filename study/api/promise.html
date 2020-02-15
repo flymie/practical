@@ -5,6 +5,7 @@
     <title>Promise</title>
 </head>
 <body>
+<a href="https://promisesaplus.com/#point-46">Promise/A+ 规范</a>
 <script>
     function myPromise(executor) {
       const self = this;
@@ -14,28 +15,79 @@
       self.onRejectCb = [];
 
       function resolve(value) {
-        if (self.status === 'pending') {
-          self.status = 'resolved';
-          self.data = value;
-          self.onResolveCb.forEach(v => {
-            v(value);
-          });
-        }
+        setTimeout(function () {
+          if (self.status === 'pending') {
+            self.status = 'resolved';
+            self.data = value;
+            self.onResolveCb.forEach(v => {
+              v(value);
+            });
+          }
+        });
       }
 
       function reject(reason) {
-        if (self.status === 'pending') {
-          self.status = 'rejected';
-          self.data = reason;
-          self.onRejectCb.forEach(v => {
-            v(reason);
-          });
-        }
+        setTimeout(function () {
+          if (self.status === 'pending') {
+            self.status = 'rejected';
+            self.data = reason;
+            self.onRejectCb.forEach(v => {
+              v(reason);
+            });
+          }
+        });
       }
       try{
         executor(resolve, reject);
       } catch (e) {
         reject(e)
+      }
+    }
+
+    function resolvePromise(promise2, x, resolve, reject) {
+      // 不可能返回自己，避免出现死循环
+      if (promise2 === x) {
+        return reject('Chaining cycle detected for promise!');
+      }
+
+      if (x instanceof Promise) { // 对应标准2.3.2节
+        // 如果x的状态还没有确定，那么它是有可能被一个thenable决定最终状态和值的
+        // 所以这里需要做一下处理，而不能一概的以为它会被一个“正常”的值resolve
+        if (x.status === 'pending') {
+          x.then(function(value) {
+            resolvePromise(promise2, value, resolve, reject)
+          }, reject)
+        } else { // 但如果这个Promise的状态已经确定了，那么它肯定有一个“正常”的值，而不是一个thenable，所以这里直接取它的状态
+          x.then(resolve, reject)
+        }
+        return
+      }
+
+      // X是返回值，可能是值，或是包含promise的函数，这里按照规范来
+      let thenFlag = false;
+      if (x != null && (typeof x === "function" || typeof x === "object")) {
+        let then = x.then;
+        if (typeof then === "function") {
+          try{
+            then.call(x, res => {
+              if (thenFlag) return;
+              thenFlag = true;
+              return resolvePromise(x, res, resolve, reject);
+            }, rea => {
+              if (thenFlag) return;
+              thenFlag = true;
+              reject(rea);
+            });
+          } catch (e) {
+            if (thenFlag) return;
+            thenFlag = true;
+            reject(e);
+          }
+        } else {
+          resolve(x);
+        }
+      } else {
+        resolve(x);
       }
     }
 
@@ -47,14 +99,11 @@
       onRejected = typeof onRejected === 'function' ? onRejected : function (reason) { throw reason};
 
       if (self.status === "pending") {
-        return new Promise(function(resolve, reject) {
+        return promise2 = new Promise(function(resolve, reject) {
           self.onResolveCb.push(function(value) {
             try {
               const x = onResolved(value);
-              if (x instanceof Promise) {
-                x.then(resolve, reject)
-              }
-              resolve(x);
+              resolvePromise(promise2, x, resolve, reject)
             } catch (e) {
               reject(e)
             }
@@ -63,10 +112,7 @@
           self.onRejectCb.push(function(reason) {
             try {
               const x = onRejected(reason);
-              if (x instanceof Promise) {
-                x.then(resolve, reject)
-              }
-              reject(x);
+              resolvePromise(promise2, x, resolve, reject)
             } catch (e) {
               reject(e)
             }
@@ -75,30 +121,28 @@
       }
 
       if (self.status === "resolved") {
-        return new myPromise((resolve, reject) => {
-          try{
-            const x = onResolved(self.data);
-            if (x instanceof myPromise) {
-              x.then(resolve, reject);
+        return promise2 = new myPromise((resolve, reject) => {
+          setTimeout(function () {
+            try{
+              const x = onResolved(self.data);
+              resolvePromise(promise2, x, resolve, reject)
+            } catch (e) {
+              reject(e)
             }
-            resolve(x);
-          } catch (e) {
-            reject(e)
-          }
+          });
         });
       }
 
       if (self.status === "rejected") {
-        return new myPromise((resolve, reject) => {
-          try {
-            const x = onRejected(self.data);
-            if (x instanceof myPromise) {
-              x.then(resolve, reject)
+        return promise2 =  new myPromise((resolve, reject) => {
+          setTimeout(function () {
+            try {
+              const x = onRejected(self.data);
+              resolvePromise(promise2, x, resolve, reject)
+            } catch (e) {
+              reject(e)
             }
-            reject(x)
-          } catch (e) {
-            reject(e)
-          }
+          });
         });
       }
     };
@@ -142,11 +186,19 @@
     };
 
     const p = new myPromise((resolve, reject) => {
-      throw 2
+      resolve(2);
     }).then((value) => {
         console.log(value)
     }).catch(function (e) {
-      console.log(e)
+      console.log(e, 'catch')
+    });
+
+    const pp = new Promise((resolve, reject) => {
+      return resolve(2)
+    }).then((value) => {
+      console.log(value)
+    }).catch(function (e) {
+      console.log(e, 'catch')
     });
 
     /*
@@ -196,6 +248,7 @@
       });
       */
 
+    /* // 测试一下promise.all,promise.race
     const p1 = new myPromise(function (resolve) { setTimeout(resolve, 1000, 1) });
     const p2 = new myPromise(function (resolve) { setTimeout(resolve, 2000, 2) });
     const p3 = 3;
@@ -212,6 +265,7 @@
     }).catch(function (e) {
       console.log(e)
     });
+    */
 </script>
 </body>
 </html>
