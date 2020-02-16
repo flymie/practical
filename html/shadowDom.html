@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>shadow dom</title>
+</head>
+<body>
+<a href="https://juejin.im/post/5bc7ead7f265da0afc2c2c6b">shadow dom</a>
+<p>谷歌为例，需要打开设置：Setting -> Preference -> Element -> show user agent shadow dom</p>
+<div id="div"></div>
+<template id="temp">
+    <div id="title"></div>
+</template>
+<video controls src=""></video>
+<script>
+  const template = document.getElementById('temp');
+  const copy = document.importNode(template.content, true);
+  copy.getElementById('title').innerHTML = 'Hello World!';
+
+  const div = document.getElementById('div');
+  const shadowRoot = div.attachShadow({ mode: 'closed' });
+  shadowRoot.appendChild(copy);
+</script>
+</body>
+</html>
