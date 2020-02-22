@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Button</title>
+</head>
+<body>
+<template id="buttonWeb">
+    <style>
+        .container {
+            padding: 8px;
+        }
+        button {
+            display: block;
+            overflow: hidden;
+            position: relative;
+            padding: 0 16px;
+            font-size: 16px;
+            font-weight: bold;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            cursor: pointer;
+            outline: none;
+            width: 100%;
+            height: 40px;
+            box-sizing: border-box;
+            border: 1px solid #a1a1a1;
+            background: #ffffff;
+            box-shadow: 0 2px 4px 0 rgba(0,0,0, 0.05), 0 2px 8px 0 rgba(161,161,161, 0.4);
+            color: #363636;
+        }
+    </style>
+    <div class="container">
+        <button>Label</button>
+    </div>
+</template>
+<my-button
+        label='click me'
+        dangerous
+>
+</my-button>
+<script>
+  class Button extends HTMLElement {
+    constructor() {
+      super();
+
+      this._shadowRoot = this.attachShadow({ mode: 'open' });
+      const buttonWeb = document.querySelector('#buttonWeb');
+      const content = document.importNode(buttonWeb.content, true);
+      this._shadowRoot.appendChild(content);
+
+      this.$button = this._shadowRoot.querySelector('button');
+
+      const _this = this;
+      this.$button.addEventListener('click', _this.sayHi);
+    }
+    sayHi() {
+      console.log('hi');
+    }
+    get label() {
+      return this.getAttribute('label');
+    }
+    set label(val) {
+      this.setAttribute('label', val);
+    }
+    // 设置要观察的属性
+    static get observedAttributes() {
+      return ['label'];
+    }
+    // 组件实例已被插入到 DOM 树中，用于进行一些展示相关的初始化操作
+    connectedCallback() {
+      if (this.hasAttribute('dangerous')) {
+        this.$button.style.color = 'red';
+      }
+    }
+    // 观察的属性变化回调
+    attributeChangedCallback(name, oldVal, newVal) {
+      // this[name] = newVal;
+      this.render();
+    }
+    // 组件被从 DOM 树中移除，用于进行一些清理操作
+    disconnectedCallback() {
+      const _this = this;
+      this.removeEventListener('click', _this.sayHi);
+    }
+
+    // 组件实例从一个文档被移动到另一个文档
+    adoptedCallback() {
+    }
+    render() {
+      this.$button.innerHTML = this.label;
+    }
+  }
+  window.customElements.define('my-button', Button);
+  const element = document.querySelector('my-button');
+  element.label = 'Click Me';
+</script>
+</body>
+</html>

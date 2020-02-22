@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>webComponent</title>
+    <style>
+        *:not(:defined) {
+            display: none;
+        }
+        .container{
+            background: red;
+        }
+    </style>
+</head>
+<body>
+<template id="firstTemp">
+    <style>
+        :host {
+            color: #FFFFFF;
+            background: grey;
+            display: block; /*这个一定要定义*/
+        }
+    </style>
+    <div class="container">
+        <div>
+            <h1>Others</h1>
+            <slot></slot>
+        </div>
+        <div>
+            <h1>Animals</h1>
+            <slot name="animal"></slot>
+        </div>
+        <div>
+            <h1>Fruits</h1>
+            <slot name="fruit"></slot>
+        </div>
+    </div>
+</template>
+<first-comp>
+    <div slot="animal">Cat</div>
+    <div slot="fruit">Apple</div>
+    <div slot="fruit">Banana</div>
+    <div slot="other">flower</div>
+    <div>pencil</div>
+    <div slot="animal">Dog</div>
+    <div slot="fruit">peach</div>
+    <div>red</div>
+    <div>
+        而默认情况下，所有子节点都会被放置在同一个 &ltslot&gt 标签下，即便是你写了多个 &ltslot&gt,
+        没有匹配的就不会展示。
+    </div>
+</first-comp>
+<script>
+    class FirstComp extends HTMLElement {
+      constructor() {
+        super();
+        const shadowRoot = this.attachShadow({ mode: 'closed' });
+
+        const firstTemp = document.getElementById('firstTemp');
+        // const content = firstTemp.content.cloneNode(true);
+        const content = document.importNode(firstTemp.content, true);
+        shadowRoot.appendChild(content);
+      }
+
+      // 组件实例已被插入到 DOM 树中，用于进行一些展示相关的初始化操作
+      connectedCallback() {
+        this.addEventListener('click', function () {
+          console.log(this.innerText)
+        });
+      }
+
+      // 组件属性发生变化，用于更新组件的状态
+      // Custom Elements 要求开发者提供一个属性列表，只有当属性列表中的属性发生变化时才会触发这个生命周期函数
+      attributeChangedCallback(attrName, oldVal, newVal) {
+        this[attrName] = newVal;
+      }
+
+      // 组件被从 DOM 树中移除，用于进行一些清理操作
+      disconnectedCallback() {
+      }
+
+      // 组件实例从一个文档被移动到另一个文档
+      adoptedCallback() {
+      }
+    }
+    window.customElements.define('first-comp', FirstComp);
+</script>
+</body>
+</html>
