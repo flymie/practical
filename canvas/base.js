@@ -13,7 +13,7 @@ function ctxFn(id) {
 /**
  * 图片加载
  * @param url
- * @returns {Promise<any>}
+ * @returns {Promise<>}
  */
 function imageLoad(url) {
   const img = new Image(url);
@@ -29,24 +29,45 @@ function imageLoad(url) {
 }
 
 /**
- * 圆角矩形
- * @param cxt
+ * 圆角矩形,使用arc()
+ * @param ctx
  * @param x
  * @param y
  * @param width
  * @param height
  * @param radius
  */
-function drawRoundRect(cxt, x, y, width, height, radius){
-  cxt.beginPath();
-  cxt.arc(x + radius, y + radius, radius, Math.PI, Math.PI * 3 / 2);
-  cxt.lineTo(width - radius + x, y);
-  cxt.arc(width - radius + x, radius + y, radius, Math.PI * 3 / 2, Math.PI * 2);
-  cxt.lineTo(width + x, height + y - radius);
-  cxt.arc(width - radius + x, height - radius + y, radius, 0, Math.PI * 1 / 2);
-  cxt.lineTo(radius + x, height +y);
-  cxt.arc(radius + x, height - radius + y, radius, Math.PI * 1 / 2, Math.PI);
-  cxt.closePath();
+function drawRoundRectByArc(ctx, x, y, width, height, radius) {
+  ctx.beginPath();
+  ctx.arc(x + radius, y + radius, radius, Math.PI, Math.PI * 3 / 2);
+  ctx.lineTo(width - radius + x, y);
+  ctx.arc(width - radius + x, radius + y, radius, Math.PI * 3 / 2, Math.PI * 2);
+  ctx.lineTo(width + x, height + y - radius);
+  ctx.arc(width - radius + x, height - radius + y, radius, 0, Math.PI / 2);
+  ctx.lineTo(radius + x, height + y);
+  ctx.arc(radius + x, height - radius + y, radius, Math.PI / 2, Math.PI);
+  ctx.closePath();
+}
+
+/**
+ * 圆角矩形,使用arcTo()
+ * @param ctx
+ * @param x
+ * @param y
+ * @param width
+ * @param height
+ * @param radius
+ */
+function drawRoundRectByArcTo(ctx, x, y, width, height, radius) {
+  ctx.beginPath();
+  ctx.moveTo(x + width - radius, y);
+  ctx.arcTo(x, y, x, y + radius, radius);
+  ctx.moveTo(x + width, y + height - radius);
+  ctx.arcTo(x + width, y, x + width - radius, y, radius);
+  ctx.moveTo(x + radius, y + height);
+  ctx.arcTo(x + width, y + height, x + width, y + height - radius, radius);
+  ctx.moveTo(x, y + radius);
+  ctx.arcTo(x, y + height, x + radius, y + height, radius);
 }
 
 window.onload = function () {
@@ -148,7 +169,16 @@ window.onload = function () {
     // 圆角矩形
     const ctx = ctxFn('canvas5');
     ctx.beginPath(); // 不写，那么stroke会覆盖之前颜色样式
-    drawRoundRect(ctx, 50, 50, 200, 200, 50);
+    drawRoundRectByArc(ctx, 50, 50, 200, 200, 50);
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = 'blue';
+    ctx.stroke();
+  }());
+  (function () {
+    // 圆角矩形
+    const ctx = ctxFn('canvas6');
+    ctx.beginPath(); // 不写，那么stroke会覆盖之前颜色样式
+    drawRoundRectByArcTo(ctx, 50, 50, 200, 200, 50);
     ctx.lineWidth = 5;
     ctx.strokeStyle = 'blue';
     ctx.stroke();

@@ -45,3 +45,57 @@ arcTo()方法将利用当前端点、端点1(x1,y1)和端点2(x2,y2)这三个点
 弧线的起点就是当前端点所在边与圆的切点，弧线的终点就是端点2(x2,y2)所在边与圆的切点，
 并且绘制的弧线是两个切点之间长度最短的那个圆弧。  
 **此外，如果当前端点不是弧线起点，arcTo()方法还将添加一条当前端点到弧线起点的直线线段。**
+
+贝塞尔曲线
+```javascript
+context.quadraticCurveTo(cpx,cpy,x,y); // 二次
+context.bezierCurveTo(cp1x,cp1y,cp2x,cp2y,x,y); // 三次
+```
+
+变换：  
+* 平移变换：translate(x,y)
+* 旋转变换：rotate(deg)
+* 缩放变换：scale(sx,sy)  
+
+**！！需要注意的是如果不使用恢复，是按照上次变换继续变化的**  
+同画圆弧一样，这里的`rotate(deg)`传入的参数是弧度，不是角度。  
+缩放的时候，是缩放整个画布。坐标不是原点，尽量不要使用scale。
+```javascript
+var context = canvas.getContext("2d");
+context.fillStyle = "#FFF";
+context.fillRect(0,0,800,600);
+context.fillStyle = "#00AAAA";
+context.fillRect(100,100,200,100);
+
+context.save(); // 平移之前保存坐标状态
+context.fillStyle = "red";
+context.translate(100,100);
+context.fillRect(100,100,200,100);
+context.restore(); // 结束后恢复。确定左边参照物统一
+
+context.save();
+context.fillStyle = "green";
+context.translate(200,200);
+context.fillRect(100,100,200,100);
+context.restore();
+
+```
+就像css中那样，都是transform下的变换。  
+context.transform(a,b,c,d,e,f) 
+
+|    参数    | 意义 |
+| :-------: | :---:|
+|     a     |  水平缩放(1)  |
+|     b     |  水平倾斜(0)  |  
+|     c     |  垂直倾斜(0)  |  
+|     d     |  垂直缩放(1)  |  
+|     e     |  水平位移(0)  |  
+|     f     |  垂直位移(0)  |  
+同样transform也会累积，如果要保持参照坐标，`setTransform`,同样是六个参数，
+参数意义和transform一样。  
+
+文本字体，对齐方式，渲染度量，相关api自行查阅。  
+[https://developer.mozilla.org/zh-CN/docs/Web/API/Canvas_API/Tutorial/Drawing_text]()
+
+
+
