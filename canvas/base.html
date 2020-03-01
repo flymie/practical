@@ -11,14 +11,15 @@
         canvas{
             width: 300px;
             margin: 10px auto;
+            border: 1px dashed #333;
             display: block;
         }
         .borderRight{
             border-right: 1px solid grey;
         }
         .container {
-            width: 800px;
-            height: 360px;
+            width: 1000px;
+            height: 380px;
             margin: 0 auto 10px;
             display: flex;
             justify-content: stretch;
@@ -29,6 +30,11 @@
         }
         .code {
             overflow: auto;
+        }
+        #colorBlock{
+            display: inline-block;
+            width: 12px;
+            height: 12px;
         }
     </style>
 </head>
@@ -181,7 +187,7 @@
     </div>
     <div class="container">
         <div class="borderRight">
-            <h4>圆角矩形,用arc()</h4>
+            <h4>圆角矩形,用arc(),加一点阴影</h4>
             <canvas id="canvas5">
                 你的浏览器居然不支持Canvas？！赶快换一个吧！！
             </canvas>
@@ -205,6 +211,10 @@
     drawRoundRectByArc(ctx, 50, 50, 200, 200, 50);
     ctx.lineWidth = 5;
     ctx.strokeStyle = 'blue';
+    ctx.shadowColor = 'red';
+    ctx.shadowOffsetX = 5;
+    ctx.shadowOffsetY = 5;
+    ctx.shadowBlur = 0;
     ctx.stroke();
             </pre>
         </div>
@@ -235,6 +245,119 @@
     ctx.lineWidth = 5;
     ctx.strokeStyle = 'blue';
     ctx.stroke();
+            </pre>
+        </div>
+    </div>
+    <div class="container">
+        <div class="borderRight">
+            <h4>裁剪</h4>
+            <canvas id="canvas7">
+                你的浏览器居然不支持Canvas？！赶快换一个吧！！
+            </canvas>
+        </div>
+        <div class="code">
+            <pre>
+    // 裁剪
+    const ctx = ctxFn('canvas7');
+    ctx.beginPath(); // 不写，那么stroke会覆盖之前颜色样式
+    ctx.fillStyle = '#FFF';
+    ctx.fillRect(0, 0, 300, 300);
+
+    // 在屏幕上绘制一个大方块
+    ctx.fillStyle = 'black';
+    ctx.fillRect(10, 10, 200, 200);
+    ctx.save();
+    ctx.beginPath();
+
+    // 裁剪画布从(0，0)点至(80，80)的正方形
+    ctx.rect(0, 0, 80, 80);
+    ctx.clip();
+
+    // 红色圆
+    ctx.beginPath();
+    ctx.strokeStyle = 'red';
+    ctx.lineWidth = 5;
+    ctx.arc(100, 100, 100, 0, Math.PI * 2, false);
+    // 整圆
+    ctx.stroke();
+    ctx.closePath();
+
+    ctx.restore();
+
+    // 再次裁切整个画布
+    ctx.beginPath();
+    ctx.rect(0, 0, 200, 200);
+    ctx.clip();
+
+    // 绘制一个没有裁切的蓝线的整圆
+    ctx.beginPath();
+    ctx.strokeStyle = 'blue';
+    ctx.lineWidth = 5;
+    ctx.arc(100, 100, 50, 0, Math.PI * 2, false);
+    ctx.stroke();
+            </pre>
+        </div>
+    </div>
+    <div class="container">
+        <div class="borderRight">
+            <h4>绘制图像drawImage()</h4>
+            <canvas id="canvas8">
+                你的浏览器居然不支持Canvas？！赶快换一个吧！！
+            </canvas>
+        </div>
+        <div class="code">
+            <pre>
+    // 绘制图像
+    const ctx = ctxFn('canvas8');
+    ctx.beginPath(); // 不写，那么stroke会覆盖之前颜色样式
+    imageLoad('../css-attr/images/userImg240.png').then((img) => {
+      ctx.drawImage(img, 0, 0, 300, 300);
+    }).catch((e) => {
+      console.log(e);
+    });
+            </pre>
+        </div>
+    </div>
+    <div class="container">
+        <div class="borderRight">
+            <h4>
+                点击图片选取颜色，当前颜色：
+                <div id="colorBlock"></div>
+                <span id="colorText"></span>
+                <div>
+                    <em>也可以优化鼠标样式，自定义。css:{cursor:url("图标路径"),auto};</em>
+                </div>
+            </h4>
+            <canvas id="canvas9">
+                你的浏览器居然不支持Canvas？！赶快换一个吧！！
+            </canvas>
+        </div>
+        <div class="code">
+            <pre>
+    function pick(ctx, el, event) {
+      const x = event.pageX - el.offsetLeft;
+      const y = event.pageY - el.offsetTop;
+      console.log(event.pageX, event.pageY)
+      const pixel = ctx.getImageData(x, y, 1, 1);
+      const { data } = pixel;
+      const rgba = `rgba(${data[0]},${data[1]},${data[2]},${data[3] / 255})`;
+      return rgba;
+    }
+    // 绘制图像
+    const canvas9 = document.querySelector('#canvas9');
+    const ctx = ctxFn('canvas9');
+    ctx.beginPath(); // 不写，那么stroke会覆盖之前颜色样式
+    imageLoad('../css-attr/images/userImg240.png').then((img) => {
+      ctx.drawImage(img, 0, 0, 300, 300);
+      canvas9.addEventListener('click', (e) => {
+        const colorText = pick(ctx, canvas9, e);
+        document.querySelector('#colorBlock').style.background = colorText;
+        document.querySelector('#colorText').style.color = colorText;
+        document.querySelector('#colorText').innerHTML = colorText;
+      });
+    }).catch((e) => {
+      console.log(e);
+    });
             </pre>
         </div>
     </div>

@@ -172,6 +172,10 @@ window.onload = function () {
     drawRoundRectByArc(ctx, 50, 50, 200, 200, 50);
     ctx.lineWidth = 5;
     ctx.strokeStyle = 'blue';
+    ctx.shadowColor = 'red';
+    ctx.shadowOffsetX = 5;
+    ctx.shadowOffsetY = 5;
+    ctx.shadowBlur = 0;
     ctx.stroke();
   }());
   (function () {
@@ -182,5 +186,81 @@ window.onload = function () {
     ctx.lineWidth = 5;
     ctx.strokeStyle = 'blue';
     ctx.stroke();
+  }());
+  (function () {
+    // 裁剪
+    const ctx = ctxFn('canvas7');
+    ctx.beginPath(); // 不写，那么stroke会覆盖之前颜色样式
+    ctx.fillStyle = '#FFF';
+    ctx.fillRect(0, 0, 300, 300);
+
+    // 在屏幕上绘制一个大方块
+    ctx.fillStyle = 'black';
+    ctx.fillRect(10, 10, 200, 200);
+    ctx.save();
+    ctx.beginPath();
+
+    // 裁剪画布从(0，0)点至(80，80)的正方形
+    ctx.rect(0, 0, 80, 80);
+    ctx.clip();
+
+    // 红色圆
+    ctx.beginPath();
+    ctx.strokeStyle = 'red';
+    ctx.lineWidth = 5;
+    ctx.arc(100, 100, 100, 0, Math.PI * 2, false);
+    // 整圆
+    ctx.stroke();
+    ctx.closePath();
+
+    ctx.restore();
+
+    // 再次裁切整个画布
+    ctx.beginPath();
+    ctx.rect(0, 0, 200, 200);
+    ctx.clip();
+
+    // 绘制一个没有裁切的蓝线的整圆
+    ctx.beginPath();
+    ctx.strokeStyle = 'blue';
+    ctx.lineWidth = 5;
+    ctx.arc(100, 100, 50, 0, Math.PI * 2, false);
+    ctx.stroke();
+  }());
+  (function () {
+    // 绘制图像
+    const ctx = ctxFn('canvas8');
+    ctx.beginPath(); // 不写，那么stroke会覆盖之前颜色样式
+    imageLoad('../css-attr/images/userImg240.png').then((img) => {
+      ctx.drawImage(img, 0, 0, 300, 300);
+    }).catch((e) => {
+      console.log(e);
+    });
+  }());
+  (function () {
+    function pick(ctx, el, event) {
+      const x = event.pageX - el.offsetLeft;
+      const y = event.pageY - el.offsetTop;
+      console.log(event.pageX, event.pageY);
+      const pixel = ctx.getImageData(x, y, 1, 1);
+      const { data } = pixel;
+      const rgba = `rgba(${data[0]},${data[1]},${data[2]},${data[3] / 255})`;
+      return rgba;
+    }
+    // 绘制图像
+    const canvas9 = document.querySelector('#canvas9');
+    const ctx = ctxFn('canvas9');
+    ctx.beginPath(); // 不写，那么stroke会覆盖之前颜色样式
+    imageLoad('../css-attr/images/userImg240.png').then((img) => {
+      ctx.drawImage(img, 0, 0, 300, 300);
+      canvas9.addEventListener('click', (e) => {
+        const colorText = pick(ctx, canvas9, e);
+        document.querySelector('#colorBlock').style.background = colorText;
+        document.querySelector('#colorText').style.color = colorText;
+        document.querySelector('#colorText').innerHTML = colorText;
+      });
+    }).catch((e) => {
+      console.log(e);
+    });
   }());
 };
