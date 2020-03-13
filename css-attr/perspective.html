@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .container{
+            width: 600px;
+            margin: 50px auto 0;
+            border: 10px dashed #999;
+            position: relative;
+            overflow: hidden;
+            perspective: 600px;
+            perspective-origin: 50% 50%;
+        }
+        .picture {
+            width: 600px;
+            transform-style: preserve-3d;
+            backface-visibility: visible;
+            transform-origin: 50% 100%;
+            animation: wind 10s cubic-bezier(0.7,0.7,0,0) infinite;
+        }
+        img {
+            width: 100%;
+        }
+        @keyframes wind {
+            0% {
+                transform: translateZ(-30px) rotateY(-30deg);
+            }
+            50% {
+                transform: translateZ(-30px) rotateY(30deg);
+            }
+            100% {
+                transform: translateZ(-30px) rotateY(-30deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="picture animal">
+            <img src="./images/1.jpg">
+        </div>
+    </div>
+</body>
+</html>
