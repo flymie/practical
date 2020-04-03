@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>查岗？不存在的</title>
+    <style>
+        #chat {
+            width: 600px;
+            border: 1px solid #999;
+            margin: 20px auto 0;
+            box-sizing: border-box;
+        }
+        #content {
+            height: 300px;
+            border-bottom: 1px solid #999;
+            padding-top: 8px;
+            overflow-y: auto;
+            box-sizing: border-box;
+            position: relative;
+            background: #F3F3F3;
+        }
+        #submit {
+            width: 100%;
+            height: 100px;
+            display: block;
+            resize: none;
+            box-sizing: border-box;
+            background: #fff;
+        }
+        #submit:focus{
+            outline: none;
+        }
+        .itemWrap{
+            display: flex;
+            width: 100%;
+            margin-bottom: 10px;
+            align-items: center;
+            padding: 0 4px;
+            box-sizing: border-box;
+        }
+        .itemWrap.self{
+            flex-direction: row-reverse;
+        }
+        .item {
+            border-radius: 4px;
+            background: #fff;
+            color: #333;
+            max-width: 60%;
+            padding: 0 6px;
+            word-break: break-all;
+            position: relative;
+            margin-left: 8px;
+        }
+        .item::after{
+            content: '';
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            display: block;
+        }
+        .item.self{
+            margin-right: 8px;
+        }
+        .item.self{
+            background: #8adc43;
+        }
+        .item.other::after {
+            border-right: 6px solid #FFF;
+            border-left: transparent;
+            left: -5px;
+        }
+        .item.self::after {
+            border-left: 6px solid #8adc43;
+            border-right: transparent;
+            right: -5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat">
+        <div id="content">
+
+        </div>
+        <textarea
+                id="submit"
+                placeholder="回车键发送"
+                maxlength="200"
+        ></textarea>
+    </div>
+<script>
+    const content = document.querySelector('#content');
+    const submit = document.querySelector('#submit');
+
+    function rendMessage({nameStr, msg}, className = 'other') {
+      const ctn = msg.trim();
+      const wrap = document.createElement('div');
+      wrap.classList.add('itemWrap', className);
+
+      const name = document.createElement('div');
+      name.innerText = nameStr;
+
+      const item = document.createElement('div');
+      item.classList.add('item', className);
+      item.innerText = ctn;
+
+      wrap.append(name);
+      wrap.append(item);
+      content.append(wrap);
+      content.scrollTop = content.scrollHeight - content.offsetHeight;
+    }
+
+    try {
+      const ws = new WebSocket("ws://localhost:8080/msg");
+
+      ws.onopen = function(evt) {
+        console.log("Connection open ...");
+        ws.send("Hello WebSockets!");
+      };
+
+      ws.onmessage = function(evt) {
+        console.log("Received Message: " + evt.data);
+        rendMessage(evt.data)
+        ws.close();
+      };
+
+      ws.onclose = function(evt) {
+        console.log("Connection closed.");
+      }
+    } catch (e) {
+      console.log(e);
+    }
+
+    document.onkeyup = function(e) {
+      // 兼容FF和IE和Opera
+      const event = e || window.event;
+      const key = event.which || event.keyCode || event.charCode;
+      if (key == 13) {
+        const ctn = submit.value.trim();
+        if (ctn) {
+          const className = Math.random() > 0.5 ? 'self' : 'other';
+          rendMessage({ nameStr: '名字', msg: ctn }, className);
+        }
+        submit.value = '';
+      }
+    };
+</script>
+</body>
+</html>

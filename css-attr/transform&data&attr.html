@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        div{
+            width: 200px;
+            margin: 100px auto;
+            line-height: 50px;
+            text-align: center;
+            border: 1px dashed #999;
+        }
+        .transform{
+            position: relative;
+        }
+        .transform:hover::after{
+            width: 100%;
+        }
+        .transform::after{
+            z-index: -1;
+            content: '';
+            width: 0;
+            height: 100%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            position: absolute;
+            background: greenyellow;
+            white-space: nowrap;
+            transition: width .2s cubic-bezier(0.96, 0.37, 0.07, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <div class="transform" data-content="hover一下">
+        hover一下
+    </div>
+</body>
+</html>
