@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+    <div>
+        <h1>koa2 upload demo</h1>
+        <p>file upload 一次性上传</p>
+        <input name="file" type="file" id="file" /><br/><br/>
+        <button id="submit">submit</button>
+    </div>
+    <div>
+        <h1>koa2 upload demo</h1>
+        <p>file upload 切片上传</p>
+        <input name="file" type="file" id="file1" /><br/><br/>
+        <button id="submit1">submit</button>
+    </div>
+<script>
+  // 一次性传完
+  const submit = document.querySelector('#submit');
+
+  submit.addEventListener('click', async function () {
+    const file = document.querySelector('#file').files[0];
+    const form = new FormData();
+    form.append('file', file);
+    fetch('http://localhost:3000/upload', {
+      method: 'POST',
+      body: form
+    }).then(res => res.json()).then(res => {
+      alert(res.message);
+    });
+  })
+</script>
+<script>
+    const SIZE = 10 * 2048; // 切片大小
+    function createFileChunkList(file, size = SIZE) {
+      const fileChunkList = [];
+      let cur = 0;
+      while (cur < file.size) {
+        fileChunkList.push({ file: file.slice(cur, cur + size) });
+        cur += size;
+      }
+      return fileChunkList;
+    }
+    // 合并切片
+    async function mergeRequest(data) {
+        fetch('http://localhost:3000/merge', {
+            method: 'post',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify(data),
+        }).then(res => res.json())
+          .catch(error => console.error('Error:', error))
+    }
+    // 上传切片
+    async function uploadChunks(data, filename) {
+        const requestList = data.map(({ chunk, hash }) => {
+            const formData = new FormData();
+            formData.append("chunk", chunk);
+            formData.append("hash", hash);
+            formData.append("filename", filename);
+            return { formData };
+        })
+        .map(({ formData }) => {
+          return fetch('http://localhost:3000/upload2', {
+            method: 'POST',
+            body: formData
+          }).then(res => res.json());
+        });
+        let result = await Promise.all(requestList); // 并发切片
+        if (result.every(v => v.success)) {
+          await mergeRequest({
+              filename,
+              size: SIZE,
+          });
+        }
+    };
+</script>
+<script>
+    const submit1 = document.querySelector('#submit1');
+
+    submit1.addEventListener('click', async function () {
+      const file = document.querySelector('#file1').files[0];
+      const filename = file.name;
+      const fileChunkList = createFileChunkList(file);
+      const data = fileChunkList.map(({ file }, index) => ({
+        chunk: file,
+        hash: filename + "-" + index, // 文件名 + 数组下标
+      }));
+      await uploadChunks(data, filename);
+    })
+</script>
+</body>
+</html>
