@@ -32,3 +32,4 @@
 * [scroll-snap-type，运动效果来执行临时点](https://flymie.github.io/practical/css-attr/scroll-snap-type.html)
 * [canvas 花瓣](https://flymie.github.io/practical/canvasAn/flower.html)
 * [perspective 在知乎页面看到一张静态图，然后的想法](https://flymie.github.io/practical/css-attr/perspective.html)
+* [瀑布流的想法](https://flymie.github.io/practical/css-attr/waterfall.html)

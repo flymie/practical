@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>sort</title>
+    <script src="../../js/sort.js"></script>
+</head>
+<body>
+<script>
+  const arr=[3,44,38,5,47,15,36,26,27,2,46,4,19,50,48];
+  // bubbleSort(arr.slice());
+  // bubbleSort2(arr.slice());
+  // console.log(selectionSort2(arr.slice()));
+  // console.log(insertionSort(arr.slice()));
+  // console.log(insertionSort2(arr.slice()));
+  // console.log(shellSort(arr.slice()));
+  // console.time('归并排序');
+  // console.log(mergeSort(arr.slice()))
+  // console.timeEnd('归并排序');
+  console.time('快速排序');
+  console.log(quickSort(arr.slice()))
+  console.timeEnd('快速排序');
+
+</script>
+</body>
+</html>
