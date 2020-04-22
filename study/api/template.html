@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>模板引擎</title>
+</head>
+<body>
+<p>
+    第一种使用eval <br />
+    将 %> 替换成 p.push(' <br />
+    将 <% 替换成 '); <br />
+    将 <%=xxx%> 替换成 ');p.push(xxx);p.push('
+</p>
+<script type="text/html" id="user_tmpl">
+    <%for ( var i = 0; i < users.length; i++ ) { %>
+    <li>
+        <a href="<%=users[i].url%>">
+            <%=users[i].name%>
+        </a>
+    </li>
+    <% } %>
+</script>
+<ul id="temp1"></ul>
+<script>
+  function tmpl(str, data) {
+    var str = document.getElementById(str).innerHTML;
+
+    var string = "var p = []; p.push('" +
+      str
+        .replace(/[\r\t\n]/g, "")
+        .replace(/<%=(.*?)%>/g, "');p.push($1);p.push('")
+        .replace(/<%/g, "');")
+        .replace(/%>/g,"p.push('")
+      + "');"
+
+    eval(string)
+
+    return p.join('');
+  };
+
+  var users = [
+    { "name": "Byron", "url": "http://localhost" },
+    { "name": "Casper", "url": "http://localhost" },
+    { "name": "Frank", "url": "http://localhost" }
+  ]
+  document.querySelector('#temp1').innerHTML = tmpl("user_tmpl", users);
+</script>
+<ul id="temp2"></ul>
+<script>
+  // 第二版
+  function tmpl(str, data) {
+    var str = document.getElementById(str).innerHTML;
+
+    var fn = new Function("obj",
+
+      "var p = []; p.push('" +
+
+      str
+        .replace(/[\r\t\n]/g, "")
+        .replace(/<%=(.*?)%>/g, "');p.push($1);p.push('")
+        .replace(/<%/g, "');")
+        .replace(/%>/g,"p.push('")
+      + "');return p.join('');");
+    var template = function(data) {
+      return fn.call(this, data)
+    };
+    return template;
+  };
+  document.querySelector('#temp2').innerHTML = tmpl("user_tmpl")(users);
+
+  var escapes = {
+    "'": "'",
+    '\\': '\\',
+    '\r': 'r',
+    '\n': 'n',
+    '\u2028': 'u2028',
+    '\u2029': 'u2029'
+  };
+
+  var escapeRegExp = /\\|'|\r|\n|\u2028|\u2029/g;
+
+  var escapeChar = function(match) {
+    console.log(match)
+    return '\\' + escapes[match];
+  };
+
+  var str = 'console.log("I am \\ \n Kevin");';
+  var newStr = str.replace(escapeRegExp, escapeChar);
+  console.log(newStr)
+
+</script>
+</body>
+</html>

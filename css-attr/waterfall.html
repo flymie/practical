@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        h3{
+            padding: 0;
+            margin: 0;
+        }
+        .flex{
+            display: flex;
+        }
+        .flex >div{
+            width: 50%;
+        }
+        #wrap{
+            display: flex;
+            flex-wrap: wrap;
+            counter-reset: items;
+        }
+        #wrap div{
+            width: 100px;
+        }
+        #wrap2{
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: column;
+            height: 100vh;
+            align-content: flex-start;
+            counter-reset: items;
+        }
+        #wrap2 div{
+            width: 33%
+        }
+        #wrap div::before, #wrap2 div::before {
+            counter-increment: items;
+            content: counter(items);
+        }
+        #wrap2 div:nth-child(3n+1) { order: 1; }
+        #wrap2 div:nth-child(3n+2) { order: 2; }
+        #wrap2 div:nth-child(3n)   { order: 3; }
+        #wrap2::before,
+        #wrap2::after {
+            content: "";
+            flex-basis: 100%;
+            width: 0;
+            order: 2;
+        }
+        #wrap3{
+            display: flex;
+        }
+        #wrap3 .item{
+            width: 33%;
+        }
+    </style>
+</head>
+<body>
+<em>感觉还是用js计算标好一点，百度谷歌的图片展示现在都是固高的了。20200420</em>
+<div class="flex">
+    <div>
+        <h3>flex无法解决空隙，float后都是按照block，估计后面w3c会重新修改吧</h3>
+        <button id="button">add</button>
+        <div id="wrap"></div>
+    </div>
+    <div>
+        <h3>高度需要设置为最高列，高度怎么算？拓展性问题</h3>
+        <button id="button2">add</button>
+        <div id="wrap2"></div>
+    </div>
+    <div>
+        <h3>还是用js计算一下吧</h3>
+        <button id="button3">add</button>
+        <div id="wrap3">
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+        </div>
+    </div>
+</div>
+<script>
+  const button = document.querySelector('#button');
+  const wrap = document.querySelector('#wrap');
+  button.addEventListener('click', function () {
+    const div = document.createElement('div');
+    div.style.height = parseInt(Math.random() * 100) + 'px';
+    div.style.background = `rgb(${parseInt(Math.random() * 255)}, ${parseInt(Math.random() * 255)}, ${parseInt(Math.random() * 255)})`;
+    wrap.append(div);
+  });
+
+  const button2 = document.querySelector('#button2');
+  const wrap2 = document.querySelector('#wrap2');
+  button2.addEventListener('click', function () {
+    const div = document.createElement('div');
+    div.style.height = parseInt(Math.random() * 100) + 20 + 'px';
+    div.style.background = `rgb(${parseInt(Math.random() * 255)}, ${parseInt(Math.random() * 255)}, ${parseInt(Math.random() * 255)})`;
+    wrap2.append(div);
+  });
+
+  const button3 = document.querySelector('#button3');
+  const items = document.querySelectorAll('#wrap3 .item');
+  const itemsHeight = Array.prototype.map.call(items, v => v.offsetHeight);
+  let count = 1;
+  button3.addEventListener('click', function () {
+    const div = document.createElement('div');
+    const height = parseInt(Math.random() * 100) + 20;
+
+    const min = Math.min(...itemsHeight);
+    const index = itemsHeight.findIndex(v => v === min);
+    itemsHeight[index] += height;
+
+    div.style.height = height + 'px';
+    div.style.background = `rgb(${parseInt(Math.random() * 255)}, ${parseInt(Math.random() * 255)}, ${parseInt(Math.random() * 255)})`;
+    div.innerText = count;
+
+    items[index].append(div);
+    count++;
+  });
+</script>
+</body>
+</html>
