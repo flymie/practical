@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>eventEmitter</title>
+</head>
+<body>
+<a href="https://github.com/mqyqingfeng/EventEmitter/blob/master/eventEmitter.js">
+    原文地址
+</a>
+<script>
+  (function () {
+    // listener 必须是函数
+    function isValidListener(listener) {
+      if (typeof listener === 'function') {
+        return true;
+      }
+      if (listener && typeof listener === 'object') {
+        return isValidListener(listener.listener);
+      }
+      return false;
+    }
+
+    function EventEmitter() {
+      this._events = {};
+    }
+
+    EventEmitter.VERSION = '1.0.0';
+    EventEmitter.prototype = {
+      construct: 'EventEmitter',
+      on: function (eventName, listener) {
+        if (!eventName || !listener) return;
+        if (!isValidListener(listener)) {
+          throw new TypeError('listener must be a function');
+        }
+        const events = this._events;
+        const listeners = events[eventName]  = events[eventName] || [];
+        // 解释一下
+        // events[eventName] = events[eventName] || [];
+        // const listeners = events[eventName];
+        const listenerIsWrapped = typeof listener === 'object';
+        // 不重复添加事件
+        if (listeners.findIndex(v => v === listener || v === listener.listener) === -1) {
+          listeners.push(listenerIsWrapped ? listener : {
+            listener,
+            once: false,
+          });
+        }
+        return this;
+      },
+
+      once: function (eventName, listener) {
+        return this.on(eventName, {
+          listener,
+          once: true,
+        })
+      },
+
+      off: function (eventName, listener) {
+        const listeners = this._events[eventName];
+
+        if (!listener) return this;
+
+        const index = listeners.findIndex(v => v.listener === listener);
+        if (index !== -1) {
+          listeners.splice(index, 1);
+        }
+        return this;
+      },
+
+      emit: function (eventName, args) {
+        const _this = this;
+        const listeners = this._events[eventName];
+        if (listeners) {
+          listeners.forEach((v) => {
+            v.listener.apply(_this, args || []);
+            if (v.once) {
+              _this.off(eventName, v.listener);
+            }
+          });
+        }
+        return this;
+      },
+
+      allOff: function(eventName) {
+        if (eventName && this._events[eventName]) {
+          this._events[eventName] = []
+        } else {
+          this._events = {}
+        }
+      },
+    };
+
+    window.EventEmitter = EventEmitter;
+  }());
+</script>
+<script>
+  var emitter = new EventEmitter();
+
+  function handleOne(a, b, c) {
+    console.log('第一个监听函数', a, b, c)
+  }
+
+  function handleSecond(a, b, c) {
+    console.log('第二个监听函数', a, b, c)
+  }
+
+  function handleThird(a, b, c) {
+    console.log('第三个监听函数', a, b, c)
+  }
+
+  emitter.on("demo", handleOne)
+    .once("demo", handleSecond)
+    .on("demo", handleThird);
+
+  emitter.emit('demo', [1, 2, 3]);
+  // => 第一个监听函数 1 2 3
+  // => 第二个监听函数 1 2 3
+  // => 第三个监听函数 1 2 3
+
+  emitter.off('demo', handleThird);
+  emitter.emit('demo', [1, 2, 3]);
+  // // => 第一个监听函数 1 2 3
+  //
+  emitter.allOff();
+  emitter.emit('demo', [1, 2, 3]);
+  // nothing
+</script>
+</body>
+</html>
