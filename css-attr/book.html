@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>book</title>
+    <style>
+        li {
+            list-style: none;
+        }
+        .color {
+            color: rebeccapurple;
+        }
+        .bookWrap {
+            perspective: 1000px;
+            perspective-origin: 50% 50%;
+            width: 400px;
+            margin: 100px auto;
+        }
+        .book {
+            width: 220px;
+            height: 280px;
+            text-align: center;
+            color: #fff;
+            position: relative;
+            transform-origin: left top;
+            transform: rotateY(-10deg);
+            transform-style: preserve-3d;
+        }
+        .pages, .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+        .font{
+            top: -1%;
+            left: 0;
+            width: 98%;
+            height: 102%;
+            position: absolute;
+            border-left: 2px solid #999;
+            border-right: 2px solid #999;
+            z-index: 10;
+            transform: rotateY(-18deg);
+            transform-origin: 0 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.8s ease-in-out;
+        }
+        .font .page:first-child {
+            background-image: linear-gradient(180deg, rgba(241, 196, 15, 1) 58%, rgba(231, 186, 7, 1) 0%);
+            backface-visibility: hidden;
+        }
+        .font .page:first-child::after {
+            content: '';
+            background-image: linear-gradient( -135deg, rgba(255, 255, 255, 0.45) 0%, transparent 100%);
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+        }
+        .font .page:last-child {
+            background-color: #fffbec;
+            transform: rotateY(180deg);
+        }
+        h1 {
+            padding: 0;
+            margin: 53% auto 0;
+        }
+        p {
+            padding: 0;
+            margin: 0;
+        }
+        .pages {
+            z-index: 2;
+        }
+        .pages .page {
+            background: linear-gradient(0, #e1ddd8 0%, #fffbf6 100%);
+            box-shadow: inset 0px -1px 2px rgba(50, 50, 50, 0.1), inset -1px 0px 1px rgba(150, 150, 150, 0.2);
+            border-radius: 0px 5px 5px 0px;
+            transform-origin: left top;
+            transition: transform 0.8s ease-in-out;
+        }
+        .pages .page:nth-child(1) {
+            transform: rotateY(-10deg);
+        }
+        .pages .page:nth-child(2) {
+            transform: rotateY(-11deg);
+        }
+        .pages .page:nth-child(3) {
+            transform: rotateY(-12deg);
+        }
+        .pages .page:nth-child(4) {
+            transform: rotateY(-13deg);
+        }
+        .pages .page:nth-child(5) {
+            transform: rotateY(-14deg);
+        }
+        .pages .page:nth-child(6) {
+            transform: rotateY(-15deg);
+        }
+        .pages .page:nth-child(7) {
+            transform: rotateY(-16deg);
+        }
+        .back {
+            background-color: #fffbec;
+            border-right: 2px solid #999;
+            z-index: 10;
+            top: -1%;
+            left: 0;
+            width: 100%;
+            height: 102%;
+            position: absolute;
+        }
+        .bookWrap:hover .font {
+            transform: rotateY(-146deg);
+        }
+        .bookWrap:hover .pages .page:nth-child(7) {
+            transform: rotateY(-140deg);
+            transition-duration: 1.2s;
+        }
+        .bookWrap:hover .pages .page:nth-child(6) {
+            transform: rotateY(-134deg);
+            transition-duration: 1.25s;
+        }
+        .bookWrap:hover .pages .page:nth-child(5) {
+            transform: rotateY(-130deg);
+            transition-duration: 1.3s;
+        }
+        .bookWrap:hover .pages .page:nth-child(4) {
+            transform: rotateY(-120deg);
+            transition-duration: 1.35s;
+        }
+        .bookWrap:hover .pages .page:nth-child(3) {
+            transform: rotateY(-16deg);
+            transition-duration: 1.35s;
+        }
+        .bookWrap:hover .pages .page:nth-child(2) {
+            transform: rotateY(-13deg);
+            transition-duration: 1.35s;
+        }
+        .bookWrap:hover .pages .page:nth-child(1) {
+            transform: rotateY(-12deg);
+            transition-duration: 1.35s;
+        }
+    </style>
+</head>
+<body>
+<div class="bookWrap">
+    <div class="book">
+        <div class="font">
+            <div class="page">
+                <h1>CSS</h1>
+                <p>TRANSFORM</p>
+            </div>
+            <div class="page"></div>
+        </div>
+        <div class="pages">
+            <div class="page"></div>
+            <div class="page"></div>
+            <div class="page color">
+                <h2>这里什么都没有</h2>
+            </div>
+            <div class="page"></div>
+            <div class="page"></div>
+            <div class="page"></div>
+            <div class="page"></div>
+        </div>
+        <div class="back"></div>
+    </div>
+</div>
+</body>
+</html>
