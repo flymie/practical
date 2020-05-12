@@ -13,7 +13,7 @@
 	.signatureWrap .signatureBtns .clearCTn{float: left;}
 	.signatureWrap .signatureBtns .saveCanvas{float: right}
 </style>
-</head>	
+</head>
 <body>
 	<div style="height:100px;" >
 		<img src="" alt="展示签名图片" id='showPic' height="100"/>
@@ -54,16 +54,17 @@
 		    this.cxt.strokeStyle = this.color;
 		    this.cxt.lineWidth = this.linewidth;
 		    this.cxt.lineCap = "round";
-		    
-		    var offsetleft = this.el.offsetLeft;
-		    var offsettop = this.el.offsetTop;
+
+		    var offsetleft = this.el.getBoundingClientRect().left;
+		    var offsettop = this.el.getBoundingClientRect().top;
 			var _ths = this;
 		    //开始绘制
 			_ths.canvas.onmousedown = function(e){
 				var e = e||event;
+				console.log(e.pageX, e.clientX)
 				document.body.style.overflow = 'hidden';
 		        _ths.cxt.beginPath();
-		        _ths.cxt.moveTo(e.pageX-offsetleft, e.pageY-offsettop);	
+		        _ths.cxt.moveTo(e.pageX-offsetleft, e.pageY-offsettop);
 
 				//绘制中
 				_ths.canvas.onmousemove = function(e){
@@ -78,7 +79,7 @@
 					document.body.style.overflow = 'auto';
 				}
 			}
-		    
+
 		    //清除画布
 		    this.clearEl.addEventListener("click", function() {
 		        this.cxt.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -90,7 +91,7 @@
 				document.getElementById('showPic').src = imgBase64;
 		    }.bind(this), false);
 		};
-		
+
 	</script>
 </body>
 </html>

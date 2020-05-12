@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="./index.css" rel="stylesheet">
+    <style>
+        #show {
+            width: 600px;
+            height: 600px;
+            margin: 10px auto;
+            background-color: #f3f3f3;
+            position: relative;
+        }
+        #show >div {
+            width: 100%;
+            height: 100%;
+            transition: clip-path 0.4s linear;
+            /*clip-path: polygon(0 0, 0 0, 0 0, 0 0);*/
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+<a href="http://species-in-pieces.com/#">http://species-in-pieces.com/#</a>
+<select id="select">
+    <option selected value="parrotfish">parrotfish</option>
+    <option value="ostrich">ostrich</option>
+</select>
+<div id="show" class="parrotfish">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+</div>
+<script>
+    const select = document.querySelector('#select');
+    const show = document.querySelector('#show');
+    select.addEventListener('change', function (event) {
+      show.className = event.target.value;
+    })
+</script>
+</body>
+</html>

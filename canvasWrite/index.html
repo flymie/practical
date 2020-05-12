@@ -13,7 +13,7 @@
 	.signatureWrap .signatureBtns .clearCTn{float: left;}
 	.signatureWrap .signatureBtns .saveCanvas{float: right}
 </style>
-</head>	
+</head>
 <body>
 	<div style="height:100px;" >
 		<img src="" alt="展示签名图片" id='showPic' height="100"/>
@@ -54,15 +54,15 @@
 		    this.cxt.strokeStyle = this.color;
 		    this.cxt.lineWidth = this.linewidth;
 		    this.cxt.lineCap = "round";
-		    
-		    var offsetleft = this.el.offsetLeft;
-		    var offsettop = this.el.offsetTop;
+
+			var offsetleft = this.el.getBoundingClientRect().left;
+			var offsettop = this.el.getBoundingClientRect().top;
 		    // console.log(offsetleft,offsettop)
 		    //开始绘制
 		    this.canvas.addEventListener("touchstart", function(e) {
 		    	document.body.style.overflow = 'hidden';
 		        this.cxt.beginPath();
-		        this.cxt.moveTo(e.changedTouches[0].pageX-offsetleft, e.changedTouches[0].pageY-offsettop);		        
+		        this.cxt.moveTo(e.changedTouches[0].pageX-offsetleft, e.changedTouches[0].pageY-offsettop);
 		    }.bind(this), false);
 		    //绘制中
 		    this.canvas.addEventListener("touchmove", function(e) {
@@ -86,7 +86,7 @@
 				document.getElementById('showPic').src = imgBase64;
 		    }.bind(this), false);
 		};
-		
+
 	</script>
 </body>
 </html>
