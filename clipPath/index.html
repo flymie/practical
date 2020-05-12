@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>clip-path脑洞大开</title>
+    <style type="text/css">
+        body {
+            padding: 0;
+            margin: 0;
+        }
+        .container {
+            width: 1000px;
+            height: 100vh;
+            display: flex;
+            justify-content: stretch;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+        .content {
+            flex: 1;
+            box-sizing: border-box;
+            padding: 10px;
+            display: flex;
+        }
+        .buttons {
+            width: 120px;
+        }
+        .buttons button {
+            display: block;
+            width: 100%;
+            margin-bottom: 6px;
+        }
+        .board {
+            width: 600px;
+            height: 600px;
+            background-color: #f3f3f3;
+            margin: 0 auto;
+            /*background-image: url("../css-attr/images/1.jpg");*/
+            background-size: 100%;
+            background-repeat: no-repeat;
+        }
+        .right {
+            width: 160px;
+            height: 100vh;
+            overflow-y: auto;
+            border: 1px solid #8BC34A;
+            text-align: center;
+            padding: 10px 0 0;
+            box-sizing: border-box;
+        }
+        .right >div {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 10px;
+            border: 1px solid #8BC34A;
+            cursor: pointer;
+        }
+        .right >div >div {
+            height: inherit;
+        }
+        #classname {
+            box-sizing: border-box;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<a href="./animal/index.html">copy其他网站的</a>
+<div class="container">
+    <div class="content">
+        <div class="buttons">
+            <div style="margin-bottom: 6px">
+                <input type="file" id="file">
+            </div>
+            <button id="reset">撤销</button>
+            <button id="paddingColor">填充</button>
+            <div style="margin-bottom: 6px">
+                <input type="color" value="#ff0000" id="colorPicker">
+            </div>
+            <button id="thumbnail">缩略图</button>
+            <!--<button id="clean">清除</button>-->
+            <div style="margin-bottom: 6px">
+                <input type="text" id="classname" placeholder="填写类名">
+            </div>
+            <button id="popCss">弹出css</button>
+        </div>
+        <div class="board">
+            <canvas id="canvas"></canvas>
+        </div>
+    </div>
+    <div class="right">
+    </div>
+</div>
+<script src="index.js"></script>
+<script>
+    let paddingColor = 'ff0000'; // 默认红色
+    let className = '';
+    const canvas = document.querySelector('#canvas');
+
+    scanFn(document.querySelector('.right'));
+    canvasFn(canvas);
+
+    const file = document.querySelector('#file');
+    file.addEventListener('change', function (event) {
+      // console.log(event.target.files[0]);
+      // 生成一个文件读取的对象
+      const reader = new FileReader();
+      reader.onload = function (ev) {
+        // base64码
+        console.log(ev.target.result)
+        document.querySelector('.board').style.backgroundImage = `url(${ev.target.result})`;
+      }
+      //发起异步读取文件请求，读取结果为data:url的字符串形式，
+      reader.readAsDataURL(event.target.files[0]);
+    });
+
+    document.querySelector('#reset').addEventListener('click', function () {
+      resetFn(canvas)
+    });
+
+    document.querySelector('#paddingColor').addEventListener('click', function () {
+      paddingFn(canvas)
+    });
+
+    document.querySelector('#thumbnail').addEventListener('click', function () {
+      thumbnailFn()
+    });
+
+    document.querySelector('#colorPicker').addEventListener('change', function (event) {
+      console.log(event.target.value);
+      paddingColor = event.target.value;
+      paddingFn(canvas, event.target.value)
+    });
+
+    document.querySelector('#popCss').addEventListener('click', function () {
+      popCssFn(className)
+    });
+
+    document.querySelector('#classname').addEventListener('change', function (event) {
+      className = event.target.value.trim();
+    });
+</script>
+</body>
+</html>

@@ -34,3 +34,5 @@
 * [perspective 在知乎页面看到一张静态图，然后的想法](https://flymie.github.io/practical/css-attr/perspective.html)
 * [瀑布流的想法](https://flymie.github.io/practical/css-attr/waterfall.html)
 * [书翻页](https://flymie.github.io/practical/css-attr/book.html)
+* [css控制方向一些自己想法](https://flymie.github.io/practical/css-attr/direction-css.html)
+* [clip-path](https://flymie.github.io/practical/clipPath/index.html)

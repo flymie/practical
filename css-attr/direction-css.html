@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .wrap{
+            position: relative;
+            width: 200px;
+            height: 200px;
+            line-height: 200px;
+            margin: 200px auto;
+            overflow: hidden;
+            transform-style: preserve-3d;
+        }
+        .wrap >div {
+            width: inherit;
+            height: inherit;
+            text-align: center;
+            transition: transform .6s linear;
+        }
+        .mid {
+            background-color: cornflowerblue;
+        }
+        .top, .right, .bottom, .left {
+            position: absolute;
+            z-index: 1;
+        }
+        .top:before,
+        .right:before,
+        .bottom:before,
+        .left:before {
+            content: '';
+            width: inherit;
+            height: inherit;
+            display: block;
+            position: absolute;
+            transition: clip-path 0s linear 0.6s, transform 0s linear 0.6s;
+        }
+        .top:before{
+            top: 100%;
+            left: 0;
+            clip-path: polygon(0 0, 50% 50%, 100% 0, 0 0);
+        }
+        .top {
+            left: 0;
+            top: -100%;
+            background-color: pink;
+        }
+        .top:hover{
+            transform: translate3d(0, 100%, 1px);
+        }
+        .top:hover ~.mid{
+            transform: translateY(100%);
+        }
+        .right {
+            right: -100%;
+            top: 0;
+            background-color: greenyellow;
+        }
+        .right:before{
+            top: 0;
+            left: -100%;
+            clip-path: polygon(100% 0, 50% 50%, 100% 100%, 100% 0);
+            /*background-color: greenyellow;*/
+        }
+        .right:hover{
+            transform: translate3d(-100%, 0, 1px);
+        }
+        .right:hover ~.mid{
+            transform: translateX(-100%);
+        }
+        .bottom {
+            top: 100%;
+            left: 0;
+            background-color: khaki;
+        }
+        .bottom:before{
+            top: -100%;
+            left: 0;
+            clip-path: polygon(0 100%, 50% 50%, 100% 100%, 0 100%);
+            /*background-color: khaki;*/
+        }
+        .bottom:hover{
+            transform: translate3d(0, -100%, 1px);
+        }
+        .bottom:hover ~.mid{
+            transform: translateY(-100%);
+        }
+        .left {
+            top: 0;
+            left: -100%;
+            background-color: royalblue;
+        }
+        .left:before{
+            top: 0;
+            left: 100%;
+            clip-path: polygon(0 0, 50% 50%, 0 100%, 0 0);
+            /*background-color: royalblue;*/
+        }
+        .left:hover {
+            transform: translate3d(100%, 0, 1px);
+        } .left:hover ~.mid{
+            transform: translateX(100%);
+        }
+        /*下面是为了减少其他导致的抖动*/
+        .top:hover, .right:hover, .bottom:hover, .left:hover {
+            z-index: 10;
+        }
+        .top:hover:before, .right:hover:before, .bottom:hover:before, .left:hover:before {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            transform: translateZ(1px);
+            transition: unset;
+        }
+    </style>
+</head>
+<body>
+<p>
+    从四个方向进入，使用clip-path优化一些边界问题，但是还是有问题的。就是hover离开时的动画没结束又触发另一个动画。可以把动画加在hover上面，
+    但是这样有闪烁现象。z-index又是没有动画的，使用transform：translateZ(1px)，这样又必须每次动画都得结束，例子没什么实际用，
+    开发一下脑洞，了解下属性吧。
+</p>
+<div class="wrap">
+    <div class="top">上</div>
+    <div class="right">右</div>
+    <div class="bottom">下</div>
+    <div class="left">左</div>
+    <div class="mid">mid</div>
+</div>
+</body>
+</html>
