@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>call, apply</title>
+    <title>call, apply, new</title>
 </head>
 <body>
 <script>
@@ -26,6 +26,20 @@
       value: 'b',
     };
     a.call2(b, 'name', 18);
+
+    // new 关键字。构造函数也是简单的函数，使用shift，抛出要new的构造函数，然后使得对象的__proto__,指向构造函数原型，
+    // 再使用apply执行，改变this指向，使其指向obj。最后返回obj。
+    function objectFactory() {
+      // const obj = new Object();
+      // const obj = {};
+      const obj = Object.create(null);
+      // 通过Object.create(null)创建出来的对象，没有任何属性，显示No properties。我们可以将其当成一个干净的 map 来使用，自主定义 toString,hasOwnProperty等方法，并且不必担心将原型链上的同名方法被覆盖。
+      // {}创建的对象，使用for in遍历对象的时候，会遍历原型链上的属性，带来性能上的损耗。使用Object.create(null)则不必再对其进行遍历了。
+      const Constructor = [].shift.call(arguments);
+      obj.__proto__ = Constructor.prototype;
+      Constructor.apply(obj, arguments);
+      return obj;
+    };
 </script>
 </body>
 </html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    function Node(data) {
+      this.data = data;
+      this.leftChild = null;
+      this.rightChild = null;
+    }
+
+    function Bt() {
+      this.root = null;
+    }
+    Bt.prototype.insert = function (data) {
+      const node = new Node(data);
+      if (!this.root) {
+        this.root = node;
+        return;
+      }
+      let current = this.root;
+      while (true) {
+        if (current.data > data) {
+          if (current.leftChild === null) {
+            current.leftChild = node;
+            break;
+          }
+          current = current.leftChild;
+        } else if (current.data < data) {
+          if (current.rightChild === null) {
+            current.rightChild = node;
+            break;
+          }
+          current = current.rightChild;
+        }
+      }
+    };
+    // 前序遍历：中左右
+    // 作用：复制一个已有的二叉树结构，性能是最高的。比重新创造一个新的二叉树的效率高十倍多。
+    function preTraverse (node) {
+      if (!node) {
+        return;
+      }
+      console.log(node.data);
+      this.preTraverse(node.leftChild);
+      this.preTraverse(node.rightChild);
+    };
+    // 中序遍历：左中右
+    // 作用：用于排序一个数组，从小到大升序排列。
+    function midTraverse (node) {
+      if (!node) {
+        return;
+      }
+      this.preTraverse(node.leftChild);
+      console.log(node.data);
+      this.preTraverse(node.rightChild);
+    };
+    // 后序遍历：左右中
+    // 作用：用于操作系统和文件系统的遍历上。
+    function afterTraverse (node) {
+      if (!node) {
+        return;
+      }
+      this.preTraverse(node.leftChild);
+      this.preTraverse(node.rightChild);
+      console.log(node.data);
+    };
+
+    // 最大值
+    function getMax(node) {
+      while (node && node.rightChild) {
+        node = node.rightChild
+      }
+      return node.data;
+    }
+
+    // 最小值
+    function getMin(node) {
+      while (node && node.leftChild) {
+        node = node.leftChild
+      }
+      return node.data;
+    }
+
+    // 查找值
+    function search(node, val) {
+      if (node.data === val) {
+        return node;
+      } else if (node.leftChild && node.data > val) {
+        return search(node.leftChild, val);
+      } else if (node.rightChild && node.data < val) {
+        return search(node.rightChild, val);
+      }
+      return null;
+    }
+
+    // 找到最小值节点,最值节点父节点
+    function findNode(parentNode,node){
+      if(node) {
+        while(node && node.leftChild !== null){
+          parentNode = node;
+          node = node.leftChild;
+        }
+        return {
+          parentNode,
+          node,
+        };
+      }
+      return null;
+    }
+
+    // 删除某个节点, 下面是错的，c语言是指针，这里不行。
+    // function deleteFn(node, val) {
+    //   if (!node) {
+    //     return null;
+    //   }
+    //   let nodeCur = search(node, val);
+    //   if (!nodeCur) {
+    //     return node;
+    //   }
+    //   // 不存在左右节点
+    //   if (!nodeCur.leftChild && !nodeCur.rightChild) {
+    //     console.log(nodeCur)
+    //     nodeCur = null;
+    //     return node;
+    //   }
+    //   console.log(node)
+    //   // 左节点不存在
+    //   if (!nodeCur.leftChild) {
+    //     nodeCur = nodeCur.rightChild;
+    //     return node;
+    //   }
+    //   // 右节点不存在
+    //   if (!nodeCur.rightChild) {
+    //     nodeCur = nodeCur.leftChild;
+    //     return node;
+    //   }
+    //   // 左右节点都存在
+    //   // 1、右节点的最小值节点就是删除节点的下一个右节点（即此节点没有左子树，nodeCur.rightChild.leftChild === null），
+    //   // 此时交换值，nodeCur.rightChild = nodeCur.rightChild.rightChild;
+    //   // 2、找到右节点的最小值节点，最小值节点的父节点，交换值nodeCur和最小值，最小节点的右节点挂载到父节点的左节点。
+    //
+    //   if (nodeCur.rightChild.leftChild === null) {
+    //     nodeCur.rightChild = nodeCur.rightChild.rightChild;
+    //     return node;
+    //   }
+    //
+    //   const result = findNode(nodeCur, nodeCur.rightChild);
+    //   nodeCur.data = result.node.data;
+    //   result.parentNode.leftChild = result.node.rightChild;
+    //   result.node = null;
+    //
+    //   return node;
+    // }
+
+    // 找到最小值节点
+    const findMinNode = function(node){
+      if(node) {
+        while(node && node.leftChild !== null){
+          node = node.leftChild;
+        }
+        return node;
+      }
+      return null;
+    }
+    // 删除叶子节点方法+删除中间节点的方法
+    var removeNode = function(node,removeKey){
+      if(node === null){//判断整个二叉树是否为空
+        return null;
+      }//
+      if(removeKey < node.data){//判断要删除的值与当前节点的值是否相等
+        node.leftChild = removeNode(node.leftChild,removeKey);//如果不相等，那就站在node.left这个节点上，继续调用一遍删除节点的函数
+        return node;//如果他的子节点刚好是要删除的那个，删完回来后返回node
+      }else if(removeKey > node.data){//同理node.leftChild
+        node.rightChild = removeNode(node.rightChild,removeKey);
+        return node;
+      }else{//当前节点的值刚好等于要删除的值，
+        // 如果左右两个节点都没有（就是叶子节点）
+        if(node.leftChild === null && node.rightChild === null){//并且符合叶子节点的特点：左右子节点都为空；
+          node = null;//把当前节点设为空表示删除这个节点了。
+          return node;
+        };
+
+
+        //删除中间节点（即有子节点的节点)
+        // 如果左子节点为空，则将本节点等于他的右节点
+        if(node.leftChild === null){//如果中间节点只有右孩子
+          node = node.rightChild;
+          return node;
+        }else if(node.rightChild === null){//如果中间节点只有左孩子
+          node = node.leftChild;// 即右子节点为空，则将本节点等于他的左节点
+          return node;
+        }
+        // 如果左右两个节点都有
+        // 找到这个中间节点的右孩子的最小的左孩子，然后把值复制下来，再把这个孩子删除掉（相当于把这个孩纸移动过来了)
+        var aux = findMinNode(node.rightChild);
+        node.data = aux.data;
+        node.rightChild = removeNode(node.rightChild,aux.data);
+      }
+    };
+
+    function Bfs(node) {
+      if (!node) {
+        return;
+      }
+      const que = [];
+      que.push(node);
+      while(que.length !== 0) {
+        node = que.shift();
+        console.log(node.data);
+        if(node.leftChild) que.push(node.leftChild);
+        if(node.rightChild) que.push(node.rightChild);
+      }
+    }
+    const bt = new Bt();
+    const testArr = [8,3,10,1,6,14,4,7,12,13];
+    testArr.forEach((v) => {
+      bt.insert(v)
+    });
+    midTraverse(bt.root);
+    console.log('max:', getMax(bt.root));
+    // console.log(bt.root);
+    // search(bt.root, 1);
+
+    // bt.root = deleteFn(bt.root, 1);
+    console.log(bt.root);
+    bt.root = removeNode(bt.root, 1);
+    console.log(bt.root);
+
+    Bfs(bt.root);
+</script>
+</body>
+</html>
