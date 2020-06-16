@@ -5,6 +5,7 @@ const styleArr = []; // 拼接css，添加到div
 
 // 创建右侧预览
 function scanInit(el, styleArrParam) {
+  el.innerHTML = ''; // 删除所有子元素
   const tempFra = document.createDocumentFragment();
   for (let i = 0; i < styleArrParam.length; i++) {
     const ele = document.createElement('div');
