@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>getVoices</title>
+    <style>
+        .content {
+            padding: 10px 0;
+        }
+        textarea {
+            display: block;
+            width: 400px;
+            height: 200px;
+        }
+    </style>
+</head>
+<body>
+<h3>当前设备上所有可用语音的对象</h3>
+<select id="voiceSelect"></select>
+<div class="content">
+    <textarea id="content">
+不要问我一生曾经爱过多少人，
+你不懂我上尤多森纳，（上尤多森纳～～～），
+要剥开伤口总是很残忍，
+劝你莫做那个神磋磋的人啊，
+多情暂且爆刘继芬，（爆刘继芬呐～～～），
+不喜欢孤独却又害怕两个人相处，
+这分明是一种痛苦，（嗨呀，好痛苦啊～～～）　
+在人多时候最沉默笑容也寂寞，
+在万丈红尘中啊找个堂客来爱我，
+当我避开你的柔情后泪开始滑落，
+你莫说莫想莫应该 我谢了你的爱，
+我不得不存在嘿 像一颗尘埃，
+还是会带给你伤害，
+你莫说莫想莫应该，我谢了你的爱，
+我不得不存在啊在你的未来，
+最怕这样就是带你永远的伤害，
+    </textarea>
+    <button id="speak">朗读</button>
+</div>
+<script>
+  /**
+   * speechSynthesis.getVoices
+   * 获取当前设备上所有可用语音的对象，生成下拉
+   */
+  let voices = [];
+  function populateVoiceList() {
+    if(typeof speechSynthesis === 'undefined') {
+      alert('当前浏览器不支持此功能')
+      return;
+    }
+
+    voices = speechSynthesis.getVoices();
+    if (!voices.length) {
+      return;
+    }
+    const fragment = document.createDocumentFragment();
+    for(let i = 0; i < voices.length; i++) {
+      // localService 本地为true时候才会有声音
+      if (voices[i].localService) {
+        let option = document.createElement('option');
+        option.textContent = voices[i].name + ' (' + voices[i].lang + ')';
+
+        if(voices[i].default) {
+          option.textContent += ' -- DEFAULT';
+        }
+
+        option.setAttribute('data-lang', voices[i].lang);
+        option.setAttribute('data-name', voices[i].name);
+        option.value = i;
+        fragment.appendChild(option);
+      }
+    }
+    document.getElementById("voiceSelect").appendChild(fragment);
+  }
+
+  populateVoiceList();
+  if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {
+    // onvoiceschanged，getVoices虽然是异步，但是又会立即返回空数组。必须等待事件触发后才能填充列表，
+    speechSynthesis.onvoiceschanged = populateVoiceList;
+  }
+
+  function speakFn(language) {
+    language = language || voices.find(voice => voice.lang.startsWith(document.querySelector('html').lang));
+    console.log(language)
+    if (!language) return;
+    let utterThis = new SpeechSynthesisUtterance(document.querySelector('#content').value);
+    utterThis.rate = 0.8;
+    utterThis.voice = language;
+    speechSynthesis.speak(utterThis);
+  }
+
+  const speak = document.querySelector('#speak');
+  let language;
+
+  speak.addEventListener('click', function () {
+    speakFn(language);
+  });
+
+  const voiceSelect = document.querySelector('#voiceSelect');
+  voiceSelect.addEventListener('change', function (e) {
+    language = voices[e.target.value]
+  });
+</script>
+</body>
+</html>

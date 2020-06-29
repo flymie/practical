@@ -36,3 +36,4 @@
 * [书翻页](https://flymie.github.io/practical/css-attr/book.html)
 * [css控制方向一些自己想法](https://flymie.github.io/practical/css-attr/direction-css.html)
 * [clip-path](https://flymie.github.io/practical/clipPath/index.html)
+* [speechSynthesis，文字转语言api](https://flymie.github.io/practical/css-attr/getVoices.html)
