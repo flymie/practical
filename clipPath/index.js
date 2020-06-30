@@ -1,86 +1,88 @@
-const divArr = [];
+const divArr = []; // 右侧缩略图
+const canvasWidth = 600; // 初始化画布宽高
+const canvasHeight = 600;
+const styleArr = []; // 拼接css，添加到div
+
 // 创建右侧预览
-function scanFn(el) {
+function scanInit(el, styleArrParam) {
+  el.innerHTML = ''; // 删除所有子元素
   const tempFra = document.createDocumentFragment();
-  for (let i = 0; i < 36; i++) {
+  for (let i = 0; i < styleArrParam.length; i++) {
     const ele = document.createElement('div');
     const div = document.createElement('div');
     ele.append(div);
+    div.style = styleArrParam[i];
     tempFra.append(ele);
     divArr.push(div);
   }
   el.append(tempFra);
 }
 
-const canvasWidth = 600;
-const canvasHeight = 600;
-const styleArr = []; // 拼接css，添加到div
-
-// 画板
+// 记录每次划线的操作；
 const pointArr = [
-  // {
-  //   endX: 281,
-  //   endY: 100,
-  //   startX: 101,
-  //   startY: 115,
-  // },
-  // {
-  //   endX: 274,
-  //   endY: 322,
-  //   startX: 281,
-  //   startY: 100,
-  // },
-  // {
-  //   endX: 101,
-  //   endY: 115,
-  //   startX: 274,
-  //   startY: 322,
-  //   fillStyle: 'red',
-  // },
-  // {
-  //   endX: 430,
-  //   endY: 207,
-  //   startX: 357,
-  //   startY: 209,
-  // },
-  // {
-  //   endX: 430,
-  //   endY: 282,
-  //   startX: 430,
-  //   startY: 207,
-  // },
-  // {
-  //   endX: 357,
-  //   endY: 209,
-  //   startX: 430,
-  //   startY: 282,
-  //   fillStyle: 'red',
-  // },
-  // {
-  //   endX: 225,
-  //   endY: 521,
-  //   startX: 189,
-  //   startY: 436,
-  // },
-  // {
-  //   endX: 176,
-  //   endY: 19,
-  //   startX: 35,
-  //   startY: 19,
-  // },
-  // {
-  //   endX: 579,
-  //   endY: 377,
-  //   startX: 481,
-  //   startY: 372,
-  // },
-  // {
-  //   endX: 498,
-  //   endY: 495,
-  //   startX: 387,
-  //   startY: 502,
-  // },
-]; // 记录每次划线的操作；
+  {
+    endX: 281,
+    endY: 100,
+    startX: 101,
+    startY: 115,
+  },
+  {
+    endX: 274,
+    endY: 322,
+    startX: 281,
+    startY: 100,
+  },
+  {
+    endX: 101,
+    endY: 115,
+    startX: 274,
+    startY: 322,
+    fillStyle: 'red',
+  },
+  {
+    endX: 430,
+    endY: 207,
+    startX: 357,
+    startY: 209,
+  },
+  {
+    endX: 430,
+    endY: 282,
+    startX: 430,
+    startY: 207,
+  },
+  {
+    endX: 357,
+    endY: 209,
+    startX: 430,
+    startY: 282,
+    fillStyle: 'red',
+  },
+  {
+    endX: 225,
+    endY: 521,
+    startX: 189,
+    startY: 436,
+  },
+  {
+    endX: 176,
+    endY: 19,
+    startX: 35,
+    startY: 19,
+  },
+  {
+    endX: 579,
+    endY: 377,
+    startX: 481,
+    startY: 372,
+  },
+  {
+    endX: 498,
+    endY: 495,
+    startX: 387,
+    startY: 502,
+  },
+];
 // pointArr = [{
 //   startX: 1,
 //   startY: 1,
@@ -89,7 +91,7 @@ const pointArr = [
 //   fillStyle: 'red', // 如果有则填充
 // }];
 
-// 画一个矩形用于辅助
+// 在线的两端画一个矩形用于辅助，用于闭合
 function rectFn(ctx, x, y) {
   ctx.beginPath();
   ctx.rect(x - 3, y - 3, 6, 6);
@@ -126,8 +128,8 @@ function nearFn(x, y) {
 }
 
 function canvasInit(canvas) {
-  canvas.width = 600;
-  canvas.height = 600;
+  canvas.width = canvasWidth;
+  canvas.height = canvasHeight;
   const ctx = canvas.getContext('2d');
 
   ctx.clearRect(0, 0, 600, 600);
@@ -275,7 +277,7 @@ function resetFn(canvas) {
 }
 
 // 填充
-function paddingFn(canvas, color = paddingColor) {
+function paddingFn(canvas, color = '#ff0000') {
   const len = pointArr.length - 1; // 取最后一个
   // 至少有三个点才可以填充
   if (!pointArr[len - 1].fillStyle && !pointArr[len - 2].fillStyle) {
@@ -310,14 +312,15 @@ function thumbnailFn() {
       i++;
     }
   }
-  divArr.forEach((v, index) => {
-    v.style = styleArr[index] || '';
-  });
+  scanInit(document.querySelector('.right'), styleArr);
+  // divArr.forEach((v, index) => {
+  //   v.style = styleArr[index] || '';
+  // });
 
   console.log(styleArr);
 }
 
-function popCssFn(className) {
+function copyCssFn(className) {
   const cssArr = [];
   // clip-path: polygon(0% 0%, 100% 0%, 100% 4px, 0% 4px);
   for (let i = 0, len = pointArr.length; i < len;) {
@@ -345,8 +348,17 @@ function popCssFn(className) {
   //
   // }
   cssArr.forEach((v, index) => {
-    cssStr += `${className} >div:nth-child(${index + 1}){${v}}`;
+    cssStr += `.${className} >div:nth-child(${index + 1}){${v}} \n`;
   });
+
+  // 用浏览器执行复制, 注意input是不会保留换行的。
+  const input = document.createElement('textarea');
+  document.body.append(input);
+  input.value = cssStr;
+  input.select(); // 选中文本
+  document.execCommand('copy'); // 执行浏览器复制命令
+  document.body.removeChild(input);
+  alert('复制成功');
 
   console.log(cssStr);
 }
