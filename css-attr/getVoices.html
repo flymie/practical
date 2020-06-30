@@ -19,24 +19,17 @@
 <select id="voiceSelect"></select>
 <div class="content">
     <textarea id="content">
-不要问我一生曾经爱过多少人，
-你不懂我上尤多森纳，（上尤多森纳～～～），
-要剥开伤口总是很残忍，
-劝你莫做那个神磋磋的人啊，
-多情暂且爆刘继芬，（爆刘继芬呐～～～），
-不喜欢孤独却又害怕两个人相处，
-这分明是一种痛苦，（嗨呀，好痛苦啊～～～）　
-在人多时候最沉默笑容也寂寞，
-在万丈红尘中啊找个堂客来爱我，
-当我避开你的柔情后泪开始滑落，
-你莫说莫想莫应该 我谢了你的爱，
-我不得不存在嘿 像一颗尘埃，
-还是会带给你伤害，
-你莫说莫想莫应该，我谢了你的爱，
-我不得不存在啊在你的未来，
-最怕这样就是带你永远的伤害，
+共虾米，哇亲秋，
+提等A仙里，
+共虾米，哇亲秋，
+狗在A写系，
+共虾米，里影哇，
+千千慢慢你，
+共虾米，梨园万，
+没来变xim已。
     </textarea>
     <button id="speak">朗读</button>
+    <button id="stop">停止</button>
 </div>
 <script>
   /**
@@ -97,6 +90,9 @@
     speakFn(language);
   });
 
+  document.querySelector('#stop').addEventListener('click', function () {
+    speechSynthesis.cancel();
+  });
   const voiceSelect = document.querySelector('#voiceSelect');
   voiceSelect.addEventListener('change', function (e) {
     language = voices[e.target.value]
