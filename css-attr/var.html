@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>variable</title>
+    <style>
+        .content {
+            width: 960px;
+            margin: 0 auto;
+        }
+        .barWrap {
+            display: flex;
+        }
+        .barWrap input {
+            width: 40px;
+            margin: 0 0 0 8px;
+        }
+        .bar {
+            height: 20px;
+            width: 300px;
+            background-color: #f5f5f5;
+        }
+        .bar::before {
+            display: block;
+            counter-reset: progress var(--percent);
+            content: counter(progress) '%\2002';
+            width: calc(1% * var(--percent));
+            color: #fff;
+            background-color: #2486ff;
+            text-align: right;
+            white-space: nowrap;
+            transition: width 0.3s ease-in-out;
+        }
+        .slider {
+            width: 300px;
+            height: 4px;
+            padding: 8px 0;
+            position: relative;
+        }
+        .slider:hover .slider_rail{
+            background-color: #e1e1e1;
+        }
+        .slider:hover .slider_track{
+            background-color: #69c0ff;
+        }
+        .slider:hover .slider-handle{
+            border-color: #69c0ff;
+        }
+        .slider_rail {
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            background-color: #f5f5f5;
+            transition: background-color .3s;
+        }
+        .slider_track {
+            position: absolute;
+            height: 4px;
+            left: calc(var(--left, 0) * 1%);
+            width: calc(var(--width, 100) * 1%);
+            background: #91d5ff;
+            transition: background-color .3s;
+        }
+        .slider-handle {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #fff;
+            border: 2px solid #91d5ff;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            margin-top: 2px;
+            transition: border-color .3s;
+        }
+        .slider-handle:hover {
+            box-shadow: 0 0 3px 2px #69c0ff;
+        }
+        .slider-left {
+            left: calc(var(--x, 0) * 1%);
+        }
+        .slider-right {
+            left: calc(var(--x, 100) * 1%);
+        }
+        .slider-right::before {
+            content: attr(data-x) '%\2002';
+            display: block;
+            position: absolute;
+            top: -24px;
+        }
+    </style>
+</head>
+<body>
+<div class="content">
+    <h4>css变量，减少js逻辑，但是有时候需要配合attr使用，权衡利弊吧。</h4>
+    <div class="barWrap" style="margin-bottom: 20px">
+        <div class="bar" style="--percent: 60;" id="bar"></div>
+        <input type="number" value="60" id="percent">
+    </div>
+    <div class="slider">
+        <div class="slider_rail"></div>
+        <div class="slider_track"></div>
+        <!--<div class="slider-handle slider-left"></div>-->
+        <div class="slider-handle slider-right"></div>
+    </div>
+</div>
+<script>
+    const percent = document.querySelector('#percent');
+    const bar = document.querySelector('#bar');
+
+    percent.addEventListener('input', function (e) {
+      const val = e.target.value;
+      bar.style.setProperty('--percent', val);
+    });
+
+    // 滑块
+    const slider = document.querySelector('.slider');
+    const sliderWidth = slider.offsetWidth;
+    const handles = slider.querySelectorAll('.slider-handle');
+    const handleLeft = slider.querySelector('.slider-left');
+    const handleRight = slider.querySelector('.slider-right');
+    const track = slider.querySelector('.slider_track');
+    handleRight.setAttribute('data-x', 100);
+    slider.addEventListener('click', function (e) {
+      const x = e.pageX - this.getBoundingClientRect().left;
+      const left = (x / sliderWidth * 100).toFixed(2);
+      handleRight.style.setProperty('--x', left);
+      track.style.setProperty('--width', left);
+    });
+    handleRight.onmousedown = function (e) {
+      const x = e.pageX - slider.getBoundingClientRect().left;
+      const left = (x / sliderWidth * 100).toFixed(2);
+      handleRight.style.setProperty('--x', left);
+      track.style.setProperty('--width', left);
+      //移动中
+      document.documentElement.onmousemove = function(e){
+        const x = e.pageX - slider.getBoundingClientRect().left;
+        const left = (x / sliderWidth * 100).toFixed(2);
+        let leftLast = left > 100 ? 100 : left;
+        leftLast = leftLast < 0 ? 0 : leftLast;
+        handleRight.style.setProperty('--x', leftLast);
+        handleRight.setAttribute('data-x', leftLast);
+        track.style.setProperty('--width', leftLast);
+      };
+      //结束
+      document.documentElement.onmouseup = function(e){
+        document.documentElement.onmouseup = document.documentElement.onmousemove = null;
+      }
+    }
+</script>
+</body>
+</html>
