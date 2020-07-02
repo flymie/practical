@@ -11,16 +11,17 @@
             min-width: 200px;
             min-height: 50px;
             overflow: hidden;
+            border: 1px dashed #91d5ff;
             position: relative;
             cursor: pointer;
         }
-        .clickEle:active{
-            background-color: rgba(0,0,0,.15);
-        }
+        /*.clickEle:active{*/
+            /*background-color: rgba(0,0,0,.15);*/
+        /*}*/
         .clickEleChild{
             position: absolute;
-            width: 200px;
-            height: 200px;
+            width: 100%;
+            padding-bottom: 100%;
             border-radius: 50%;
             background: #4285f4;
             opacity: .5;
@@ -35,13 +36,39 @@
                 transform: scale(2.5);
             }
         }
-        .test{
-            padding: 500px 0 0 0;
+        .clickEle2{
+            display: inline-block;
+            min-width: 200px;
+            min-height: 50px;
+            overflow: hidden;
+            border: 1px dashed #91d5ff;
             position: relative;
+            cursor: pointer;
+        }
+        .clickEle2::after {
+            z-index: -1;
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: var(--x, 0);
+            top: var(--y, 0);
+            pointer-events: none;
+            background: radial-gradient(circle at 50% 50%, #4285f4 20%, transparent 20.01%) no-repeat 50%;
+            transform: translate(-50%,-50%) scale(10);
+            opacity: 0;
+            transition: transform .8s, opacity .8s;
+        }
+        .clickEle2:active::after {
+            transform: translate(-50%,-50%) scale(0);
+            opacity: .3;
+            transition: 0s;
         }
     </style>
 </head>
 <body>
+<div id="js">
+    <h4>通过大量js操作</h4>
     <div class="clickEle">
         点击看一下
     </div>
@@ -54,8 +81,25 @@
     <div class="clickEle">
         点击看一下
     </div>
+</div>
+<div id="css">
+    <h4>通过css变量，js此时只是工具人</h4>
+    <div class="clickEle2">
+        点击看一下
+    </div>
+    <div class="clickEle2">
+        点击看一下
+    </div>
+    <div class="clickEle2">
+        点击看一下
+    </div>
+    <div class="clickEle2">
+        点击看一下
+    </div>
+</div>
 <script>
-    const clickEles = document.querySelectorAll('.clickEle');
+    // 方法1：
+    const clickEles = document.querySelectorAll('#js .clickEle');
     Array.prototype.forEach.call(clickEles, (el) => {
       el.addEventListener('click', function (e) {
         const hasDiv = el.querySelector('.clickEleChild');
@@ -76,6 +120,17 @@
             hasDiv.classList.add('clickAn');
           // },0);
         }
+      })
+    })
+    // 方法2：
+    const clickEles2 = document.querySelectorAll('#css .clickEle2');
+    Array.prototype.forEach.call(clickEles2, (el) => {
+      el.addEventListener('click', function (e) {
+        const x = e.pageX - this.getBoundingClientRect().left;
+        const y = e.pageY - this.getBoundingClientRect().top;
+        console.log(e.pageX, e.pageY, x, y)
+        el.style.setProperty('--x', x + 'px');
+        el.style.setProperty('--y', y + 'px');
       })
     })
 </script>
