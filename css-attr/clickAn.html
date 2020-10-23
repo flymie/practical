@@ -103,8 +103,8 @@
     Array.prototype.forEach.call(clickEles, (el) => {
       el.addEventListener('click', function (e) {
         const hasDiv = el.querySelector('.clickEleChild');
-        const left = e.pageX - this.getBoundingClientRect().left - 100;
-        const top = e.pageY - this.getBoundingClientRect().top - 100;
+        const left = e.clientX - this.getBoundingClientRect().left - 100;
+        const top = e.clientY - this.getBoundingClientRect().top - 100;
         const iStyle = `left: ${left}px; top: ${top}px`;
         console.log(iStyle)
         if (!hasDiv) {
@@ -126,9 +126,9 @@
     const clickEles2 = document.querySelectorAll('#css .clickEle2');
     Array.prototype.forEach.call(clickEles2, (el) => {
       el.addEventListener('click', function (e) {
-        const x = e.pageX - this.getBoundingClientRect().left;
-        const y = e.pageY - this.getBoundingClientRect().top;
-        console.log(e.pageX, e.pageY, x, y)
+        const x = e.clientX - this.getBoundingClientRect().left;
+        const y = e.clientY - this.getBoundingClientRect().top;
+        console.log(e.clientX, e.clientY, x, y)
         el.style.setProperty('--x', x + 'px');
         el.style.setProperty('--y', y + 'px');
       })

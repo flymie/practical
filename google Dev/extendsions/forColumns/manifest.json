@@ -1,0 +1,22 @@
+{
+  "name": "forColumns",
+  "version": "1.0.0",
+  "description": "Shineout Columns",
+  "manifest_version": 2,
+  "background": {
+    "persistent": false,
+    "scripts": ["background.js"]
+  },
+  "permissions" : [
+    "*://*/*",
+    "tabs"
+  ],
+  "browser_action": {
+    "default_icon": "./images/icon.png",
+    "default_popup": "popup.html"
+  },
+  "content_scripts":[{
+    "js": [ "content_script.js" ],
+    "matches": ["<all_urls>"]
+  }]
+}
