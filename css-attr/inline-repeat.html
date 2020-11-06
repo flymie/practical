@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .underline {
+            background-image: linear-gradient(90deg, #ea7c7c 0%, #f30606 100%);
+            background-position: 0px 95%;
+            background-size: 0px 2px;
+            background-repeat: no-repeat;
+        }
+        .underline:hover {
+            background-size: 100% 2px;
+            transition: background-size 80s linear 0s;
+        }
+    </style>
+</head>
+<body>
+<span class="underline">
+    hover可以看一下效果。我感觉这可以在广告阅读时候给一个辅助，告诉读者此时文字会停留多少时间。这个使用inline元素配合属性：linear-gradient、
+    background-size、background-repeat、background-position。因为行内元素盒子超过了行内元素盒子的宽带，如果可以分割就会换行，被隔断，
+    不换行就回溢出。background-size，当使用百分比时候，是相对于背景区域的百分比，第一个值是宽度，第二个值是高度。因为只是为了画一条线，
+    此时一定要写上background-repeat: no-repeat，这样所展示的效果就可以解释了。此外，这个属性-webkit-box-decoration-break: clone;
+    这个时候就使用了，就会导致每行都会同步渲染，属性本来就是要形成这样的效果，效果可以自己试一试。
+</span>
+</body>
+</html>

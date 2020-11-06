@@ -38,4 +38,4 @@
 * [clip-path](https://flymie.github.io/practical/clipPath/index.html)
 * [speechSynthesis，文字转语言api](https://flymie.github.io/practical/css-attr/getVoices.html)
 * [css 变量](https://flymie.github.io/practical/css-attr/var.html)
-
+* [行内元素下使用background相关属性的动画效果](https://flymie.github.io/practical/css-attr/inline-repeat.html)
