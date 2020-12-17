@@ -39,3 +39,4 @@
 * [speechSynthesis，文字转语言api](https://flymie.github.io/practical/css-attr/getVoices.html)
 * [css 变量](https://flymie.github.io/practical/css-attr/var.html)
 * [行内元素下使用background相关属性的动画效果](https://flymie.github.io/practical/css-attr/inline-repeat.html)
+* [使用canvas进行明水印、暗水印的处理](https://flymie.github.io/practical/css-attr/waterMark.html)
