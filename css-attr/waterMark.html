@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>关于css属性的clip-path</title>
+    <style>
+        .watermark {
+            position: fixed;
+            top: 0px;
+            right: 0px;
+            bottom: 0px;
+            left: 0px;
+            pointer-events: none;
+            background-repeat: repeat;
+        }
+        .picWrap {
+            display: flex;
+            justify-content: space-between;
+            text-align: center;
+            min-height: 500px;
+        }
+        .picWrap >div {
+            flex: 1;
+        }
+        .picWrap img {
+            width: 300px;
+        }
+    </style>
+</head>
+<body lang="en">
+    <div class="watermark"></div>
+    <!--<canvas id="canvas" width="240" height="240"></canvas>-->
+    <div class="picWrap">
+        <div>
+            <p>处理前图片</p>
+            <img src="" alt="待选择图片" id="img1">
+        </div>
+        <div>
+            <p>加入暗水印后的加密图片</p>
+            <img src="" alt="加密后的图片" id="img2">
+        </div>
+        <div>
+            <p>解密后的效果</p>
+            <img src="" alt="解密后的效果" id="img3">
+        </div>
+    </div>
+    <hr/>
+    <input type="file" id="file" />
+    <input type="text" placeholder="请输入水印文字" id="text" />
+    <button id="encode">加入暗水印</button>
+    <button id="decode">解密加密后的图片</button>
+<script>
+  // 选择需要观察变动的节点
+  // const targetNode = document.getElementById('some-id');
+
+  // 观察器的配置（需要观察什么变动）
+  // const config = { attributes: true, childList: true, subtree: true };
+
+  // 当观察到变动时执行的回调函数
+  // const callback = function(mutationsList, observer) {
+  //   // Use traditional 'for loops' for IE 11
+  //   for(let mutation of mutationsList) {
+  //     if (mutation.type === 'childList') {
+  //       console.log('A child node has been added or removed.');
+  //     }
+  //     else if (mutation.type === 'attributes') {
+  //       console.log('The ' + mutation.attributeName + ' attribute was modified.');
+  //     }
+  //   }
+  // };
+
+  // 创建一个观察器实例并传入回调函数
+  // const observer = new MutationObserver(callback);
+
+  // 以上述配置开始观察目标节点
+  // observer.observe(targetNode, config);
+
+  // 之后，可停止观察
+  // observer.disconnect();
+</script>
+<script>
+  /**
+   * 明水印
+   * @param options
+   * @returns {string}
+   */
+  function createWaterMark(options) {
+    const {
+      angle = -20,
+      txt = '水印',
+      width = 180,
+      height = 100,
+      fillStyle = '#000',
+      opacity = 0.2,
+      font = '24px serif',
+    } = options;
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = width;
+    canvas.height = height;
+    ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = fillStyle;
+    ctx.globalAlpha = opacity;
+    ctx.rotate(Math.PI / 180 * angle);
+    ctx.font = font;
+    ctx.fillText(txt, 0, 50);
+    return canvas.toDataURL();
+  }
+  const watermark = document.querySelector('.watermark');
+  const base64 = createWaterMark({
+    txt: '水印',
+  });
+  // watermark.style.backgroundImage = `url(${base64})`;
+
+  // 选择需要观察变动的节点
+  const targetNode = document.body;
+
+  // 观察器的配置（需要观察什么变动）
+  const config = { attributes: true, childList: true, subtree: true };
+
+  // 当观察到变动时执行的回调函数
+  const callback = function(mutationsList, observer) {
+    // Use traditional 'for loops' for IE 11
+    for(let mutation of mutationsList) {
+      mutation.removedNodes.forEach(function (item) {
+        if (item.className.includes('watermark')) {
+          console.log('观察到消除水印操作')
+        }
+      });
+    }
+  };
+
+  // 创建一个观察器实例并传入回调函数
+  const observer = new MutationObserver(callback);
+
+  // 以上述配置开始观察目标节点
+  observer.observe(targetNode, config);
+</script>
+<script>
+  /**
+   *   下面是暗水印
+   *
+   */
+  let mergeData = function (newData, color, originalData) {
+    let oData = originalData.data;
+    let bit, offset;  // offset的作用是找到alpha通道值
+
+    switch (color) {
+      case 'R':
+        bit = 0;
+        offset = 3;
+        break;
+      case 'G':
+        bit = 1;
+        offset = 2;
+        break;
+      case 'B':
+        bit = 2;
+        offset = 1;
+        break;
+    }
+
+    for (let i = 0; i < oData.length; i++) {
+      if (i % 4 === bit) {
+        // 只处理目标通道
+        if (newData[i + offset] === 0 && (oData[i] % 2 === 1)) {
+          // 没有信息的像素，该通道最低位置0，但不要越界
+          if (oData[i] === 255) {
+            oData[i]--;
+          } else {
+            oData[i]++;
+          }
+        } else
+          if (newData[i + offset] !== 0 && (oData[i] % 2 === 0)) {
+          // // 有信息的像素，该通道最低位置1，可以想想上面的斑点效果是怎么实现的
+          oData[i]++;
+        }
+      }
+    }
+    return originalData;
+  };
+  const processData = function (originalData) {
+    let data = originalData.data;
+    for (let i = 0; i < data.length; i++) {
+      if (i % 4 === 0) {
+        // R分量
+        if (data[i] % 2 === 0) {
+          data[i] = 0;
+        } else {
+          data[i] = 255;
+        }
+      } else if (i % 4 === 3) {
+        // alpha通道不做处理
+        continue;
+      } else {
+        // 关闭其他分量，不关闭也不影响答案
+        data[i] = 0;
+      }
+    }
+    return originalData;
+  };
+  function encodeImg(src, text) {
+    let img = new Image();
+    img.src = src;
+
+    return new Promise(resolve => {
+      img.onload = function () {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = this.width;
+        canvas.height = this.height;
+
+        ctx.font = '30px Microsoft Yahei';
+        ctx.fillText(text, 60, 130);
+
+        const textData = ctx.getImageData(0, 0, this.width, this.height).data;
+        // 获取指定区域的canvas像素信息
+        ctx.drawImage(img, 0, 0);
+        const originalData = ctx.getImageData(0, 0, this.width, this.height);
+        const resultData = mergeData(textData, 'R', originalData);
+        ctx.putImageData(resultData, 0, 0);
+
+        resolve(canvas.toDataURL());
+      };
+    });
+  }
+
+  function decodeImg(src) {
+
+    let img = new Image();
+    img.src = src;
+
+    return new Promise(resolve => {
+      img.onload = function () {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = this.width;
+        canvas.height = this.height;
+
+        // 获取指定区域的canvas像素信息
+        ctx.drawImage(img, 0, 0);
+        const originalData = ctx.getImageData(0, 0, this.width, this.height);
+        const resultData = processData(originalData);
+        ctx.putImageData(resultData, 0, 0);
+
+        resolve(canvas.toDataURL());
+      };
+    });
+  }
+
+  const img1 = document.querySelector('#img1');
+  const img2 = document.querySelector('#img2');
+  const img3 = document.querySelector('#img3');
+
+
+  // 选择图片
+  const file = document.querySelector('#file');
+  file.addEventListener('change', function (event) {
+    // console.log(event.target.files[0]);
+    // 生成一个文件读取的对象
+    const reader = new FileReader();
+    reader.onload = function (ev) {
+      // console.log(ev.target.result);
+      img1.src = ev.target.result;
+    };
+    //发起异步读取文件请求，读取结果为data:url的字符串形式，
+    reader.readAsDataURL(event.target.files[0]);
+  });
+
+  // 加入暗水印
+    const encode = document.querySelector('#encode');
+    const text = document.querySelector('#text');
+    encode.addEventListener('click', function () {
+      const str = text.value;
+      encodeImg(img1.src, str).then(val => {
+        img2.src = val;
+      });
+    });
+
+  // 处理加水印后的效果图片
+  const decode = document.querySelector('#decode');
+  decode.addEventListener('click', function () {
+    const str = text.value;
+    decodeImg(img2.src, str).then(val => {
+      img3.src = val;
+    });
+  });
+</script>
+</body>
+</html>
