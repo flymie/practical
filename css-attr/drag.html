@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>拖拽</title>
+    <style>
+        .flex {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        li {
+            width: 100px;
+            height: 100px;
+            text-align: center;
+            line-height: 100px;
+            border: 1px dashed;
+            list-style: none;
+            transition: transform ease-in-out;
+        }
+        [draggable="true"] {
+            cursor: move;
+        }
+    </style>
+</head>
+<body>
+<h2>简易实现，有缺陷，待优化</h2>
+    <ul class="flex">
+        <li
+                data-ind="0"
+            draggable="true"
+            ondragend="dragEnd()"
+            ondragenter="dragenter(event)"
+            ondragstart="dragStart(event)"
+            ondragleave="dragleave(event)"
+        >
+            0
+        </li>
+        <li
+                data-ind="1"
+            draggable="true"
+            ondragend="dragEnd()"
+            ondragenter="dragenter(event)"
+            ondragstart="dragStart(event)"
+                ondragleave="dragleave(event)"
+
+        >
+            1
+        </li>
+        <li
+                data-ind="2"
+            draggable="true"
+            ondragend="dragEnd()"
+            ondragenter="dragenter(event)"
+            ondragstart="dragStart(event)"
+                ondragleave="dragleave(event)"
+        >
+            2
+        </li>
+        <li
+                data-ind="3"
+            draggable="true"
+            ondragend="dragEnd()"
+            ondragenter="dragenter(event)"
+            ondragstart="dragStart(event)"
+                ondragleave="dragleave(event)"
+        >
+            3
+        </li>
+        <li
+                data-ind="4"
+                draggable="true"
+                ondragend="dragEnd()"
+                ondragenter="dragenter(event)"
+                ondragstart="dragStart(event)"
+                ondragleave="dragleave(event)"
+        >
+            4
+        </li>
+        <li
+                data-ind="5"
+                draggable="true"
+                ondragend="dragEnd()"
+                ondragenter="dragenter(event)"
+                ondragstart="dragStart(event)"
+                ondragleave="dragleave(event)"
+        >
+            5
+        </li>
+        <li
+                data-ind="6"
+                draggable="true"
+                ondragend="dragEnd()"
+                ondragenter="dragenter(event)"
+                ondragstart="dragStart(event)"
+                ondragleave="dragleave(event)"
+        >
+            6
+        </li>
+        <li
+                data-ind="7"
+                draggable="true"
+                ondragend="dragEnd()"
+                ondragenter="dragenter(event)"
+                ondragstart="dragStart(event)"
+                ondragleave="dragleave(event)"
+        >
+            7
+        </li>
+        <li
+                data-ind="8"
+                draggable="true"
+                ondragend="dragEnd()"
+                ondragenter="dragenter(event)"
+                ondragstart="dragStart(event)"
+                ondragleave="dragleave(event)"
+        >
+            8
+        </li>
+    </ul>
+
+<script>
+  const lis = document.querySelectorAll('li'); // dom是只读的。
+  const lisIndArr = Array.from({ length: lis.length }, (_, ind) => ind); // 用来维护lis变化后的索引,即真实位置。
+  const styles = [];
+  const offsets = []; // 偏移量,
+
+  Array.prototype.forEach.call(lis, (v, ind) => {
+    styles.push({
+      x: v.getBoundingClientRect().left,
+      y: v.getBoundingClientRect().top,
+    });
+    offsets.push({x: 0, y: 0});
+  });
+  // console.log(styles)
+
+  let selected;
+  let selectedInd;
+
+  function dragenter(e) {
+    const ind = +e.target.dataset.ind;
+    const enterInd = lisIndArr.findIndex(v => v === ind);
+
+    console.log({enterInd, selectedInd})
+    if (enterInd === selectedInd) {
+      return;
+    }
+    // 拖拽的元素一定要最后偏移赋值
+    const sx = styles[enterInd].x -  styles[selectedInd].x + offsets[lisIndArr[selectedInd]].x;
+    const sy = styles[enterInd].y -  styles[selectedInd].y + offsets[lisIndArr[selectedInd]].y;
+
+    if (enterInd < selectedInd) {
+      for (let i = selectedInd - 1; i >= enterInd; i--) {
+        const x = styles[i + 1].x -  styles[i].x + offsets[lisIndArr[i]].x;
+        const y = styles[i + 1].y -  styles[i].y + offsets[lisIndArr[i]].y;
+        lis[lisIndArr[i]].style.cssText = `transform: translate3d(${x}px, ${y}px, 0); transition-duration: 0.4s;`;
+        // 更新偏移量
+        offsets[lisIndArr[i]].x = x;
+        offsets[lisIndArr[i]].y = y;
+      }
+      // console.log(sx, 1)
+
+    } else {
+
+      for (let i = selectedInd + 1; i <= enterInd; i++) {
+        const x = styles[i - 1].x -  styles[i].x + offsets[lisIndArr[i]].x;
+        const y = styles[i - 1].y -  styles[i].y + offsets[lisIndArr[i]].y;
+        lis[lisIndArr[i]].style.cssText = `transform: translate3d(${x}px, ${y}px, 0); transition-duration: 0.4s;`;
+        // 更新偏移量
+        offsets[lisIndArr[i]].x = x;
+        offsets[lisIndArr[i]].y = y;
+      }
+
+    }
+
+    // 更新拖拽的元素偏移量
+    offsets[lisIndArr[selectedInd]].x = sx;
+    offsets[lisIndArr[selectedInd]].y = sy;
+
+    lisIndArr.splice(enterInd, 0, ...lisIndArr.splice(selectedInd, 1));
+    // 赋值为新的索引，即位置
+    selectedInd = enterInd;
+
+    console.table(
+      JSON.stringify(offsets.slice(0, 2)),
+      JSON.stringify(lisIndArr.slice(0, 2)),
+      selectedInd);
+  }
+
+  function dragleave(e) {
+  }
+
+  function dragenter1(e) {
+    //  向前拖拽 向后拖拽 
+    // 拖动目标(drop)是不是在拖拽源(drag)的前面       
+    if (isBefore(selected, e.target)){
+      e.target.parentNode.insertBefore(selected, e.target);
+    } else {
+      e.target.parentNode.insertBefore(selected, e.target.nextSibling);
+    }
+  }
+
+  function dragEnd() {
+    selected.style.cssText = `
+        opacity: '';
+        visibility: '';
+        transform: translate3d(${offsets[lisIndArr[selectedInd]].x}px, ${offsets[lisIndArr[selectedInd]].y}px, 0);
+        transition-duration: 0;
+    `;
+    selected = null;
+    console.log('排序：', lisIndArr)
+  }
+
+  function dragStart(e) {
+    selected = e.target;
+    const ind = +selected.dataset.ind;
+    selectedInd = lisIndArr.findIndex(v => v === ind); // 取得索引，即排序后的位置
+    // e.dataTransfer.setDragImage();
+    setTimeout(() => {
+      selected.style.opacity = 0;
+      selected.style.visibility = 'hidden';
+    }, 0);
+    // console.log(selected, selected.parentNode);
+  }      
+
+  function isBefore(el1, el2) {
+    if (el2.parentNode !== el1.parentNode) {
+      return false;
+    }
+    let cur;
+    for (cur = el1.previousSibling; cur; cur = cur.previousSibling) {
+      if (cur === el2)
+        return true;
+    }
+    return false;
+  }
+</script>
+</body>
+</html>
