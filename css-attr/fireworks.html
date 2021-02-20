@@ -8,79 +8,37 @@
             margin: 0;
             padding: 0;
         }
+        canvas {
+            z-index: -1;
+            position: absolute;
+        }
     </style>
 </head>
 <body>
-      <canvas id="canvas"></canvas>
+<canvas id="canvas"></canvas>
 <script>
-    const canvas = document.querySelector('#canvas');
-    const context = canvas.getContext('2d');
-
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-
-      context.fillStyle = '#000';
-      context.fillRect(0,0,canvas.width, canvas.height);
+  class Fire {
+    constructor(canvasEle) {
+      this.canvas = canvasEle;
+      this.ctx = canvas.getContext('2d');
+      this.rid = null;
+      this.particles = [];
     }
 
-    function clearCanvas(){
-      context.fillStyle = '#000';
-      context.fillRect(0,0,canvas.width, canvas.height);
+    init() {
+      this.canvas.width = window.innerWidth;
+      this.canvas.height = window.innerHeight;
+
+      this.ctx.fillStyle = '#000';
+      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
-    window.addEventListener('resize', resizeCanvas, false);
-    resizeCanvas();
-
-    function mouseDownHandler(e) {
-      const x = e.clientX;
-      const y = e.clientY;
-      fire(x, y)
+    clearCanvas() {
+      this.ctx.fillStyle = '#000';
+      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
-    // function drawFireworks(sx, sy, radius) {
-    //   clearCanvas();
-    //   const count = 10; // 烟花粒子数量
-    //   // const radius = 10; // 烟花环绕半径
-    //   const size = 2; // 烟花粒子大小
-    //
-    //   for (let i = 0; i < count; i++) {
-    //     const angle = 360 / count * i; // 烟花粒子角度
-    //     const radians = angle * Math.PI / 180; // 烟花粒子弧度
-    //
-    //     const vx = sx + Math.cos(radians) * radius;
-    //     const vy = sy + Math.sin(radians) * radius;
-    //
-    //     context.beginPath();
-    //     context.arc(vx, vy, size, 0, Math.PI * 2, false);
-    //     context.closePath();
-    //     context.fillStyle = "#ff0000";
-    //     context.fill();
-    //   }
-    // }
-
-    document.addEventListener('mousedown', mouseDownHandler, false);
-
-    let rid;
-    function fire(x,y){
-      createFireworks(x,y);
-
-      function tick() {
-        context.globalCompositeOperation = 'destination-out';
-        context.fillStyle = 'rgba(0,0,0,0.1)';
-        context.fillRect(0,0,canvas.width,canvas.height);
-        context.globalCompositeOperation = 'lighter';
-        drawFireworks();
-        rid = requestAnimationFrame(tick);
-      }
-      cancelAnimationFrame(rid);
-      tick();
-    }
-
-    const particles=[];
-    function createFireworks(sx,sy){
-      particles.length = 0;
-
+    createFireworks(sx,sy){
       const hue = ~~(Math.random() * 210);
       const hueVariance = 30;
       const count = 100;
@@ -94,43 +52,91 @@
         p.x = sx;
         p.y = sy;
         p.speed = Math.random() * 4 + 0.4;
-
         p.size = ~~(Math.random() * 3) + 1;
+        p.y0 = this.canvas.height; // 用作上升动画，到达高度就爆炸
+        p.boom = false; // 默认都没有爆炸
 
         // 色相、亮度、透明度
         p.hue = ~~(Math.random() * hueVariance * 2) + hue - hueVariance;
         p.brightness = ~~(Math.random() * 31) + 50;
         p.alpha = (~~(Math.random() * 61) + 40) / 100;
 
-        particles.push(p);
+        this.particles.push(p);
       }
     }
 
-    function drawFireworks() {
-      clearCanvas();
+    drawFireworks() {
+      this.clearCanvas();
 
-      for(let i = 0; i < particles.length; i++){
-        const p = particles[i];
+      for(let i = 0; i < this.particles.length; i++){
+        const p = this.particles[i];
 
-        // 这里计算速度增量
-        const vx = Math.cos(p.radians) * p.speed;
-        const vy = Math.sin(p.radians) * p.speed + 0.6;
+        if (!p.boom && p.y0 > p.y) {
+          // 上升阶段
+          p.y0 -= 5;
+          this.ctx.beginPath();
+          this.ctx.arc(p.x, p.y0, p.size, 0, Math.PI * 2, false);
+          this.ctx.closePath();
+        } else {
+          p.boom = true;
+          // 爆炸阶段
+          // 这里计算速度增量
+          const vx = Math.cos(p.radians) * p.speed;
+          const vy = Math.sin(p.radians) * p.speed + 0.6; // y方向加点重力
 
-        p.x += vx;
-        p.y += vy;
+          p.x += vx;
+          p.y += vy;
 
-        p.speed *= 1 - p.speed * 0.01; // 速度每次都损耗
-        p.alpha -= 0.0075; // 烟花逐渐燃烧，表现为透明度
+          p.speed *= 1 - p.speed * 0.01; // 速度每次都损耗
+          p.alpha -= 0.0075; // 烟花逐渐燃烧，表现为透明度
 
-        context.beginPath();
-        context.arc(p.x, p.y, p.size, 0, Math.PI * 2, false);
-        context.closePath();
+          if (p.alpha <= 0) {
+            this.particles.splice(i, 1);
+          }
+
+          this.ctx.beginPath();
+          this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2, false);
+          this.ctx.closePath();
+        }
 
         // 色相、饱和度、亮度、透明度
-        context.fillStyle = `hsla(${p.hue}, 100%, ${p.brightness}%, ${p.alpha})`;
-        context.fill();
+        this.ctx.fillStyle = `hsla(${p.hue}, 100%, ${p.brightness}%, ${p.alpha})`;
+        this.ctx.fill();
       }
     }
+
+    fire(x, y){
+      this.createFireworks(x, y);
+
+      const tick = () => {
+        this.ctx.globalCompositeOperation = 'destination-out';
+        this.ctx.fillStyle = 'rgba(0,0,0,0.1)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.globalCompositeOperation = 'lighter';
+        this.drawFireworks();
+        this.rid = requestAnimationFrame(tick);
+      };
+      cancelAnimationFrame(this.rid);
+      tick();
+    }
+  }
+
+  const fireObj = new Fire(document.querySelector('#canvas'));
+  fireObj.init();
+
+  window.addEventListener('resize', fireObj.init.bind(fireObj), false);
+
+  function mouseDownHandler(e) {
+    const x = e.clientX;
+    const y = e.clientY;
+
+    fireObj.fire(x, y);
+    setInterval(() => {
+      fireObj.fire(x, y);
+    }, 2000);
+  }
+
+  document.addEventListener('mousedown', mouseDownHandler, false, false);
 
 </script>
 </body>
