@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+      function swap(arr, i, j) {
+        let temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+      }
+    // 大根堆
+    // arr[i] >= arr[2 * i + 1] && arr[i] >= arr[2 * i + 2];
+    // 父：~~(len / 2) - 1;
+    function maxHeapify(arr, i, len) {
+      let left, right, maxlr;
+
+      while (i < len) {
+        left = 2 * i + 1;
+        right = left + 1;
+
+        //无左右孩子节点
+        if (left >= len && right >= len) {
+          break
+        }
+        //只有左孩子节点
+        if (left < len && right >= len) {
+          maxlr = left;
+        }
+        //只有右孩子节点
+        if (right < len && left >= len) {
+          maxlr = right;
+        }
+        //同时有左右孩子节点
+        if (left < len && right < len) {
+          maxlr = arr[left] < arr[right] ? right : left
+        }
+
+        if (arr[i] < arr[maxlr]) {
+          swap(arr, maxlr, i);
+          i = maxlr
+        }
+      }
+    }
+
+    function creatHeap(arr) {
+        if (!Array.isArray(arr)) {
+          throw 'Parameter is not an array';
+        }
+        let lastParent = ~~(arr.length / 2) -1;
+        while (lastParent >= 0) {
+          maxHeapify(arr, lastParent, arr.length);
+          lastParent--;
+        }
+        console.log(arr)
+    }
+
+    function sortHeap(arr) {
+      if (!Array.isArray(arr)) {
+        throw 'Parameter is not an array';
+      }
+      let end = arr.length - 1;
+      while (end > 0) {
+        swap(arr, 0, end);
+        maxHeapify(arr, 0, end);
+        end--;
+      }
+      console.log(arr)
+    }
+    const arr = [5, 2, 8, 3, 1, 6, 9];
+    creatHeap(arr);
+    sortHeap(arr);
+
+    function topK(arr, k) {
+      if (k >= arr.length) {
+        return arr.slice();
+      }
+      const result = arr.slice(0, k);
+      creatHeap(result);
+      for (let i = k + 1, len = arr.length; i < len; i++) {
+        if (result[0] > arr[i]) {
+          result[0] = arr[i];
+          sortHeap(result)
+        }
+      }
+      return result;
+    }
+    // topK(arr, 3);
+</script>
+</body>
+</html>

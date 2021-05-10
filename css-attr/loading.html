@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>loading</title>
+    <style>
+        @keyframes loading {
+            0%{
+                stroke-dashoffset: 0;
+            }
+            100%{
+                stroke-dashoffset: -157; /* 线条顺时针偏移 */
+            }
+        }
+        .loading{
+            animation: loading 5s ease-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <svg with='200' height='200' viewBox="0 0 100 100"  >
+        <circle class="loading" cx="50" cy="50" r="25"  fill="transparent" stroke-width="4" stroke="#0079f5" stroke-dasharray="50 157" />
+    </svg>
+</body>
+</html>

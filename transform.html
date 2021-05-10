@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    Function.prototype.call2 = function (context) {
+      context = context || window;
+      context.fn = this;
+      const args = [];
+      for (let i = 1; i < arguments.length; i++) {
+        args.push(arguments[i]);
+      }
+      const result = eval('context.fn(' + args +')');
+      delete  context.fn;
+      return result;
+    };
+    // a.call(b, arg1, arg2)
+    function curry2(f, ...args) {
+      if (f.length <= args.length) {
+        return f(...args);
+      }
+      return (nexts) => curry(f.bind(f, ...args), nexts);
+    }
+  function curry(f, ...args) {
+    console.log(f.length, args)
+    if (args.length >= f.length) {
+      return f(...args)
+    }
+
+    return (...next) => curry(f.bind(f, ...args), ...next)
+  }
+
+  function add(a, b, c, d, e) {
+    return a + b + c + d + e;
+  }
+  curry(add)(1)(2)(3)(4)(5);
+  const fn = add.bind(add, 1);
+  console.log(fn, fn.length)
+</script>
+</body>
+</html>

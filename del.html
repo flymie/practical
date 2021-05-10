@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        :root {
+            font-size: .875em;
+        }
+        .k1 {
+            /*display: flex;*/
+            /*align-items: center;*/
+        }
+        .k1 >div:nth-child(5) {
+            line-height: 4;
+            color: red;
+            font-size: 30px;
+        }
+        .k1 div {
+            width: 200px;
+            height: 200px;
+            border: 1px solid currentColor;
+            float: left;
+        }
+        .p {
+            /*position: relative;*/
+            border: 10px solid grey;
+            padding: 10px;
+            width: 100px;
+            height: 100px;
+        }
+        .c {
+            background-color: grey;
+            height: 50%;
+        }
+        img:not([src]) {
+            content: url("css-attr/images/1.jpg");
+            width: 200px;
+            height: auto;
+        }
+        .icon-dot {
+            display: inline-block;
+            width: 100px; height: 100px;
+            padding: 10px;
+            border: 10px solid;
+            border-radius: 50%;
+            background-color: currentColor;
+            background-clip: content-box;
+        }
+        .bgClip {
+            background-image: url('./css-attr/images/1.jpg');
+            background-position: center;
+            font-size: 100px;
+            -webkit-background-clip: text;
+            color: transparent;
+            font-style: italic;
+        }
+        .fa {
+            border: 1px solid black;
+
+        }
+        .ch {
+            margin: 50px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="fa">
+    <div class="ch"> </div>
+</div>
+<div class="p">
+    <div>
+        <div class="c"></div>
+    </div>
+</div>
+<img>
+<span>11</span>
+<div>
+    <div>洛杉矶的雷锋精神独立房间里是空房间里上课江东父老上课的路上开饭啦快放假了深刻的福利
+        洛杉矶的雷锋精神独立房间里是空房间里上课江东父老上课的路上开饭啦快放假了深刻的福利
+        洛杉矶的雷锋精神独立房间里是空房间里上课江东父老上课的路上开饭啦快放假了深刻的福利
+        洛杉矶的雷锋精神独立房间里是空房间里上课江东父老上课的路上开饭啦快放假了深刻的福利
+        洛杉矶的雷锋精神独立房间里是空房间里上课江东父老上课的路上开饭啦快放假了深刻的福利
+    </div>
+</div>
+<a href="">链接</a>
+<div class="icon-dot"></div>
+<div class="bgClip">面对疾风吧</div>
+<div style="height: 200px; overflow: hidden; border: 1px solid">
+    <div style="height: 400px;"></div>
+    <div id="foot">foot</div>
+</div>
+<a href="#foot">返回</a>
+<div class="k1">
+    <div>1</div>
+    <div>1</div>
+    <div>1</div>
+    <div>1</div>
+    <div>1</div>
+    <div>1</div>
+    <div>1</div>
+    <div>1</div>
+    <div>1</div>
+    <div>1</div>
+    <div>1</div>
+    <div>1</div>
+</div>
+<ul>
+    <li>2</li>
+    <li>3</li>
+    <li>4</li>
+</ul>
+<style>
+    .container {
+        position: fixed;
+        top: 0; right: 0; bottom: 0; left: 0;
+        background-color: rgba(0,0,0,.5);
+        text-align: center;
+        font-size: 0;
+        white-space: nowrap;
+        overflow: auto;
+    }
+    .container:after {
+        content: '';
+        display: inline-block;
+        height: 100%;
+        vertical-align: middle;
+    }
+    .dialog {
+        display: inline-block;
+        vertical-align: middle;
+        text-align: left;
+        font-size: 14px;
+        white-space: normal;
+        background: white;
+    }
+</style>
+<!--<div class="container">-->
+    <!--<div class="dialog">-->
+        <!--sdlfkjsldkfj-->
+    <!--</div>-->
+<!--</div>-->
+<img src="css-attr/images/1.jpg" style="width: 480px !important" />
+<a href="javascript:alert(document.cookie)">href</a>
+<!--<script>-->
+    <!--const container = document.querySelector('.container');-->
+    <!--container.addEventListener('mouseenter', function () {-->
+      <!--console.log(1)-->
+    <!--})-->
+<!--</script>-->
+<script>
+  function a() {
+    console.log(this, this.value)
+  }
+  const b = {
+    value: 1,
+  };
+  const b2 = {
+    value: 2,
+  };
+  const b3 = {
+    value: 3,
+  };
+  const fn = a.bind(b)
+    .bind(b2).call(b2)
+    // .bind(b3)
+    // ();
+    console.log(fn)
+</script>
+</body>
+</html>

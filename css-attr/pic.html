@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>写点小东西吧</title>
+</head>
+<body>
+<fieldset>
+    <style>
+        .picWrap {
+            max-width: 300px;
+            max-height: 400px;
+            overflow: auto;
+            /*margin: 50px auto;*/
+            cursor: zoom-in;
+        }
+        .picWrap img {
+            width: 100%;
+        }
+        .picWrap.active {
+            cursor: zoom-out;
+        }
+        .picWrap.active img {
+            width: auto;
+        }
+    </style>
+        <div class="picWrap">
+            <img src="./images/1.jpg">
+        </div>
+    <script>
+        const picWrap = document.querySelector('.picWrap');
+        picWrap.addEventListener('click', function (e1) {
+          this.classList.toggle('active');
+
+          const img = this.querySelector('img');
+          const imgW = img.getBoundingClientRect().width;
+          const imgH = img.getBoundingClientRect().height;
+          const wrapW = this.getBoundingClientRect().width;
+          const wrapH = this.getBoundingClientRect().height;
+          const left = this.getBoundingClientRect().left;
+          const top = this.getBoundingClientRect().top;
+
+          if (!this.classList.contains('active')) {
+            return;
+          }
+          const x = e1.pageX - left - 50;
+          const y = e1.pageY - top - 50;
+
+          this.scrollTop = y * imgH / wrapH;
+          this.scrollLeft = x * imgW / wrapW;
+
+          this.onmousemove = function (e) {
+            if (!this.classList.contains('active')) {
+              return;
+            }
+            const x = e.pageX - left - 50;
+            const y = e.pageY - top - 50;
+
+            this.scrollTop = y * imgH / wrapH;
+            this.scrollLeft = x * imgW / wrapW;
+          }
+        });
+    </script>
+</fieldset>
+<fieldset>
+    <style>
+        .partWrap {
+            display: flex;
+        }
+        .part {
+            flex: 0 0 100px;
+            margin-right: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        .part input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 26px;
+            /*opacity: 0;*/
+            z-index: -1;
+        }
+        h3 {
+            margin: 0;
+            background-color: grey;
+            text-align: center;
+            cursor: pointer;
+        }
+        .part input[type=checkbox]:checked ~.textCtn {
+            max-height: 0 !important;
+        }
+        .textCtn {
+            overflow: hidden;
+            transition: max-height 0.5s ease-in;
+        }
+    </style>
+    <h4>利用css进行动态高度动画</h4>
+    <div class="partWrap">
+        <div class="part">
+            <input type="checkbox">
+            <h3>我是标题</h3>
+            <div class="textCtn">
+                了克拉克森的肌肤轮廓设计的六块腹肌善良的开房记录是肯德基路上看到肌肤
+            </div>
+        </div>
+        <div class="part">
+            <input type="checkbox">
+            <h3>我是标题</h3>
+            <div class="textCtn">
+                了克拉克森的肌肤轮廓设计的六块腹肌善良的开房记录是肯德基路上看到肌肤
+                了克拉克森的肌肤轮廓设计的六块腹肌善良的开房记录是肯德基路上看到肌肤
+                了克拉克森的肌肤轮廓设计的六块腹肌善良的开房记录是肯德基路上看到肌肤
+            </div>
+        </div>
+        <div class="part">
+            <input type="checkbox">
+            <h3>我是标题</h3>
+            <div class="textCtn">
+                了克拉克森的肌肤轮廓设计的六块腹肌善良的开房记录是肯德基路上看到肌肤
+                了克拉克森的肌肤轮廓设计的六块腹肌善良的开房记录是肯德基路上看到肌肤
+                了克拉克森的肌肤轮廓设计的六块腹肌善良的开房记录是肯德基路上看到肌肤
+                了克拉克森的肌肤轮廓设计的六块腹肌善良的开房记录是肯德基路上看到肌肤
+                了克拉克森的肌肤轮廓设计的六块腹肌善良的开房记录是肯德基路上看到肌肤
+                了克拉克森的肌肤轮廓设计的六块腹肌善良的开房记录是肯德基路上看到肌肤
+            </div>
+        </div>
+    </div>
+    <script>
+        Array.prototype.forEach.call(document.querySelectorAll('.textCtn'), (v) => {
+          v.style.maxHeight = v.offsetHeight + 'px';
+        });
+    </script>
+</fieldset>
+</body>
+</html>

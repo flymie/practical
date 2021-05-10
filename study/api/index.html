@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <ul id="ul">
+        <li><div>1</div></li>
+        <li><div>2</div></li>
+        <li><span>3</span></li>
+        <li>4</li>
+        <li>5</li>
+    </ul>
+<script>
+    // 时间委托
+    const ul = document.querySelector('#ul');
+    ul.addEventListener('click', function (e) {
+      let el = e.target;
+      while(el) {
+        if (el.tagName.toLowerCase() === 'li') {
+          console.log(el.innerText);
+          break;
+        }
+        el = el.parentNode;
+      }
+    });
+
+    // 防抖
+    function throttle(fn, delay) {
+      let time = null;
+      return function (...args) {
+        const ths= this;
+        if (time) {
+          clearTimeout(time);
+          return;
+        }
+        clearTimeout(time);
+        time = setTimeout(function () {
+          fn.apply(ths, args);
+        }, delay);
+      }
+    }
+
+    // 节流
+    function debounce(fn, delay) {
+      let flag = false;
+      let timer = null;
+      return function (...args) {
+        const ths = this;
+        if (flag) {
+          return;
+        }
+        flag = true;
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+          fn.apply(ths, args);
+          flag = false;
+        }, delay);
+      }
+    }
+
+    // 数组去重
+    const arrFn = (arr) => Array.from(new Set(arr));
+
+    // 数组填充
+    const arrFn2 = (num) => Array.from({length: num}, (v, index) => index);
+
+    //  curry
+    const curryFn = (fn, ...args) => {
+      if (fn.length <= args) {
+        return fn(...args);
+      }
+      return (...nexts) => curryFn(fn.bind(fn, ...args), ...nexts);
+    }
+</script>
+</body>
+</html>
