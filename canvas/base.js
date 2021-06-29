@@ -9,7 +9,7 @@ function ctxFn(id) {
   canvas.height = 300;
   return canvas.getContext('2d');
 }
-
+const b = 2;
 /**
  * 图片加载
  * @param url
