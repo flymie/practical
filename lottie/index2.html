@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>lottie</title>
+    <style>
+        #pause {
+            width: 160px;
+            height: 160px;
+        }
+    </style>
+    <script src="js/lottie.min.js"></script>
+</head>
+<body>
+<div id="pause"></div>
+<div
+        style="width:160px; height:160px"
+        class="lottie"
+        data-animation-path="./json/pause.json"
+        data-anim-loop="false"
+        data-anim-type="svg"
+        data-anim-autoplay="true"
+        data-anim-prerender="false"
+        data-name="我是名字"
+></div>
+<script>
+  const pauseEle = document.getElementById('pause');
+  const animation = bodymovin.loadAnimation({
+    container: pauseEle, // Required
+    path: './json/pause.json', // Required
+    renderer: 'svg', // Required svg/canvas/html
+    loop: false, // Optional
+    autoplay: false, // Optional
+    name: "pause", // Name for future reference. Optional.
+  });
+
+  animation.goToAndStop(14, true); // 动画先到14帧，第二个参数：true帧，false时间
+
+  pauseEle.state = 'play';
+  pauseEle.addEventListener('click', function () {
+    if(this.state === 'play') {
+      animation.playSegments([14, 28], true);
+      this.state = 'pause';
+    } else {
+      animation.playSegments([0, 14], true);
+      this.state = 'play';
+    }
+  });
+
+</script>
+
+</body>
+</html>

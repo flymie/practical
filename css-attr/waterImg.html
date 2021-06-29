@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>关于css属性的clip-path</title>
+    <style>
+        .watermark {
+            position: fixed;
+            top: 0px;
+            right: 0px;
+            bottom: 0px;
+            left: 0px;
+            pointer-events: none;
+            background-repeat: repeat;
+        }
+        .picWrap {
+            display: flex;
+            justify-content: space-between;
+            text-align: center;
+            min-height: 500px;
+        }
+        .picWrap >div {
+            flex: 1;
+        }
+        .picWrap img {
+            width: 300px;
+        }
+    </style>
+</head>
+<body lang="en">
+<img id="img" />
+<script>
+  const imgSrc= './images/userImg240.png';
+
+  function decodeImg(src) {
+
+    let img = new Image();
+    img.src = src;
+
+    return new Promise(resolve => {
+      img.onload = function () {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = this.width;
+        canvas.height = this.height;
+
+        // 获取指定区域的canvas像素信息
+        ctx.drawImage(img, 0, 0);
+        const originalData = ctx.getImageData(0, 0, this.width, this.height);
+        ctx.putImageData(originalData, 0, 0);
+// document.getElementsByTagName('body')[0].append(canvas)
+//         resolve(canvas.toDataURL());
+        resolve(canvas);
+      };
+    });
+  }
+
+  function createWaterMark(options, canvas) {
+    const {
+      angle = -20,
+      txt = '水印',
+      // width = 180,
+      // height = 100,
+      fillStyle = '#000',
+      opacity = 0.2,
+      font = '24px serif',
+    } = options;
+    // const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    //
+    // canvas.width = width;
+    // canvas.height = height;
+    // ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = fillStyle;
+    ctx.globalAlpha = opacity;
+    ctx.rotate(Math.PI / 180 * angle);
+    ctx.font = font;
+    ctx.fillText(txt, 0, 50);
+
+    return canvas.toDataURL();
+  }
+
+  decodeImg(imgSrc).then((canvas) => {
+    const base64 = createWaterMark({
+      txt: '水印',
+    }, canvas);
+    document.getElementById('img').src = base64;
+  });
+
+</script>
+</body>
+</html>

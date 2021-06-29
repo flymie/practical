@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>lottie</title>
+    <style>
+        #car {
+            width: 160px;
+            height: 160px;
+        }
+    </style>
+    <script src="js/lottie.min.js"></script>
+</head>
+<body>
+<div id="car"></div>
+<div>
+    <button id="getDuration">anim.getDuration()</button>
+    <button id="play">anim.play()</button>
+    <button id="pause">anim.pause()</button>
+    <button id="stop">anim.stop()</button>
+    <button id="setLocationHref">anim.setLocationHref(locationHref) </button>
+    <button id="setSpeed">anim.setSpeed(speed)</button>
+    <button id="goToAndStop">anim.goToAndStop(value, isFrame)</button>
+    <button id="goToAndPlay">anim.goToAndPlay(value, isFrame)</button>
+    <button id="setDirection">anim.setDirection(direction) </button>
+    <button id="playSegments">anim.playSegments(segments, forceFlag)</button>
+    <button id="setSubframe">anim.setSubframe(flag) </button>
+    <button id="destroy">anim.destroy()</button>
+</div>
+<script>
+  const pauseEle = document.getElementById('car');
+  const animation = bodymovin.loadAnimation({
+    container: pauseEle, // Required
+    animationData: '', // 和path只能有一个
+    path: './json/car.json', // Required
+    renderer: 'svg', // Required svg/canvas/html
+    loop: true, // Optional
+    autoplay: false, // Optional
+    name: "car", // Name for future reference. Optional.
+  });
+  console.log(animation);
+
+  const getDuration = document.getElementById('getDuration');
+  const play = document.getElementById('play');
+  const pause = document.getElementById('pause');
+  const stop = document.getElementById('stop');
+  const setLocationHref = document.getElementById('setLocationHref'); // 当您在 safari 中遇到 url 没有#符号的掩码问题时，它很有用
+  const setSpeed = document.getElementById('setSpeed');
+  const goToAndPlay = document.getElementById('goToAndPlay');
+  const goToAndStop = document.getElementById('goToAndStop');
+  const setDirection = document.getElementById('setDirection');
+  const playSegments = document.getElementById('playSegments');
+  const setSubframe = document.getElementById('setSubframe');
+  const destroy = document.getElementById('destroy');
+
+  getDuration.addEventListener('click', () => {
+    const fps = animation.getDuration(true);
+    const div = document.createElement('div');
+    div.innerText = `总共${fps}帧`;
+    document.body.appendChild(div);
+    console.log(fps);
+  });
+
+  play.addEventListener('click', () => {
+    animation.play();
+  });
+
+  pause.addEventListener('click', () => {
+    animation.pause();
+  });
+
+  stop.addEventListener('click', () => {
+    animation.stop();
+  });
+
+  setSpeed.addEventListener('click', () => {
+    animation.setSpeed(2);
+  });
+
+  goToAndStop.addEventListener('click', () => {
+    animation.goToAndStop(11, true);
+  });
+
+  goToAndPlay.addEventListener('click', () => {
+    animation.goToAndPlay(11, true);
+  });
+
+  setDirection.addEventListener('click', () => {
+    animation.setDirection(-1);
+  });
+
+  playSegments.addEventListener('click', () => {
+    animation.playSegments([0,15], true);
+  });
+
+  setSubframe.addEventListener('click', () => {
+    animation.setSubframe(false);
+  });
+
+  destroy.addEventListener('click', () => {
+    animation.destroy();
+  });
+</script>
+
+</body>
+</html>
