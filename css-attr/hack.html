@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>信息132经典语录</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow-y: hidden;
+        }
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+        }
+        main {
+            display: flex;
+            justify-content: space-around;
+            min-width: 100vw;
+            /*perspective: 500;*/
+            /*-webkit-perspective: 500;*/
+        }
+        p {
+            line-height: 1;
+        }
+        span {
+            display: block;
+            width: 2vmax;
+            height: 2vmax;
+            font-size: 2vmax;
+            color: #9bff9b11;
+            text-align: center;
+            font-family: "Helvetica Neue", Helvetica, sans-serif;
+        }
+    </style>
+</head>
+<body>
+<noscript>
+    原文地址，这里修改一下效果
+    https://codepen.io/yuanchuan/pen/YoqWeR
+</noscript>
+<main></main>
+<script>
+  function r(from, to) {
+    return ~~(Math.random() * (to - from + 1) + from);
+  }
+  function pick() {
+    return arguments[r(0, arguments.length - 1)];
+  }
+  function getChar() {
+    return String.fromCharCode(pick(
+      r(0x3041, 0x30ff),
+      r(0x2000, 0x206f),
+      r(0x0020, 0x003f)
+    ));
+  }
+  function loop(fn, delay) {
+    let stamp = Date.now();
+    let i = 0;
+    function _loop() {
+      if (Date.now() - stamp >= delay) {
+        fn(i++ % 30); stamp = Date.now();
+      }
+      requestAnimationFrame(_loop);
+    }
+    requestAnimationFrame(_loop);
+  }
+  class Char {
+    constructor(char) {
+      this.element = document.createElement('span');
+      this.mutate(char);
+    }
+    mutate(char) {
+      this.element.textContent = char ? char : getChar();
+    }
+  }
+  class Trail {
+    constructor(list = [], options) {
+      this.list = list;
+      this.options = Object.assign(
+        { size: 10, offset: 0 }, options
+      );
+      this.body = [];
+      this.move();
+    }
+    traverse(fn) {
+      this.body.forEach((n, i) => {
+        let last = (i === this.body.length - 1);
+        if (n) fn(n, i, last);
+      });
+    }
+    move() {
+      this.body = [];
+      let { offset, size } = this.options;
+      for (let i = 0; i < size; ++i) {
+        let item = this.list[offset + i - size + 1];
+        this.body.push(item);
+      }
+      this.options.offset =
+        (offset + 1) % (this.list.length + size - 1);
+    }
+  }
+  class Rain {
+    constructor({ target, row, str }) {
+      this.element = document.createElement('p');
+      // this.element.style.cssText += `transform: translateZ(${r(-200, 200)}px);`;
+      this.str = str;
+
+      this.build(row, str);
+      if (target) {
+        target.appendChild(this.element);
+      }
+      this.drop();
+    }
+    build(row = 20, str) {
+      let root = document.createDocumentFragment();
+      let chars = [];
+      if (str && Math.random() > 0.5) {
+        const length = Math.max(row, str.length);
+        for (let i = 0; i < length; ++i) {
+          let c = new Char(str[i]);
+          root.appendChild(c.element);
+          chars.push(c);
+        }
+      } else {
+        for (let i = 0; i < row; ++i) {
+          let c = new Char();
+          root.appendChild(c.element);
+          chars.push(c);
+          if (Math.random() < .5) {
+            loop(() => c.mutate(), r(1e3, 5e3));
+          }
+        }
+      }
+      this.trail = new Trail(chars, {
+        size: r(10, 30), offset: r(0, 100)
+      });
+      this.element.appendChild(root);
+    }
+    drop() {
+      let trail = this.trail;
+      let len = trail.body.length;
+      let str = this.str;
+
+      let delay = r(30, 100);
+      // let delay = 100;
+      loop((count) => {
+        trail.move();
+        trail.traverse((c, i, last) => {
+          c.element.style = `
+          color: hsl(136, 100%, ${85 / len * (i + 1)}%)
+        `;
+          if (last) {
+            c.mutate(str[count]);
+            c.element.style = `
+            color: hsl(136, 100%, 85%);
+            text-shadow:
+              0 0 .5em #fff,
+              0 0 .5em currentColor;
+          `;
+          }
+        });
+      }, delay);
+    }
+  }
+
+  const strings = [
+    '江宁球王是一球超人吗？',
+    '秃然的自我',
+    '恭喜邵总金榜题名',
+    '心甘情愿的小黄瓜是曹操的江南吗？',
+    '打球，打球了，有人打球吗？',
+    '恭喜三牌楼霸主喜提菊厂',
+    '@毋妄 @ALT @白日梦想家 ',
+    '@心甘情愿的小黄瓜 @黑夜传说 ',
+    '女篮中锋有点可爱啊',
+    '南工程吴彦祖在吗？',
+    '什么，阿晋都30了？'
+  ];
+
+  const main = document.querySelector('main');
+  const arrs = Array.from({ length: 15 }, () => '');
+
+  strings.forEach((v) => {
+    arrs.splice(r(0, arrs.length), 0, v);
+  });
+
+  arrs.forEach((v) => {
+    new Rain({ target: main, row: 20, str: v });
+  })
+</script>
+</body>
+</html>

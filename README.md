@@ -42,3 +42,4 @@
 * [使用canvas进行明水印、暗水印的处理](https://flymie.github.io/practical/css-attr/waterMark.html)
 * [简易实现拖拽](https://flymie.github.io/practical/css-attr/drag.html)
 * [烟花](https://flymie.github.io/practical/css-attr/fireworks.html)
+* [黑客效果语录](https://flymie.github.io/practical/css-attr/hack.html)
