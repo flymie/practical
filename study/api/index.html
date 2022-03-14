@@ -26,7 +26,7 @@
       }
     });
 
-    // 防抖
+    // 节流
     function throttle(fn, delay) {
       let time = null;
       return function (...args) {
@@ -42,7 +42,7 @@
       }
     }
 
-    // 节流
+    // 防抖
     function debounce(fn, delay) {
       let flag = false;
       let timer = null;
