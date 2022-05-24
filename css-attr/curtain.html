@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>幕布</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        :root {
+            --minh: 100vh;
+            --color1: wheat;
+            --color2: midnightblue;
+        }
+        .curtain {
+            position: relative;
+            overflow: hidden;
+            width: 80%;
+        }
+        .curtain::after {
+            content: "";
+            display: block;
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            height: 200%;
+            background-image: linear-gradient(to bottom, var(--color2) 50%, var(--color1) 50%);
+            z-index: -1;
+            transition: transform 2s cubic-bezier(0.32, 0.72, 0, 1.09);
+        }
+        .curtain:hover::after {
+            transform: translateY(-25%);
+        }
+        .invert {
+            /* position: sticky; */
+            /* top: 20px; */
+            mix-blend-mode: difference;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: var(--minh);
+        }
+
+        .log {
+            color: var(--color1);
+            font-size: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div class="curtain">
+        <div class="invert">
+            <h1 class="log">hover hover</h1>
+        </div>
+    </div>
+</body>
+</html>

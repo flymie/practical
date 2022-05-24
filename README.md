@@ -43,3 +43,4 @@
 * [简易实现拖拽](https://flymie.github.io/practical/css-attr/drag.html)
 * [烟花](https://flymie.github.io/practical/css-attr/fireworks.html)
 * [黑客效果语录](https://flymie.github.io/practical/css-attr/hack.html)
+* [障眼法幕布](https://flymie.github.io/practical/css-attr/curtain.html)
