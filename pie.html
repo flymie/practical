@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        @keyframes spin {
+            to {
+                transform: rotate(0.5turn);
+            }
+        }
+        @keyframes bg {
+            0% {
+                background: #f1f2f5;
+            }
+            50% {
+                background: yellowgreen;
+            }
+            100% {
+                background: yellowgreen;
+            }
+        }
+        .pie {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background-color: #f1f2f5;
+            background-image: linear-gradient(90deg, transparent 50%, yellowgreen 0);
+            position: relative;
+        }
+        .pie::before {
+            content: "";
+            display: block;
+            margin-left: 50%;
+            height: 100%;
+            border-radius: 0 100% 100% 0 / 50%;
+            background-color: inherit;
+            transform-origin: 0 50%;
+            /*transform: rotate(0.2turn);*/
+            animation:
+                    spin 10s linear,
+                    bg 20s step-end
+            ;
+            animation-play-state: paused;
+            animation-delay: -9s;
+            animation-fill-mode: forwards;
+            animation-iteration-count: 2, 1;
+        }
+    </style>
+    <style>
+        .pie2 {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background-image: conic-gradient(yellowgreen 20%, #f1f2f5 0 );
+            position: relative;
+        }
+        .ctn {
+            position: absolute;
+            top: 5%;
+            right: 5%;
+            bottom: 5%;
+            left: 5%;
+            border-radius: 50%;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+<div class="pie">
+    <div class="ctn">
+        有缺陷：背景不透明, 0%也是100%问题
+    </div>
+</div>
+<div class="pie2">
+    <div class="ctn">
+        有缺陷，背景不透明
+    </div>
+</div>
+<canvas id="canvas"></canvas>
+<script>
+    const canvas = document.getElementById('canvas');
+    canvas.width = 300;
+    canvas.height = 300;
+    const ctx = canvas.getContext('2d');
+
+    ctx.beginPath();
+    ctx.strokeStyle = '#f1f2f5';
+    ctx.lineWidth = 20;
+    ctx.arc(150, 150, 130, Math.PI * -1, Math.PI * 0, false);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.strokeStyle = 'yellowgreen';
+    ctx.lineWidth = 20;
+    ctx.arc(150, 150, 130, Math.PI * -1, Math.PI * -0.2, false);
+    ctx.stroke();
+    ctx.closePath();
+</script>
+<style>
+    .svgPie {
+        width: 200px;
+        height: 200px;
+        transform: rotate(-90deg);
+        background: #f1f2f5;
+        border-radius: 50%;
+    }
+    .svgPie circle {
+        fill: #f1f2f5;
+        stroke: yellowgreen;
+        stroke-width: 32;
+        stroke-dasharray: 10 100;
+    }
+</style>
+<svg class="svgPie" viewBox="0 0 32 32">
+    <circle r="16" cx="16" cy="16"/>
+</svg>
+</body>
+</html>

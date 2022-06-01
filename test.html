@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+
+  </body>
+	<script>
+		const arr = [
+			{
+				id: 1,
+				children: [
+					{
+						id: 2,
+						children: [
+							{
+								id: 3,
+							},
+							{
+								id: 5,
+							}
+						]
+					}
+				]
+			},
+			{
+				id: 4,
+			}
+		];
+
+		const moduleSupport = function m(moduleId, navFuncList){
+			if (navFuncList && 
+				navFuncList.length && 
+				moduleId) {
+				for(let item of navFuncList){
+					if (String(item.id) == String(moduleId)) {
+						return true;
+					}
+					if(item.children && item.children.length){
+						if (m(moduleId, item.children)) {
+							return true;
+						}
+					}
+				}
+			}
+			return false;
+		}
+	
+		const res = moduleSupport(4, arr);
+		console.log(res)
+	</script>
+</html>

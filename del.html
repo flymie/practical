@@ -4,58 +4,211 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <style>
-        .triangle {
-            width: 200px;
+        div {
             height: 200px;
-            background-image: linear-gradient(180deg, #F46635, #5EA345);
-            border-radius: 20px;
-            margin: 100px auto;
-            transform: rotate(45deg);
-        }
-
-        .parent {
             display: flex;
         }
-        .child {
-            padding: 20px;
-            min-width: 100px;
-            border: 1px solid #ccc;
+        .main {
+            background-color: goldenrod;
+            flex: 1;
+        }
+        .left {
+            background-color: beige;
+            width: 100px;
+        }
+        .right {
+            background-color: saddlebrown;
+            width: 100px;
         }
     </style>
 </head>
 <body>
-<div class="triangle"></div>
-<div class="parent">
-    <div class="child"></div>
-    <div class="child">
-        <p>1111</p>
-        <p>1111</p>
-        <p>1111</p>
-        <p>1111</p>
-    </div>
-    <div class="child">
-        <p>1111</p>
-    </div>
-    <div class="child">
-        <p>1111</p>
-        <p>1111</p>
-    </div>
-    <div class="child"></div>
-    <div class="child"></div>
-    <div class="child"></div>
+<div class="wrap">
+    <div class="main"></div>
+    <div class="left"></div>
+    <div class="right"></div>
 </div>
-<ul>
-    <li>豆浆</li>
-    <li>油条</li>
-    <li>豆汁</li>
-    <li>焦圈</li>
-</ul>
-<ol>
-    <li>沿着条路走到头</li>
-    <li>右转</li>
-    <li>直行穿过第一个十字路口</li>
-    <li>在第三个十字路口处左转</li>
-    <li>继续走 300 米，学校就在你的右手边</li>
-</ol>
+<script>
+    function throttle(fn, wait, options) {
+        let preTime = 0;
+        //
+        // return function () {
+        //     const args = arguments;
+        //     const now = +new Date();
+        //
+        //     if (now - preTime >= wait) {
+        //         fn(...args);
+        //         preTime = now;
+        //     }
+        // }
+
+        let timer = null;
+
+        return function () {
+            const args = arguments;
+            const _this = this;
+            const now = +new Date();
+
+            if (!preTime && options.leading === false) {
+                preTime = now;
+            }
+            const remaind = wait - (now - preTime);
+            if (remaind <= 0 || remaind > wait) {
+                fn(...args);
+                preTime = now;
+            } else if (!timer && options.trailing !== false) {
+                timer = setTimeout(() => {
+                    fn.apply(_this, args);
+                    timer = null;
+                    preTime = options.leading === false ? 0 : +new Date();
+                }, remaind);
+            }
+        }
+
+    }
+
+    function debounce(fn, wait, imedicate) {
+        let timer;
+
+        return function () {
+            const _this = this;
+            const args = arguments;
+
+            clearTimeout(timer);
+
+            if (imedicate && !timer) {
+                timer = setTimeout(() => {
+                    timer = null;
+                }, wait);
+                fn.apply(_this, args);
+            } else {
+                timer = setTimeout(() => {
+                    fn.apply(_this, args);
+                    timer = null;
+                }, wait);
+            }
+        }
+    }
+
+    // fn.call(b, x);
+
+    function call2(ctx) {
+        const args = [];
+        const context = ctx || window;
+
+        for (let i = 1, length = arguments.length; i < length; i++) {
+            args.push(`arguments[${i}]`);
+        }
+
+        context.fn = this;
+
+        const result = eval(`context.fn(${args})`);
+        delete context.fn;
+
+        return result;
+    }
+
+    // const b = new A();
+
+    function new1(A) {
+        const obj = Object.create(null);
+
+        obj.__proto__ = A.prototype;
+
+        A.apply(obj, arguments.slice(1));
+
+        return obj;
+    }
+
+    const Bt = {};
+    const dfs = (bt) => {
+        if (!bt) {
+            return;
+        }
+        bt.children.forEach(dfs);
+    }
+
+    const bfs = (bt) => {
+        if (!bt) {
+            return;
+        }
+        const que = [bt];
+        while (que.length > 0) {
+            const tree = que.shift();
+            tree.children.forEach((v) => {
+                que.push(v);
+            })
+        }
+    }
+
+    function getArr(arr, val) {
+        let start = 0;
+        let end = arr.length - 1;
+        let mid;
+
+        while (start < end) {
+            mid = ~~((start + end) / 2);
+            if (arr[mid] === val) {
+                return true;
+            } else if (arr[mid] > val) {
+                end = mid;
+            } else {
+                start = mid;
+            }
+        }
+
+        return false;
+    }
+
+    try {
+        [1, 2].forEach((v) => {
+            throw 'error';
+            console.log(v)
+        });
+    } catch (e) {
+        console.log(e)
+    }
+
+    function p() {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                reject(1)
+            }, 100);
+        }).catch(() => {})
+    }
+
+    function p1() {
+        return new Promise((resolve, reject) => {
+           p().then((val) => {
+               resolve(val)
+           }, reject)
+        }).catch((e) => console.log({ e }))
+    }
+
+    function p2() {
+        return 2;
+    }
+
+    function p3() {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve(3)
+            }, 100);
+        }).catch((res) => {
+
+        });
+    }
+
+    // Promise.all([
+    //     p1(),
+    //     p2(),
+    //     p3(),
+    // ]).then((res) => {
+    //     console.log(res)
+    // }, (e) => {
+    //     console.log(e, 'e')
+    // })
+
+</script>
 </body>
 </html>

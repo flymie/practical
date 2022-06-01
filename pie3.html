@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .pie {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background-color: #f1f2f5;
+            background-image: linear-gradient(0deg, transparent 50%, yellowgreen 0);
+            position: relative;
+            clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
+        }
+        .spin {
+            display: block;
+            height: 50%;
+            border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+            background-color: inherit;
+            transform-origin: 50% 100%;
+            transform: rotate(0.2turn);
+        }
+        .ctn {
+            position: absolute;
+            width: 90%;
+            height: 45%;
+            top: 5%;
+            left: 5%;
+            border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body>
+<div class="pie">
+    <div class="spin"></div>
+    <div class="ctn">
+        <div>百分比要减少一半</div>
+        <div>有缺陷：背景不透明</div>
+    </div>
+</div>
+<script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
+<script>
+    window.onload = function () {
+        const res = dayjs('2010-01').isBefore(dayjs('2011-01'));
+        console.log(res);
+        console.log(dayjs('2010-01').format("YYYY-MM-DD"))
+    }
+</script>
+</body>
+</html>
