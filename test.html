@@ -10,47 +10,26 @@
 
   </body>
 	<script>
-		const arr = [
-			{
-				id: 1,
-				children: [
-					{
-						id: 2,
-						children: [
-							{
-								id: 3,
-							},
-							{
-								id: 5,
-							}
-						]
-					}
-				]
-			},
-			{
-				id: 4,
+		const isMock = (url) => {
+			if (!url) {
+				return url;
 			}
-		];
 
-		const moduleSupport = function m(moduleId, navFuncList){
-			if (navFuncList && 
-				navFuncList.length && 
-				moduleId) {
-				for(let item of navFuncList){
-					if (String(item.id) == String(moduleId)) {
-						return true;
-					}
-					if(item.children && item.children.length){
-						if (m(moduleId, item.children)) {
-							return true;
-						}
-					}
-				}
-			}
-			return false;
-		}
-	
-		const res = moduleSupport(4, arr);
-		console.log(res)
+			// 当前在代理时候 /api 、 /lcd，mock时候都是http请求的，这里稍微判断一下
+			const pathRewrites = ['/api/', '/lcd/'];
+			const pathRewrite = pathRewrites.find((v) => {
+				const reg = new RegExp(`^${v}http`);
+				console.log(reg)
+				return reg.test(url);
+			});
+			console.log(pathRewrite);
+			// if (pathRewrite) {
+			//   return url.replace(pathRewrite, '');
+			// }
+
+			return url;
+		};
+
+		isMock('/api/htps')
 	</script>
 </html>
