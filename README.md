@@ -44,3 +44,4 @@
 * [烟花](https://flymie.github.io/practical/css-attr/fireworks.html)
 * [黑客效果语录](https://flymie.github.io/practical/css-attr/hack.html)
 * [障眼法幕布](https://flymie.github.io/practical/css-attr/curtain.html)
+* [background-clip下的hover动画](https://flymie.github.io/practical/css-attr/background-clip.html)
