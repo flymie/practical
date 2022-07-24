@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>background-clip</title>
+  <style>
+    .wrap {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .item {
+        width: 200px;
+        height: 200px;
+        background-color: gainsboro;
+        margin: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+        font-weight: bold;
+    }
+
+    .hover1 {
+        color: #0000;
+        background:
+                linear-gradient(90deg, #1095c1 50%, #000 0)
+                var(--_p, 100%)/200% no-repeat;
+        -webkit-background-clip: text;
+        background-clip: text;
+        transition: .4s;
+    }
+    .hover1:hover {
+        --_p: 0%;
+    }
+
+    .hover2 {
+        --s: 0.1em;   /* the thickness of the line */
+        --c: #1095c1; /* the color */
+
+        color: #0000;
+        background:
+                linear-gradient(90deg, var(--c) 50%, #000 0) var(--_p, 100%)/200%,
+                linear-gradient(var(--c) 0 0) 0 100%/var(--_p2, 0%) var(--s) no-repeat;
+        -webkit-background-clip: text, padding-box;
+        background-clip: text, padding-box;
+        transition: 0.5s;
+    }
+    .hover2:hover {
+        --_p: 0;
+        --_p2: 100%;
+    }
+
+    .hover3 {
+        --s: 0.1em;   /* the thickness of the line */
+        --c: #1095c1; /* the color */
+
+        color: #0000;
+        background-image:
+                linear-gradient(var(--c) 0 0),
+                linear-gradient(180deg, var(--c) 50%, #000 0);
+        background-repeat: no-repeat;
+        background-size:
+                var(--p, 0%) var(--s),
+                100% 200%;
+        background-position: 0 var(--p, 0), 0 var(--p2, 100%);
+        -webkit-background-clip: padding-box, text;
+        background-clip: padding-box, text;
+        transition: 0.5s var(--_s, 0s), background-size .5s calc(.5s - var(--_s, 0s));
+    }
+    .hover3:hover {
+        --p: 100%;
+        --p2: 0%;
+        --_s: .5s;
+    }
+
+    .tip {
+        --c: #1095c1;
+
+        color: #0000;
+        background:
+                linear-gradient(90deg, #fff 50%, var(--c) 0) var(--p1, 100%)/200% 100%,
+                linear-gradient(var(--c) 0 0) 0/var(--p2,0%) 100% no-repeat;
+        -webkit-background-clip: text, padding-box;
+        background-clip: text, padding-box;
+        transition: 0.5s;
+        font-size: 24px;
+        cursor: pointer;
+        display: inline;
+    }
+    .tip a {
+        color: #0000;
+    }
+    .tip:hover {
+        --p1: 0%;
+        --p2: 100%;
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="item">
+    <div class="hover1">
+      hover
+    </div>
+  </div>
+  <div class="item">
+    <div class="hover2">
+      hover
+    </div>
+  </div>
+  <div class="item">
+    <div class="hover3">
+      hover
+    </div>
+  </div>
+</div>
+<div class="tip">
+  因为是-webkit属性，其他复杂效果先不过多研究了，详情地址：
+  <a href="https://css-tricks.com/css-hover-effects-background-masks-3d/background-clip.html" target="_blank">
+    https://css-tricks.com/css-hover-effects-background-masks-3d/
+  </a>
+  （这也有hover过渡动画）
+</div>
+</body>
+</html>
