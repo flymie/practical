@@ -4,211 +4,42 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <style>
-        div {
-            height: 200px;
+        .flex {
             display: flex;
-        }
-        .main {
-            background-color: goldenrod;
-            flex: 1;
+            flex-wrap: wrap;
         }
         .left {
-            background-color: beige;
-            width: 100px;
+            flex: 0 0 200px;
+            width: 200px;
+            height: 40px;
+            background: red;
+        }
+        .left:nth-child(n+3) {
+            background: pink;
         }
         .right {
-            background-color: saddlebrown;
-            width: 100px;
+            width: 200px;
+            height: 40px;
+            background: gray;
         }
     </style>
 </head>
 <body>
-<div class="wrap">
-    <div class="main"></div>
+<div class="flex">
+    <div class="left"></div>
+    <div class="left"></div>
+    <div class="left"></div>
+    <div class="left"></div>
+    <div class="left"></div>
+    <div class="left"></div>
+    <div class="left"></div>
     <div class="left"></div>
     <div class="right"></div>
 </div>
 <script>
-    function throttle(fn, wait, options) {
-        let preTime = 0;
-        //
-        // return function () {
-        //     const args = arguments;
-        //     const now = +new Date();
-        //
-        //     if (now - preTime >= wait) {
-        //         fn(...args);
-        //         preTime = now;
-        //     }
-        // }
-
-        let timer = null;
-
-        return function () {
-            const args = arguments;
-            const _this = this;
-            const now = +new Date();
-
-            if (!preTime && options.leading === false) {
-                preTime = now;
-            }
-            const remaind = wait - (now - preTime);
-            if (remaind <= 0 || remaind > wait) {
-                fn(...args);
-                preTime = now;
-            } else if (!timer && options.trailing !== false) {
-                timer = setTimeout(() => {
-                    fn.apply(_this, args);
-                    timer = null;
-                    preTime = options.leading === false ? 0 : +new Date();
-                }, remaind);
-            }
-        }
-
-    }
-
-    function debounce(fn, wait, imedicate) {
-        let timer;
-
-        return function () {
-            const _this = this;
-            const args = arguments;
-
-            clearTimeout(timer);
-
-            if (imedicate && !timer) {
-                timer = setTimeout(() => {
-                    timer = null;
-                }, wait);
-                fn.apply(_this, args);
-            } else {
-                timer = setTimeout(() => {
-                    fn.apply(_this, args);
-                    timer = null;
-                }, wait);
-            }
-        }
-    }
-
-    // fn.call(b, x);
-
-    function call2(ctx) {
-        const args = [];
-        const context = ctx || window;
-
-        for (let i = 1, length = arguments.length; i < length; i++) {
-            args.push(`arguments[${i}]`);
-        }
-
-        context.fn = this;
-
-        const result = eval(`context.fn(${args})`);
-        delete context.fn;
-
-        return result;
-    }
-
-    // const b = new A();
-
-    function new1(A) {
-        const obj = Object.create(null);
-
-        obj.__proto__ = A.prototype;
-
-        A.apply(obj, arguments.slice(1));
-
-        return obj;
-    }
-
-    const Bt = {};
-    const dfs = (bt) => {
-        if (!bt) {
-            return;
-        }
-        bt.children.forEach(dfs);
-    }
-
-    const bfs = (bt) => {
-        if (!bt) {
-            return;
-        }
-        const que = [bt];
-        while (que.length > 0) {
-            const tree = que.shift();
-            tree.children.forEach((v) => {
-                que.push(v);
-            })
-        }
-    }
-
-    function getArr(arr, val) {
-        let start = 0;
-        let end = arr.length - 1;
-        let mid;
-
-        while (start < end) {
-            mid = ~~((start + end) / 2);
-            if (arr[mid] === val) {
-                return true;
-            } else if (arr[mid] > val) {
-                end = mid;
-            } else {
-                start = mid;
-            }
-        }
-
-        return false;
-    }
-
-    try {
-        [1, 2].forEach((v) => {
-            throw 'error';
-            console.log(v)
-        });
-    } catch (e) {
-        console.log(e)
-    }
-
-    function p() {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                reject(1)
-            }, 100);
-        }).catch(() => {})
-    }
-
-    function p1() {
-        return new Promise((resolve, reject) => {
-           p().then((val) => {
-               resolve(val)
-           }, reject)
-        }).catch((e) => console.log({ e }))
-    }
-
-    function p2() {
-        return 2;
-    }
-
-    function p3() {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve(3)
-            }, 100);
-        }).catch((res) => {
-
-        });
-    }
-
-    // Promise.all([
-    //     p1(),
-    //     p2(),
-    //     p3(),
-    // ]).then((res) => {
-    //     console.log(res)
-    // }, (e) => {
-    //     console.log(e, 'e')
-    // })
-
+    window.addEventListener('resize', function () {
+       console.log('resize')
+    });
 </script>
 </body>
 </html>

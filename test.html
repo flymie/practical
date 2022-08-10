@@ -1,35 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Document</title>
-	</head>
-	<body>
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<style>
+		.absolute {
+			position: absolute;
+		}
+		/*body::after {*/
+		/*	position: absolute;*/
+		/*	top: -4px;*/
+		/*	right: 0;*/
+		/*	bottom: -4px;*/
+		/*	left: -7px;*/
+		/*	z-index: -9999;*/
+		/*	!* opacity: 0.0001; *!*/
+		/*	content: ' ';*/
+		/*	background: rebeccapurple;*/
 
-  </body>
-	<script>
-		const isMock = (url) => {
-			if (!url) {
-				return url;
+		/*}*/
+		.grid {
+			display: flex;
+			flex-wrap: wrap;
+			/*display: grid;*/
+			/*grid-template-columns: repeat(auto-fill, 200px);*/
+			grid-gap: 10px;
+		}
+		.grid > div {
+			background-color: gray;
+			height: 100px;
+			width: 200px;
+		}
+	</style>
+</head>
+<body>
+<div class="grid">
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+	<div></div>
+</div>
+<div class="absolute">
+
+</div>
+
+<script>
+	const arr = [
+		{
+			link: 'a',
+			children: [
+				{
+					link: 'b',
+					children: [
+						{
+							link: 'c',
+						}
+					]
+				},
+				{
+					link: 'b-1',
+				}
+			]
+		},
+		{
+			link: 'aa',
+			children: [
+				{
+					link: 'bb',
+					children: [
+						{
+							link: 'cc',
+						}
+					]
+				}
+			]
+		},
+		{
+			link: 'aaa',
+			children: [
+				{
+					link: 'bbb',
+					children: [
+						{
+							link: 'ccc',
+						}
+					]
+				}
+			]
+		}
+	];
+
+	const getActiveIndex = (menuList, path) => {
+			if (!Array.isArray(menuList)) {
+				throw 'menuList is Array';
 			}
 
-			// 当前在代理时候 /api 、 /lcd，mock时候都是http请求的，这里稍微判断一下
-			const pathRewrites = ['/api/', '/lcd/'];
-			const pathRewrite = pathRewrites.find((v) => {
-				const reg = new RegExp(`^${v}http`);
-				console.log(reg)
-				return reg.test(url);
-			});
-			console.log(pathRewrite);
-			// if (pathRewrite) {
-			//   return url.replace(pathRewrite, '');
-			// }
+			let flag = false;
+			let res = '';
 
-			return url;
+			const dfs = (data, parent) => {
+				for (let i = 0, len = data.length; i < len; i++) {
+					const item = data[i];
+					const nextParent = parent ? `${parent}-${i + 1}` : `${i + 1}`;
+
+					if (path.includes(item.link)) {
+						flag = true;
+						res = nextParent;
+					}
+
+					if (!flag && item && item.children && item.children.length > 0) {
+						dfs(item.children, nextParent);
+					}
+				}
+			};
+
+			dfs(menuList, '');
+
+			return res;
 		};
 
-		isMock('/api/htps')
-	</script>
+	const res = getActiveIndex(arr, 'b-1')
+	console.log(res)
+</script>
+</body>
 </html>
