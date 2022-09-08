@@ -56,87 +56,12 @@
 	<div></div>
 	<div></div>
 </div>
-<div class="absolute">
+<div id="k">
 
 </div>
 
 <script>
-	const arr = [
-		{
-			link: 'a',
-			children: [
-				{
-					link: 'b',
-					children: [
-						{
-							link: 'c',
-						}
-					]
-				},
-				{
-					link: 'b-1',
-				}
-			]
-		},
-		{
-			link: 'aa',
-			children: [
-				{
-					link: 'bb',
-					children: [
-						{
-							link: 'cc',
-						}
-					]
-				}
-			]
-		},
-		{
-			link: 'aaa',
-			children: [
-				{
-					link: 'bbb',
-					children: [
-						{
-							link: 'ccc',
-						}
-					]
-				}
-			]
-		}
-	];
-
-	const getActiveIndex = (menuList, path) => {
-			if (!Array.isArray(menuList)) {
-				throw 'menuList is Array';
-			}
-
-			let flag = false;
-			let res = '';
-
-			const dfs = (data, parent) => {
-				for (let i = 0, len = data.length; i < len; i++) {
-					const item = data[i];
-					const nextParent = parent ? `${parent}-${i + 1}` : `${i + 1}`;
-
-					if (path.includes(item.link)) {
-						flag = true;
-						res = nextParent;
-					}
-
-					if (!flag && item && item.children && item.children.length > 0) {
-						dfs(item.children, nextParent);
-					}
-				}
-			};
-
-			dfs(menuList, '');
-
-			return res;
-		};
-
-	const res = getActiveIndex(arr, 'b-1')
-	console.log(res)
+	document.getElementById('kk').style.width = '200px'
 </script>
 </body>
 </html>
