@@ -7,7 +7,9 @@
       "import/no-mutable-exports": "off",
       "react/prefer-stateless-function" : "off",
       "no-param-reassign": "off",
-      "react/require-default-props": "off"
+      "react/require-default-props": "off",
+      "no-extend-native": "off",
+      "func-names": ["error", "never"]
     },
     "env": {
       "browser": true

@@ -4,64 +4,54 @@
 	<meta charset="UTF-8">
 	<title>Title</title>
 	<style>
-		.absolute {
-			position: absolute;
-		}
-		/*body::after {*/
-		/*	position: absolute;*/
-		/*	top: -4px;*/
-		/*	right: 0;*/
-		/*	bottom: -4px;*/
-		/*	left: -7px;*/
-		/*	z-index: -9999;*/
-		/*	!* opacity: 0.0001; *!*/
-		/*	content: ' ';*/
-		/*	background: rebeccapurple;*/
-
-		/*}*/
-		.grid {
-			display: flex;
-			flex-wrap: wrap;
-			/*display: grid;*/
-			/*grid-template-columns: repeat(auto-fill, 200px);*/
-			grid-gap: 10px;
-		}
-		.grid > div {
-			background-color: gray;
-			height: 100px;
-			width: 200px;
-		}
+		#container{
+            width: 100%; height: 200px; line-height: 200px; text-align: center; color: #fff; background-color: #444; font-size: 30px;
+        }
 	</style>
 </head>
 <body>
-<div class="grid">
-	<div></div>
-	<div></div>
-	<div></div>
-	<div></div>
-	<div></div>
-	<div></div>
-	<div></div>
-	<div></div>
-	<div></div>
-	<div></div>
-	<div></div>
-	<div></div>
-	<div></div>
-	<div></div>
-	<div></div>
-	<div></div>
-	<div></div>
-	<div></div>
-	<div></div>
-	<div></div>
-</div>
-<div id="k">
-
-</div>
+	<div id="container"></div>
 
 <script>
-	document.getElementById('kk').style.width = '200px'
+	// 第四版
+function debounce(func, wait, immediate) {
+
+var timeout;
+
+function debounced () {
+	var context = this;
+	var args = arguments;
+
+	clearTimeout(timeout);
+
+	if (immediate) {
+		// 如果已经执行过，不再执行
+		var callNow = !timeout;
+		timeout = setTimeout(function(){
+			timeout = null;
+		}, wait)
+		if (callNow) func.apply(context, args)
+	}
+	else {
+		timeout = setTimeout(function(){
+			func.apply(context, args)
+		}, wait);
+	}
+}
+debounced.cancel = function () {
+	clearTimeout(timeout);
+	timeout = null;
+}
+return debounced;
+}
+
+var count = 1;
+var container = document.getElementById('container');
+function getUserAction(e) {
+    container.innerHTML = count++;
+};
+
+container.onmousemove = debounce(getUserAction, 1000, true);
 </script>
 </body>
 </html>
