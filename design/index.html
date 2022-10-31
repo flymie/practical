@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script> 
+    // 透明但是不好阅读
+    (
+        function() {
+            const CreateDiv = (function () {
+                let instance;
+
+                const CreateDiv = function (html) {
+                    if (instance) {
+                        return instance;
+                    }
+                    this.html = html;
+                    this.init();
+                    instance = this;
+                    return instance;
+                };
+
+                CreateDiv.prototype.init = function () {
+                    const div = document.createElement('div');
+                    div.innerHTML = this.html;
+                    document.body.appendChild(div);
+                };
+                return CreateDiv;
+            }());
+
+            const a = new CreateDiv('sven1');
+            const b = new CreateDiv('sven2');
+            alert(a === b);
+        }
+    )()
+        // 通过代理
+        function CreateDiv(html) {
+            
+        }
+        const ProxySingle = (function(){
+            let _instance = null;
+            return function(html) {
+                if (!_instance) {
+                    _instance = new CreateDiv(html);
+                }
+
+                return _instance;
+            }
+        })();
+        const a = new ProxySingle('sven1');
+        const b = new ProxySingle('sven2');
+        alert(a === b);
+
+    </script>
+</body>
+</html>
