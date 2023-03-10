@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>file</title>
+</head>
+<body>
+  <input type="file" onchange="onFile(event)" />
+  <div class="contents"></div>
+  <script src="./js/pdf.js"></script>
+  <script type="module">
+    // const mammoth = require('mammoth');
+    import mammoth from './node_modules/mammoth';
+  </script>
+  <script src="./node_modules/mammoth/mammoth.browser.js"></script>
+<script>
+  const content = document.getElementsByTagName("input");
+  const contentBox = document.getElementsByClassName("contents")[0]
+  let files,
+    type,
+    urlData,
+    html
+  function onFile(e) {
+    console.log(e);
+    files = e.target.files
+    console.log(files, files[0].type, 'files');
+    //FileReader读取文件内容
+    countWords(e.target.files[0])
+  }
+</script>
+<script>
+  // 统计doc、pdf文件的文字字数
+  function countWords(file) {
+    const reader = new FileReader();
+    reader.readAsArrayBuffer(file);
+    reader.onload = function() {
+      const result = this.result;
+      if (file.type === 'application/pdf') {
+        // 统计pdf文件文字字数
+        const loadingTask = pdfjsLib.getDocument({ data: result });
+        loadingTask.promise.then(function(pdf) {
+          let count = 0;
+          for (let i = 1; i <= pdf.numPages; i++) {
+            pdf.getPage(i).then(function(page) {
+              page.getTextContent().then(function(textContent) {
+                // count += textContent.items.length;
+                textContent.items.forEach((v) => count+= v.str.length);
+                if (i === pdf.numPages) {
+                  console.log(`PDF文件文字字数：${count}`);
+                }
+              });
+            });
+          }
+        });
+      } else if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || file.type === 'application/msword') {
+        // 统计doc文件文字字数
+        // const doc = new ActiveXObject('Word.Application');
+        // doc.Visible = false;
+        // const docFile = doc.Documents.OpenFromByteArray(result);
+        // const count = docFile.Content.ComputeStatistics(2);
+        // console.log(`DOC文件文字字数：${count}`);
+        // docFile.Close(false);
+        // doc.Quit(false);
+
+        // 统计doc、docx文件文字字数
+        mammoth.convertToHtml({arrayBuffer: result})
+          .then(function(result) {
+            const html = result.value;
+            const doc = new DOMParser().parseFromString(html, 'text/html');
+            const text = doc.querySelector('body').textContent;
+            // const count = text.replace(/[^\u4e00-\u9fa5]/gi, '').length;
+            const count = text.length;
+            console.log(`DOC/DOCX文件文字字数：${count}`);
+          })
+          .done();
+
+      } else {
+        console.log('不支持的文件类型');
+      }
+    }
+  }
+</script>
+  注：该代码中使用了pdf.js库和ActiveXObject对象，需要在IE浏览器中运行。如果需要在其他浏览器中运行，可以考虑使用第三方库如 mammoth.js 来读取 doc、docx 文件。
+</body>
+</html>
