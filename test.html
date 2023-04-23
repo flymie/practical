@@ -5,53 +5,44 @@
 	<title>Title</title>
 	<style>
 		#container{
-            width: 100%; height: 200px; line-height: 200px; text-align: center; color: #fff; background-color: #444; font-size: 30px;
-        }
+			width: 100px;
+			height: 100px;
+			background-repeat: no-repeat;
+			background-size: 50% 100%, 50% 100%;
+			background-position: 0 0, 100% 0;
+			background-image:
+				radial-gradient(circle at 0 100%, transparent 10px, red 0),
+				radial-gradient(circle at 100% 100%, transparent 10px, red 0);
+			overflow: hidden;
+		}
 	</style>
 </head>
 <body>
 	<div id="container"></div>
-
+	<form name="punchout_form" method="post" action="https://openapi.alipaydev.com/gateway.do?charset=UTF-8&method=alipay.trade.wap.pay&sign=Mqev5eCY%2BzzUK1ezcxKtyBb5jQTZq3QV06e7IGJgDGPda6nbavoDcZFLse065LsY3gFUOm6rH%2F3YIK0lFhzak8cM9XH%2B4tpjZqcGAUDsKnuT4CGlx4V4EfyoDuUXzrAdrPr5Heb%2BGo7lC73G6jwICgkDah0PPMvsXsXjqg4VZsjUGenpmOvcGagnNSS3s1wUBO5kJ1i1Xa0UwWL168bBk7AacyWS3j8SbObcFqd%2Bd2lpzuI9UjOZtBzxPO9yHpplG%2FGG5eshFqCY0q3PaPLaEAjDAnmNdElRCiNMCpbJb%2FQKfhYGzqctuSK0k7WkKU7ZXmmqzy3ezx0ZwJYZBMHYkQ%3D%3D&return_url=http%3A%2F%2Fxlj.medreading.com%2Fwhale%2Fpay%2Fali%2Freturn_url&notify_url=http%3A%2F%2Fxlj.medreading.com%2Fwhale%2Fpay%2Fali%2Fnotify_url&version=1.0&app_id=2021000121690412&sign_type=RSA2&timestamp=2023-02-10+10%3A17%3A35&alipay_sdk=alipay-sdk-java-dynamicVersionNo&format=json">
+		<input type="hidden" name="biz_content" value="{&quot;out_trade_no&quot;:&quot;387944932773827914&quot;,&quot;product_code&quot;:&quot;QUICK_WAP_PAY&quot;,&quot;subject&quot;:&quot;小绿鲸1年会员&quot;,&quot;total_amount&quot;:&quot;0.01&quot;}">
+		<input type="submit" value="立即支付" style="display:none" >
+	</form>
+	<script>document.forms[0].submit();</script>
 <script>
-	// 第四版
-function debounce(func, wait, immediate) {
-
-var timeout;
-
-function debounced () {
-	var context = this;
-	var args = arguments;
-
-	clearTimeout(timeout);
-
-	if (immediate) {
-		// 如果已经执行过，不再执行
-		var callNow = !timeout;
-		timeout = setTimeout(function(){
-			timeout = null;
-		}, wait)
-		if (callNow) func.apply(context, args)
+	// 1
+	function firstCase(str){
+		if(str == ''){
+			return ''
+		}else{
+			var reStr = str.replace(/\s+/g,".").split('.').filter((item)=>{
+				return item != ''
+			})
+			var arr = reStr.map((item)=> item.charAt(0).toUpperCase())
+			if(arr.join('.')+'.'.slice(-2,-1) == '.'){
+				return arr.join('.')+'.'.slice(0,arr.join('.')+'.'.length-1)
+			}else{
+				return arr.join('.')+'.'
+			}
+		}
 	}
-	else {
-		timeout = setTimeout(function(){
-			func.apply(context, args)
-		}, wait);
-	}
-}
-debounced.cancel = function () {
-	clearTimeout(timeout);
-	timeout = null;
-}
-return debounced;
-}
-
-var count = 1;
-var container = document.getElementById('container');
-function getUserAction(e) {
-    container.innerHTML = count++;
-};
-
-container.onmousemove = debounce(getUserAction, 1000, true);
+	console.log(['sdfsdf', 'sdfs', 'sdf', 'sdf'].join('.')+'.'.slice(-2,-1))
+	console.log(['sdfsdf', 'sdfs', 'sdf', 'sdf'].join('.')+'.'.slice(0,arr.join('.')+'.'.length-1))
 </script>
 </body>
 </html>
