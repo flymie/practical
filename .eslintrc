@@ -9,7 +9,9 @@
       "no-param-reassign": "off",
       "react/require-default-props": "off",
       "no-extend-native": "off",
-      "func-names": ["error", "never"]
+      "func-names": ["error", "never"],
+      "no-use-before-define": ["error", { "functions": false }],
+      "no-shadow": "off"
     },
     "env": {
       "browser": true
