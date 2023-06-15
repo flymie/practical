@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script>
+  // https://openapi.alipay.com/gateway.do?timestamp=2013-01-01 08:08:08&method=alipay.trade.pay&app_id=24717&sign_type=RSA2&sign=ERITJKEIJKJHKKKKKKKHJEREEEEEEEEEEE&version=1.0&charset=utf-8&biz_content=AlipayTradePayModel
+</script>
+<form name="punchout_form" method="post"
+      action="https://openapi.alipaydev.com/gateway.do?charset=utf-8
+      &method=alipay.trade.wap.pay
+      &sign=SQHogCem55%2Fz0eSgUM5SdusGCV%2BjDPFLDKVR8Vj%2B3VsaYvI%2BW0kxyIHCSAIyMx6u47Tss%2B3eqebsVjp5ixwy5P5ZJEk2sn6QSACYZ5SUFmzM%2B7052PEnrmCIWW74sKS7e192sX5BG%2BlKwmtG%2FjUo96OVkPAB9NZRYJ6DWCB%2F1Mlf3nK9zld7%2B%2Bppy%2F3Iksdco%2FHcEoO71q2zgLWrQlverPu9NvHcWl60qS0Wx5ZV6y36QVnNUDaxV8TD2TUPMJu1ZzEcAdeg36vG7mSJkjZcjY6lbK6%2BMklrgjpNF2AegDd2%2F2hIsHGUErwbfOAOPUjj3RvHCXX0%2FJfypAHl2rlSdg%3D%3D
+      &return_url=http%3A%2F%2Fxlj.medreading.com%2Fwhale%2Fpay%2Fali%2Freturn_url&notify_url=http%3A%2F%2Fxlj.medreading.com%2Fwhale%2Fpay%2Fali%2Fnotify_url&version=1.0&app_id=2021000121690412&sign_type=RSA2&timestamp=2023-02-14+14%3A54%3A21&alipay_sdk=alipay-sdk-java-dynamicVersionNo&format=json">
+  <input type="hidden" name="biz_content" value="{&quot;out_trade_no&quot;:&quot;339892424062988313&quot;,&quot;product_code&quot;:&quot;QUICK_WAP_PAY&quot;,&quot;subject&quot;:&quot;小绿鲸1年会员&quot;,&quot;total_amount&quot;:&quot;0.01&quot;}">
+  <input type="submit" value="立即支付" >
+</form>
+
+<form name="punchout_form" method="post" action="https://openapi.alipaydev.com/gateway.do?charset=UTF-8&method=alipay.trade.wap.pay&sign=TOuKi8uE%2FBJEcUrXqeHA1p2iCFaQnN2uMs0BVKSnZrKpHcCmVgE5nvoLnUIn%2FJqWYyio1mg8SwROveMK9AvTv%2BISK1L%2B%2BxXvE0mf%2FsTnn4IeMxVzTpBl9ITQe9ZU2%2F5xs3mi5Q3neAQ%2BbB7f%2FnONNPDGJykk3Ld5kCzIhPCgpYku1vwIZHG8Gmgs7VdoAF4V5r71Xd4ETKHwUEW422%2BF16PWHoSQ3BhrtqcCQbOE1EKKNeNBOlpMgfh4lj4QvDVNM%2FoL%2BwTG%2B54VCpKTKCGknJZ7%2Frbzp6PUEjlN0PqajeINLvqtjo58%2BmmTNwUo3RcmrFA52JdkHEkIM%2BAiN0AXVw%3D%3D&return_url=http%3A%2F%2Fxlj.medreading.com%2Fwhale%2Fpay%2Fali%2Freturn_url&notify_url=http%3A%2F%2Fxlj.medreading.com%2Fwhale%2Fpay%2Fali%2Fnotify_url&version=1.0&app_id=2021000121690412&sign_type=RSA2&timestamp=2023-02-14+16%3A55%3A34&alipay_sdk=alipay-sdk-java-dynamicVersionNo&format=json">
+  <input type="hidden" name="biz_content" value="{&quot;out_trade_no&quot;:&quot;339892424062988313&quot;,&quot;product_code&quot;:&quot;QUICK_WAP_PAY&quot;,&quot;subject&quot;:&quot;小绿鲸1年会员&quot;,&quot;total_amount&quot;:&quot;0.01&quot;}">
+  <input type="submit" value="立即支付" style="display:none" >
+</form>
+<button id="test">
+  测试
+</button>
+<button id="pro">
+  测试pro
+</button>
+<form name="punchout_form" method="post" action="https://openapi.alipaydev.com/gateway.do?charset=UTF-8&method=alipay.trade.wap.pay&sign=YE0LnmkeTqbFsNSNunBsNNekCielIGGg9zgEHLdObbDXWeyGP0xBjgLfmcMVohrlJE7yQ9PjuJDoc8rr65ldzK9VP%2Bu%2FwFaoALds4SdXbmNssN7pwzWQvSDuFtFmVYVVSPodN6E9SpUU3so0HzI8BYnTaESAq9%2BuCHD95rAjTxkyX%2FkTQnTHHo5V22xfKhJtpOWSxq8fmmsNi2LN4HlYChGCg%2B5c5cz0nbm15m5EvIcATFuPM0%2F2afjBIyRMu8XP7eyDQKypUorDmLVcjLycVR%2FwbjXr%2BjPnUv8%2BYX9Y9g6n2YiUctrxWWaRNitMenhFvflxWZRObbk%2BRqwokErVlw%3D%3D&return_url=http%3A%2F%2Fxlj.medreading.com%2Fwhale%2Fpay%2Fali%2Freturn_url&notify_url=http%3A%2F%2Fxlj.medreading.com%2Fwhale%2Fpay%2Fali%2Fnotify_url&version=1.0&app_id=2021000121690412&sign_type=RSA2&timestamp=2023-02-14+16%3A18%3A06&alipay_sdk=alipay-sdk-java-dynamicVersionNo&format=json">
+  <input type="hidden" name="biz_content" value="{&quot;out_trade_no&quot;:&quot;339892424062988313&quot;,&quot;product_code&quot;:&quot;QUICK_WAP_PAY&quot;,&quot;subject&quot;:&quot;小绿鲸1年会员&quot;,&quot;total_amount&quot;:&quot;0.01&quot;}">
+  <input type="submit" value="立即支付" >
+</form>
+<script>
+  // document.forms['alipaysubmit'].submit();
+  // document.forms[0].submit();
+  document.querySelector('#test').addEventListener('click', function () {
+    fetch('http://47.100.222.178:8088/whale/pay/ali/wapPay', {
+      method: 'POST', // or 'PUT'
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        orderNumber: '339892424062988313',
+      })
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+        console.log(data.data);
+        // document.write(data.data)
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  })
+</script>
+<script>
+  document.querySelector('#pro').addEventListener('click', function () {
+    fetch('http://m.xljsci.com/member/index/payMember?order_number=776344836419470931', {
+      method: 'POST', // or 'PUT'
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+        console.log(data.data.orderinfo);
+        document.write(data.data.orderinfo)
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  })
+</script>
+</body>
+</html>

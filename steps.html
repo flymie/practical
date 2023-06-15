@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>steps</title>
+  <style>
+    .iSteps {
+        display: flex;
+        justify-content: center;
+    }
+    .iSteps__item {
+        flex: 1;
+        text-align: center;
+    }
+    .iSteps__item-progress {
+        height: 3px;
+        background: #F2F4F7;
+        margin-bottom: 15px;
+        position: relative;
+    }
+    .iSteps__item-progress:after {
+        content: '';
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #FFFFFF;
+        border: 3px solid #B2B9C1;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .iSteps__item-progress.is-active {
+        background: blue;
+    }
+    .iSteps__item-progress.is-active:after {
+        border-color: blue;
+        background: blue;
+    }
+    .iSteps__item:first-child  .iSteps__item-progress, .iSteps__item:last-child .iSteps__item-progress {
+        width: 50%;
+    }
+    .iSteps__item:first-child  .iSteps__item-progress {
+        margin-left: 50%;
+    }
+    .iSteps__item:first-child  .iSteps__item-progress:after {
+        left: 0;
+    }
+    .iSteps__item:last-child .iSteps__item-progress:after {
+        left: 100%;
+    }
+
+    .iSteps__title {
+
+    }
+    .iSteps__des {
+
+    }
+  </style>
+</head>
+<body>
+  <div class="iSteps">
+    <div class="iSteps__item">
+      <div class="iSteps__item-progress is-active"></div>
+      <div class="iSteps__title">title</div>
+      <div class="iSteps__des">description</div>
+    </div>
+    <div class="iSteps__item">
+      <div class="iSteps__item-progress"></div>
+      <div class="iSteps__title">title2</div>
+      <div class="iSteps__des">description2</div>
+    </div>
+    <div class="iSteps__item">
+      <div class="iSteps__item-progress"></div>
+      <div class="iSteps__title">title2</div>
+      <div class="iSteps__des">description2</div>
+    </div>
+  </div>
+</body>
+</html>

@@ -44,6 +44,7 @@
             pdf.getPage(i).then(function(page) {
               page.getTextContent().then(function(textContent) {
                 // count += textContent.items.length;
+                console.log(textContent.items)
                 textContent.items.forEach((v) => count+= v.str.length);
                 if (i === pdf.numPages) {
                   console.log(`PDF文件文字字数：${count}`);

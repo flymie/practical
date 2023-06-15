@@ -18,31 +18,79 @@
 	</style>
 </head>
 <body>
-	<div id="container"></div>
-	<form name="punchout_form" method="post" action="https://openapi.alipaydev.com/gateway.do?charset=UTF-8&method=alipay.trade.wap.pay&sign=Mqev5eCY%2BzzUK1ezcxKtyBb5jQTZq3QV06e7IGJgDGPda6nbavoDcZFLse065LsY3gFUOm6rH%2F3YIK0lFhzak8cM9XH%2B4tpjZqcGAUDsKnuT4CGlx4V4EfyoDuUXzrAdrPr5Heb%2BGo7lC73G6jwICgkDah0PPMvsXsXjqg4VZsjUGenpmOvcGagnNSS3s1wUBO5kJ1i1Xa0UwWL168bBk7AacyWS3j8SbObcFqd%2Bd2lpzuI9UjOZtBzxPO9yHpplG%2FGG5eshFqCY0q3PaPLaEAjDAnmNdElRCiNMCpbJb%2FQKfhYGzqctuSK0k7WkKU7ZXmmqzy3ezx0ZwJYZBMHYkQ%3D%3D&return_url=http%3A%2F%2Fxlj.medreading.com%2Fwhale%2Fpay%2Fali%2Freturn_url&notify_url=http%3A%2F%2Fxlj.medreading.com%2Fwhale%2Fpay%2Fali%2Fnotify_url&version=1.0&app_id=2021000121690412&sign_type=RSA2&timestamp=2023-02-10+10%3A17%3A35&alipay_sdk=alipay-sdk-java-dynamicVersionNo&format=json">
-		<input type="hidden" name="biz_content" value="{&quot;out_trade_no&quot;:&quot;387944932773827914&quot;,&quot;product_code&quot;:&quot;QUICK_WAP_PAY&quot;,&quot;subject&quot;:&quot;小绿鲸1年会员&quot;,&quot;total_amount&quot;:&quot;0.01&quot;}">
-		<input type="submit" value="立即支付" style="display:none" >
-	</form>
-	<script>document.forms[0].submit();</script>
+<button id="btn">下载</button>
 <script>
-	// 1
-	function firstCase(str){
-		if(str == ''){
-			return ''
-		}else{
-			var reStr = str.replace(/\s+/g,".").split('.').filter((item)=>{
-				return item != ''
-			})
-			var arr = reStr.map((item)=> item.charAt(0).toUpperCase())
-			if(arr.join('.')+'.'.slice(-2,-1) == '.'){
-				return arr.join('.')+'.'.slice(0,arr.join('.')+'.'.length-1)
-			}else{
-				return arr.join('.')+'.'
-			}
+	const data = [
+		{
+			"filename": "13325326163257261.jpg",
+			"href": "https://img.yasuotu.com/uploads/2023/04/26/644893a4cbef8_preview.jpg?time=1682478206",
+		},
+		{
+			"filename": "13325326163257262.jpg",
+			"href": "https://img.yasuotu.com/uploads/2023/04/26/644893a52e4b3_preview.jpg?time=1682478206",
+		},
+		{
+			"filename": "13325326163257263.jpg",
+			"href": "https://img.yasuotu.com/uploads/2023/04/26/644893a5a36bd_preview.jpg?time=1682478206",
+		},
+		{
+			"filename": "13325326163257264.jpg",
+			"href": "https://img.yasuotu.com/uploads/2023/04/26/644893a6206e6_preview.jpg?time=1682478206",
+		},
+		{
+			"filename": "13325326163257265.jpg",
+			"href": "https://img.yasuotu.com/uploads/2023/04/26/644893a679437_preview.jpg?time=1682478206",
+		},
+		{
+			"filename": "13325326163257266.jpg",
+			"href": "https://img.yasuotu.com/uploads/2023/04/26/644893a6ba8d6_preview.jpg?time=1682478206",
+		},
+		{
+			"filename": "13325326163257267.jpg",
+			"href": "https://img.yasuotu.com/uploads/2023/04/26/644893a718858_preview.jpg?time=1682478206",
+		},
+		{
+			"filename": "13325326163257268.jpg",
+			"href": "https://img.yasuotu.com/uploads/2023/04/26/644893a7755dc_preview.jpg?time=1682478206",
+		},
+		{
+			"filename": "13325326163257269.jpg",
+			"href": "https://img.yasuotu.com/uploads/2023/04/26/644893a7b5064_preview.jpg?time=1682478206",
+		},
+		{
+			"filename": "13325326163257270.jpg",
+			"href": "https://img.yasuotu.com/uploads/2023/04/26/644893a821d5d_preview.jpg?time=1682478206",
+		},
+		{
+			"filename": "13325326163257271.jpg",
+			"href": "https://img.yasuotu.com/uploads/2023/04/26/644893a887448_preview.jpg?time=1682478206",
 		}
+	];
+
+	function downloadWithLink(dataUrl, fileName) {
+		const a = document.createElement('a'); // 创建一个a标签
+		a.href = dataUrl; // a标签的src属性赋值
+		a.target="_blank"
+
+		a.download = fileName; // a标签的download属性赋值
+		document.body.appendChild(a); // 添加a标签到body下
+		a.click(); // 触发a标签点击事件
+		document.body.removeChild(a); // 完成后删除a标签
 	}
-	console.log(['sdfsdf', 'sdfs', 'sdf', 'sdf'].join('.')+'.'.slice(-2,-1))
-	console.log(['sdfsdf', 'sdfs', 'sdf', 'sdf'].join('.')+'.'.slice(0,arr.join('.')+'.'.length-1))
+
+	// data.forEach((v) => {
+	// 	downloadWithLink(v.href, v.filename)
+	// })
+
+	const btn = document.querySelector('#btn');
+
+	let i = 0;
+	btn.onclick = function () {
+		const v = data[i];
+		downloadWithLink(v.href, v.filename)
+		i++;
+	}
+
 </script>
 </body>
 </html>

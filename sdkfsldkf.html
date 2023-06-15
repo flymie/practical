@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script>
+  new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, 1000);
+  }).then((res) => {
+    console.log(res, typeof res, res.a, res.b)
+  }).catch((e) => {
+    console.log(e);
+  })
+  const a = true;
+  console.log(a.a);
+</script>
+</body>
+</html>

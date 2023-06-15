@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>菜鸟教程(runoob.com)</title>
+</head>
+<body>
+<audio id="myAudio" autoplay>
+  <source src="1.mp3" type="audio/mp3">
+  您的浏览器不支持 audio 与元素。
+</audio>
+
+<p>点击按钮播放后暂停音频。</p>
+
+<button onclick="playAudio()" type="button">播放音频</button>
+<button onclick="pauseAudio()" type="button">暂停音频</button>
+
+<script>
+  var x = document.getElementById("myAudio");
+
+  document.addEventListener("WeixinJSBridgeReady", function() {
+    x.play();
+  }, false);
+
+  function playAudio()
+  {
+    x.play();
+  }
+
+  function pauseAudio()
+  {
+    x.pause();
+  }
+</script>
+
+</body>
+</html>
