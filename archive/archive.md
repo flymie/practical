@@ -43,8 +43,8 @@ password: 6c5c408c
 
 ## 大屏展示
 * [项目地址](https://codeup.aliyun.com/636f5380801ae2503bb98ddd/lifana/dashboard)
-* [next.js 中文文档](https://www.nextjs.cn/)
 * react + ts + axios + scss
+* 后端：潘志宏
 ```
 http://192.168.10.90:12459/1d62a179
 username: ofhbfzuw

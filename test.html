@@ -3,94 +3,58 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Title</title>
-	<style>
-		#container{
-			width: 100px;
-			height: 100px;
-			background-repeat: no-repeat;
-			background-size: 50% 100%, 50% 100%;
-			background-position: 0 0, 100% 0;
-			background-image:
-				radial-gradient(circle at 0 100%, transparent 10px, red 0),
-				radial-gradient(circle at 100% 100%, transparent 10px, red 0);
-			overflow: hidden;
-		}
-	</style>
 </head>
 <body>
 <button id="btn">下载</button>
 <script>
-	const data = [
-		{
-			"filename": "13325326163257261.jpg",
-			"href": "https://img.yasuotu.com/uploads/2023/04/26/644893a4cbef8_preview.jpg?time=1682478206",
-		},
-		{
-			"filename": "13325326163257262.jpg",
-			"href": "https://img.yasuotu.com/uploads/2023/04/26/644893a52e4b3_preview.jpg?time=1682478206",
-		},
-		{
-			"filename": "13325326163257263.jpg",
-			"href": "https://img.yasuotu.com/uploads/2023/04/26/644893a5a36bd_preview.jpg?time=1682478206",
-		},
-		{
-			"filename": "13325326163257264.jpg",
-			"href": "https://img.yasuotu.com/uploads/2023/04/26/644893a6206e6_preview.jpg?time=1682478206",
-		},
-		{
-			"filename": "13325326163257265.jpg",
-			"href": "https://img.yasuotu.com/uploads/2023/04/26/644893a679437_preview.jpg?time=1682478206",
-		},
-		{
-			"filename": "13325326163257266.jpg",
-			"href": "https://img.yasuotu.com/uploads/2023/04/26/644893a6ba8d6_preview.jpg?time=1682478206",
-		},
-		{
-			"filename": "13325326163257267.jpg",
-			"href": "https://img.yasuotu.com/uploads/2023/04/26/644893a718858_preview.jpg?time=1682478206",
-		},
-		{
-			"filename": "13325326163257268.jpg",
-			"href": "https://img.yasuotu.com/uploads/2023/04/26/644893a7755dc_preview.jpg?time=1682478206",
-		},
-		{
-			"filename": "13325326163257269.jpg",
-			"href": "https://img.yasuotu.com/uploads/2023/04/26/644893a7b5064_preview.jpg?time=1682478206",
-		},
-		{
-			"filename": "13325326163257270.jpg",
-			"href": "https://img.yasuotu.com/uploads/2023/04/26/644893a821d5d_preview.jpg?time=1682478206",
-		},
-		{
-			"filename": "13325326163257271.jpg",
-			"href": "https://img.yasuotu.com/uploads/2023/04/26/644893a887448_preview.jpg?time=1682478206",
+	function format() {
+		const data = [
+			{
+				_id: '652123c04bdfdc17e0db1b1a',
+				monitor: '64d49a6ab888372b74c13ad9',
+				date: '2023-10-07T09:20:00.000Z',
+				origin_data: { level: 0, sigstr: 31, voltage: 3.65 },
+			},
+			{
+				_id: '652110064bdfdc17e0d52f2a',
+				monitor: '64d49a6ab888372b74c13ad9',
+				date: '2023-10-07T08:00:00.000Z',
+				origin_data: { level: 0.01, sigstr: 31, voltage: 3.64, test: [{ a: 1}] },
+			},
+		];
+
+		const dfs = (data) => {
+			if (Object.prototype.toString.call(data) !== '[object Object]' && Object.prototype.toString.call(data) !== '[object Array]') {
+				return data;
+			}
+
+			let res = [];
+			if (Object.prototype.toString.call(data) === '[object Object]') {
+				Object.keys(data).forEach((key) => {
+					res.push(dfs(data[key]));
+				})
+			}
+
+			if (Object.prototype.toString.call(data) === '[object Array]') {
+				data.forEach((v) => {
+					res.push(dfs(v));
+				});
+			}
+
+			return res;
 		}
-	];
 
-	function downloadWithLink(dataUrl, fileName) {
-		const a = document.createElement('a'); // 创建一个a标签
-		a.href = dataUrl; // a标签的src属性赋值
-		a.target="_blank"
+		let res = dfs(data);
 
-		a.download = fileName; // a标签的download属性赋值
-		document.body.appendChild(a); // 添加a标签到body下
-		a.click(); // 触发a标签点击事件
-		document.body.removeChild(a); // 完成后删除a标签
+		// 拍扁第一行
+		res = res.map((v) => {
+			return v.flat(Infinity);
+		})
+console.log(res)
+		return res;
 	}
 
-	// data.forEach((v) => {
-	// 	downloadWithLink(v.href, v.filename)
-	// })
-
-	const btn = document.querySelector('#btn');
-
-	let i = 0;
-	btn.onclick = function () {
-		const v = data[i];
-		downloadWithLink(v.href, v.filename)
-		i++;
-	}
-
+	format()
 </script>
 </body>
 </html>

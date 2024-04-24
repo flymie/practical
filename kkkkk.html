@@ -13,41 +13,22 @@
     </style>
 </head>
 <body>
-<video src="https://www.runoob.com/try/demo_source/movie.mp4" autoplay="autoplay" controls="controls" id="video">
-    your browser does not support the video tag
-</video>
-<img src="./css-attr/images/userImg240.png" id="img" />
-<button id="btn">
-    截屏3
-</button>
 <script>
-    const video = document.querySelector('#video');
-    const captureImgFn = (video) => {
-        const canvas = document.createElement('canvas');
-        canvas.width = video.videoWidth || 240;
-        canvas.height = video.videoHeight || 240;
-        const ctx = canvas.getContext('2d');
-		ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-		const img = new Image();
-	    img.crossOrigin = 'anonymous';
-		img.src = canvas.toDataURL('image/png');
-
-        img.onload = function () {
-	        document.body.append(img);
+    class Test {
+        constructor(obj) {
+            this.obj = obj;
         }
-	    img.onerror = (e) => {
-            console.log(e)
-        };
-    };
-
-    const btn = document.querySelector('#btn');
-		const img = document.querySelector('#img');
-
-    btn.addEventListener('click', () => {
-        captureImgFn(video);
-        // captureImgFn(img);
-    })
+        get() {
+            console.log(this.obj.a)
+        }
+    }
+    const obj = {
+        a: 1
+    }
+    const a = new Test(obj)
+    a.get()
+    obj.a = 2
+    a.get()
 </script>
 </body>
 </html>

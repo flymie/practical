@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<style>
+  video {
+      background-color: #333;
+  }
+</style>
+<body>
+<script src="./flv.min.js"></script>
+<video id="videoElement" muted></video>
+<button id="btn">谷歌需要点击播放</button>
+<script>
+    const url1 = 'http://39.108.6.177:8791/rtp/34020000001110000020_34020000001320000003.live.flv';
+    const url2 = 'ws://172.16.202.52:30150/live/43000000801198000036/43000000801320004040/main.flv?username=gb_media_server&amp;nonce=I5KD7MDV&amp;created=1692351818&amp;expire=2592000&amp;token=5840a3c83266f2c5de31abf511f9934f';
+    const url3 = 'http://172.21.13.222:80/dispatch.asp?user=admin&pass=er123456&page=preview.asp[&slice=1&open={4}]';
+
+    if (flvjs.isSupported()) {
+        var videoElement = document.getElementById('videoElement');
+        var flvPlayer = flvjs.createPlayer({
+            type: 'flv',
+            isLive: true,
+            url: url2,
+        });
+        flvPlayer.attachMediaElement(videoElement);
+        flvPlayer.load();
+    }
+
+    document.querySelector('#btn').addEventListener('click', function () {
+        flvPlayer.play();
+    })
+</script>
+</body>
+</html>
