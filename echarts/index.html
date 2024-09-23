@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>井深纵截面图</title>
+    <style>
+      #main {
+        width: 1600px;
+        height: 800px;
+        margin: 80px auto;
+      }
+    </style>
+    <script src="./echarts.min.js"></script>
+    <script src="./moment.min.js"></script>
+  </head>
+  <body>
+    <div id="main"></div>
+    <script>
+        let barData = Array.from({length: 10}, (_, index) => [moment().add(index, 'day').toDate(), ~~((index + 1) * 10 * Math.random())]);
+        let lineData =  Array.from({length: 10}, (_, index) => [moment().add(index, 'day').toDate(), ~~((index + 1) * 10 * Math.random())]);
+        const option = {
+            // grid: {
+            //     x: 0,
+            //     y: 0,
+            //     x2: 0,
+            //     y2: 0,
+            //     top: '15%',
+            //     left: '3%',
+            //     right: '3%',
+            //     bottom: '20%',
+            //     containLabel: true,
+            // },
+            legend: {
+                data: ["限上零售额总量", "限上零售额增速"],
+                bottom: 'top',
+                type: 'scroll',
+                padding: [10, 0, 0, 0],
+                textStyle: {
+                    color: '#fff',
+                    fontSize: "1rem",
+                },
+                //图例标记的图形高度
+                itemHeight: 5,
+                //图例标记的图形宽度
+                itemWidth: 10,
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            xAxis: [
+                {
+                    // type: 'category',
+                    type: 'time',
+                    // axisTick: {
+                    //     show: false,
+                    // },
+                    // axisLabel: {
+                    //     color: 'rgba(36, 173, 254, 1)',
+                    //     fontSize: "1rem",
+                    // },
+                    // axisLine: {
+                    //     show: false
+                    // },
+                    // data: xData,
+                }
+            ],
+            yAxis: [
+                {
+                    name: 'mmmmmmmmmmmmmmmm',
+                    type: 'value',
+                    // splitNumber: 5,
+                    // splitLine: {
+                    //     show: true,
+                    //     lineStyle: {
+                    //         type: 'dashed',
+                    //         color: 'rgba(36, 173, 254, 0.2)'
+                    //     }
+                    // },
+                    // axisTick: {
+                    //     show: false
+                    // },
+                    // axisLine: {
+                    //     show: true,
+                    //     lineStyle: {
+                    //         color: 'rgba(36, 173, 254, 1)'
+                    //     }
+                    // }
+                },
+                {
+                    type: 'value',
+                    // splitNumber: 5,
+                    // splitLine: {
+                    //     show: true,
+                    //     lineStyle: {
+                    //         type: 'dashed',
+                    //         color: 'rgba(36, 173, 254, 0.2)'
+                    //     }
+                    // },
+                    // axisTick: {
+                    //     show: false
+                    // },
+                    // axisLabel: {
+                    //     textStyle: {
+                    //         color: 'rgba(36, 173, 254, 1)'
+                    //     },
+                    //     fontSize: "1rem",
+                    // },
+                    // axisLine: {
+                    //     show: true,
+                    //     lineStyle: {
+                    //         color: 'rgba(36, 173, 254, 1)'
+                    //     }
+                    // }
+                }
+            ],
+            series: [
+                {
+                    name: "限上零售额总量",
+                    type: 'bar',
+                    barWidth: '10px',
+                    data: barData,
+                    //背景色
+                    showBackground: true,
+                    backgroundStyle: {
+                        color: 'rgba(180, 180, 180, 0.2)'
+                    },
+                    //柱体颜色
+                    itemStyle: {
+                        normal: {
+                            //柱图高亮渐变色
+                            color: new echarts.graphic.LinearGradient(
+                                0, 0, 0, 1,
+                                [{
+                                    offset: 0,
+                                    color: '#159AFF'
+                                },
+                                    {
+                                        offset: 1,
+                                        color: 'rgba(21, 154, 255, .1)'
+                                    }]
+                            )
+                        }
+                    },
+                },
+                {
+                    type: 'line',
+                    stack: 'Total',
+                    name: "限上零售额增速",
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    yAxisIndex: 1,
+                    data: lineData,
+                    itemStyle: {
+                        normal: {
+                            color: '#FFBB00', //改变折线点的颜色
+                            lineStyle: {
+                                color: '#FFBB00', //改变折线颜色
+                            }
+                        }
+                    },
+                    // 线条不显示点
+                    // symbol: 'none',
+                },
+            ]
+        };
+
+    </script>
+    <script type="text/javascript">
+      // 基于准备好的dom，初始化echarts实例
+      var myChart = echarts.init(document.getElementById("main"));
+
+      // 使用刚指定的配置项和数据显示图表。
+      myChart.setOption(option);
+    </script>
+  </body>
+</html>

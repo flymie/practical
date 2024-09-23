@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>井深纵截面图</title>
+    <style>
+      #main {
+        width: 1600px;
+        height: 800px;
+        margin: 80px auto;
+      }
+    </style>
+    <script src="./echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="main"></div>
+    <script>
+      function drawProfile(route) {
+        const UNIT = "m";
+        const diagram_style = {
+          fill: "#fff",
+          stroke: "#000",
+        };
+        //获取节点矩形的坐标
+        const getJTPolygon = (junction, start_x) => {
+          return [
+            Number(start_x),
+            // junction.bottom,
+            junction.surface - junction.depth,
+            Number(start_x) + junction.diameter,
+            // start_x + 1,
+            // junction.bottom,
+            junction.surface - junction.depth,
+            Number(start_x) + junction.diameter,
+            // start_x + 1,
+            junction.surface,
+            Number(start_x),
+            junction.surface,
+          ];
+        };
+        //获取管线多边形的坐标
+        const getPLPolygon = (pipe, start_x) => {
+          let length = Number(
+            20
+            // AMap.GeometryUtil.distance(
+            //   pipe.geometry.coordinates[0],
+            //   pipe.geometry.coordinates[1]
+            // ).toFixed(2)
+          );
+
+          const x2 = start_x + length,
+            y1 = pipe.in_ele || pipe.in_offset + pipe.inPoint.bottom,
+            y2 = pipe.out_ele || pipe.out_offset + pipe.outPoint.bottom,
+            y3 = y2 + pipe.data1,
+            y4 = y1 + pipe.data1;
+          return [start_x, y1, x2, y2, x2, y3, start_x, y4];
+        };
+        //获取坐标系的范围
+        const getBounds = (poly) => {
+          if (max_x < poly[2]) {
+            max_x = poly[2];
+          }
+          for (let i = 1; i < 8; i += 2) {
+            if (min_y > poly[i]) {
+              min_y = poly[i];
+            }
+            if (max_y < poly[i]) {
+              max_y = poly[i];
+            }
+          }
+        };
+        const getStartX = () => {
+          return profile_data[profile_data.length - 1].value[2];
+        };
+
+        const renderItem = (params, api) => {
+          const points = [];
+          for (let i = 0; i < 8; i += 2) {
+              // console.log(i, api.value(i))
+
+              points.push(api.coord([api.value(i), api.value(i + 1)]));
+          }
+
+          return {
+            type: "polygon",
+            shape: {
+              points: echarts.graphic.clipPointsByRect(points, {
+                x: params.coordSys.x,
+                y: params.coordSys.y,
+                width: params.coordSys.width,
+                height: params.coordSys.height,
+              }),
+            },
+            style: api.style(diagram_style),
+          };
+        };
+        const genJunctionData = (junction, start_x) => {
+          const coords = getJTPolygon(junction, start_x);
+          getBounds(coords);
+          return {
+            value: coords,
+            type: "JT",
+            tooltip: `<b>${junction.id}</b><br>底部高程：${
+              (junction.surface - junction.depth).toFixed(3) + UNIT
+            }<br>地表高程：${junction.surface + UNIT}`,
+          };
+        };
+        const genPipeData = (pipe, start_x) => {
+          const coords = getPLPolygon(pipe, start_x);
+          getBounds(coords);
+          let length = Number(
+            20
+            // AMap.GeometryUtil.distance(
+            //   pipe.geometry.coordinates[0],
+            //   pipe.geometry.coordinates[1]
+            // ).toFixed(2)
+          );
+          return {
+            value: coords,
+            type: "PL",
+            tooltip: `<b>${
+              pipe.code
+            }</b><br>管&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;径：${
+              pipe.data1 + UNIT
+            }<br>长&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;度：${
+              length + UNIT
+            }<br>上游管底标高：${pipe.in_ele + UNIT}<br>下游管底标高：${
+              pipe.out_ele + UNIT
+            }`,
+          };
+        };
+
+        let min_y = Number.MAX_VALUE,
+          max_x = -Number.MAX_VALUE,
+          max_y = -Number.MAX_VALUE;
+        const profile_data = [];
+
+        profile_data.push(genJunctionData(route.linkList[0].inPoint, 0));
+        route.linkList.forEach(async (link) => {
+          profile_data.push(genPipeData(link, getStartX()));
+          profile_data.push(genJunctionData(link.outPoint, getStartX()));
+        });
+console.log(profile_data)
+        this.option.chart = {
+          tooltip: {
+            formatter: function (params) {
+              return params.data.tooltip;
+            },
+          },
+          grid: {
+            show: true,
+            left: "4%",
+            right: "3%",
+            top: 30,
+            borderColor: "transparent",
+            backgroundColor: {
+              type: "linear",
+              x: 0,
+              y: 0,
+              x2: 0,
+              y2: 1,
+              colorStops: [
+                {
+                  offset: 0,
+                  color: "#fff",
+                },
+                {
+                  offset: 1,
+                  color: "#8c5757",
+                },
+              ],
+              global: false, // 缺省为 false
+            },
+          },
+          dataZoom: [
+            {
+              type: "slider",
+              filterMode: "none",
+              height: 4,
+              bottom: 20,
+              borderColor: "transparent",
+              backgroundColor: "#e2e2e2",
+              handleIcon:
+                "path://M10.7,11.9H9.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4h1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7v-1.2h6.6z M13.3,22H6.7v-1.2h6.6z M13.3,19.6H6.7v-1.2h6.6z",
+              handleSize: 15,
+              handleStyle: {
+                shadowBlur: 6,
+                shadowOffsetX: 1,
+                shadowOffsetY: 2,
+                shadowColor: "#aaa",
+              },
+            },
+            {
+              type: "inside",
+              filterMode: "none",
+            },
+          ],
+          xAxis: { min: 0, max: Math.ceil(max_x * 10) / 10, name: UNIT },
+          yAxis: [
+            {
+              min: Math.floor(min_y * 10) / 10,
+              max: Math.ceil(max_y * 10) / 10,
+              name: UNIT,
+            },
+          ],
+          series: [
+            {
+              type: "custom",
+              renderItem: renderItem,
+              data: profile_data,
+            },
+          ],
+        };
+        let line_data = [];
+        const data = profile_data.filter((d) => d.type === "JT");
+        data
+          .map((data) => data.value)
+          .forEach((value) => {
+            let datas = this.cutProfileDataValue(value);
+            datas = datas.sort((a, b) => b[1] - a[1]);
+            line_data.push(datas[0]);
+            line_data.push(datas[1]);
+          });
+        line_data = line_data.sort((a, b) => a[0] - b[0]);
+        const line_series = {
+          color: "#000",
+          name: "123",
+          type: "line",
+          data: line_data,
+        };
+        console.log(line_data)
+        this.option.chart.series.push(line_series);
+        //通过设定的对话框容器类名获取蒙层元素，并将蒙层高度设为0，避免遮住下层
+        // document.getElementsByClassName(
+        //   "profile-drawer"
+        // )[0].parentElement.style.height = "0";
+      }
+
+      function cutProfileDataValue(value) {
+        let index = 0;
+        let newArr = [];
+        while (index < value.length) {
+          newArr.push(value.slice(index, (index += 2)));
+        }
+        return newArr;
+      }
+    </script>
+    <script>
+      var option = {
+        chart: null,
+      };
+      const connectData = {
+        linkList: [
+          {
+            id: "WS0127631",
+            _id: "665d387d9636722350bd3728",
+            code: "WS018111080-WS018111079",
+            shape: "CIRCULAR",
+            inCode: "WS018111080",
+            outCode: "WS018111079",
+            name: "",
+            inPoint: {
+              id: "WS018111080",
+              _id: "665d37e49636722350bb403b",
+              geometry: {
+                type: "Point",
+                coordinates: [119.2258756109258, 36.68016175358268],
+              },
+              surface: 51.387,
+              depth: 2.8999999999999986,
+              diameter: 1,
+            },
+            outPoint: {
+              id: "WS018111079",
+              _id: "665d37e49636722350bb4039",
+              geometry: {
+                type: "Point",
+                coordinates: [119.22519266058495, 36.68016701090977],
+              },
+              surface: 51.078,
+              depth: 2.950000000000003,
+              diameter: 1,
+            },
+            geometry: {
+              type: "LineString",
+              coordinates: [
+                [119.2258756109258, 36.68016175358268],
+                [119.22519266058495, 36.68016701090977],
+              ],
+            },
+            in_ele: 48.717,
+            out_ele: 48.378,
+            data1: 0.6,
+          },
+          {
+            id: "WS0127630",
+            _id: "665d387d9636722350bd3726",
+            code: "WS018111079-WS018111078",
+            shape: "CIRCULAR",
+            inCode: "WS018111079",
+            outCode: "WS018111078",
+            name: "",
+            inPoint: {
+              id: "WS018111079",
+              _id: "665d37e49636722350bb4039",
+              geometry: {
+                type: "Point",
+                coordinates: [119.22519266058495, 36.68016701090977],
+              },
+              surface: 51.078,
+              depth: 2.950000000000003,
+              diameter: 1,
+            },
+            outPoint: {
+              id: "WS018111078",
+              _id: "665d37e49636722350bb4037",
+              geometry: {
+                type: "Point",
+                coordinates: [119.22451788331574, 36.680161052688305],
+              },
+              surface: 51.259,
+              depth: 2.9200000000000017,
+              diameter: 1,
+            },
+            geometry: {
+              type: "LineString",
+              coordinates: [
+                [119.22519266058495, 36.68016701090977],
+                [119.22451788331574, 36.680161052688305],
+              ],
+            },
+            in_ele: 48.378,
+            out_ele: 48.579,
+            data1: 0.6,
+          },
+          {
+            id: "WS0127749",
+            _id: "665d387e9636722350bd37e8",
+            code: "WS018111078-WS018111077",
+            shape: "CIRCULAR",
+            inCode: "WS018111078",
+            outCode: "WS018111077",
+            name: "",
+            inPoint: {
+              id: "WS018111078",
+              _id: "665d37e49636722350bb4037",
+              geometry: {
+                type: "Point",
+                coordinates: [119.22451788331574, 36.680161052688305],
+              },
+              surface: 51.259,
+              depth: 2.9200000000000017,
+              diameter: 1,
+            },
+            outPoint: {
+              id: "WS018111077",
+              _id: "665d37e49636722350bb4035",
+              geometry: {
+                type: "Point",
+                coordinates: [119.22383362762801, 36.680161815338025],
+              },
+              surface: 51.433,
+              depth: 2.770000000000003,
+              diameter: 1,
+            },
+            geometry: {
+              type: "LineString",
+              coordinates: [
+                [119.22451788331574, 36.680161052688305],
+                [119.22383362762801, 36.680161815338025],
+              ],
+            },
+            in_ele: 48.559,
+            out_ele: 48.663,
+            data1: 0.6,
+          },
+          {
+            id: "WS0127750",
+            _id: "665d387e9636722350bd37ea",
+            code: "WS018111077-WS018111076",
+            shape: "CIRCULAR",
+            inCode: "WS018111077",
+            outCode: "WS018111076",
+            name: "",
+            inPoint: {
+              id: "WS018111077",
+              _id: "665d37e49636722350bb4035",
+              geometry: {
+                type: "Point",
+                coordinates: [119.22383362762801, 36.680161815338025],
+              },
+              surface: 51.433,
+              depth: 2.770000000000003,
+              diameter: 1,
+            },
+            outPoint: {
+              id: "WS018111076",
+              _id: "665d37e49636722350bb4033",
+              geometry: {
+                type: "Point",
+                coordinates: [119.22315639328454, 36.68016037238819],
+              },
+              surface: 51.606,
+              depth: 3,
+              diameter: 1,
+            },
+            geometry: {
+              type: "LineString",
+              coordinates: [
+                [119.22383362762801, 36.680161815338025],
+                [119.22315639328454, 36.68016037238819],
+              ],
+            },
+            in_ele: 48.663,
+            out_ele: 48.766,
+            data1: 0.6,
+          },
+          {
+            id: "WS0127629",
+            _id: "665d387d9636722350bd3724",
+            code: "WS018111076-WS018111075",
+            shape: "CIRCULAR",
+            inCode: "WS018111076",
+            outCode: "WS018111075",
+            name: "",
+            inPoint: {
+              id: "WS018111076",
+              _id: "665d37e49636722350bb4033",
+              geometry: {
+                type: "Point",
+                coordinates: [119.22315639328454, 36.68016037238819],
+              },
+              surface: 51.606,
+              depth: 3,
+              diameter: 1,
+            },
+            outPoint: {
+              id: "WS018111075",
+              _id: "665d37e49636722350bb4031",
+              geometry: {
+                type: "Point",
+                coordinates: [119.22261177580658, 36.680164168993294],
+              },
+              surface: 51.641,
+              depth: 3.1299999999999955,
+              diameter: 1,
+            },
+            geometry: {
+              type: "LineString",
+              coordinates: [
+                [119.22315639328454, 36.68016037238819],
+                [119.22261177580658, 36.680164168993294],
+              ],
+            },
+            in_ele: 48.766,
+            out_ele: 48.791,
+            data1: 0.6,
+          },
+          {
+            id: "WS0127747",
+            _id: "665d387d9636722350bd37e4",
+            code: "WS018111075-WS018111074",
+            shape: "CIRCULAR",
+            inCode: "WS018111075",
+            outCode: "WS018111074",
+            name: "",
+            inPoint: {
+              id: "WS018111075",
+              _id: "665d37e49636722350bb4031",
+              geometry: {
+                type: "Point",
+                coordinates: [119.22261177580658, 36.680164168993294],
+              },
+              surface: 51.641,
+              depth: 3.1299999999999955,
+              diameter: 1,
+            },
+            outPoint: {
+              id: "WS018111074",
+              _id: "665d37e49636722350bb402f",
+              geometry: {
+                type: "Point",
+                coordinates: [119.22202111573402, 36.680165467865436],
+              },
+              surface: 51.79,
+              depth: 2.9499999999999957,
+              diameter: 1,
+            },
+            geometry: {
+              type: "LineString",
+              coordinates: [
+                [119.22261177580658, 36.680164168993294],
+                [119.22202111573402, 36.680165467865436],
+              ],
+            },
+            in_ele: 48.791,
+            out_ele: 48.84,
+            data1: 0.6,
+          },
+          {
+            id: "WS0127748",
+            _id: "665d387e9636722350bd37e6",
+            code: "WS018111074-WS018111073",
+            shape: "CIRCULAR",
+            inCode: "WS018111074",
+            outCode: "WS018111073",
+            name: "",
+            inPoint: {
+              id: "WS018111074",
+              _id: "665d37e49636722350bb402f",
+              geometry: {
+                type: "Point",
+                coordinates: [119.22202111573402, 36.680165467865436],
+              },
+              surface: 51.79,
+              depth: 2.9499999999999957,
+              diameter: 1,
+            },
+            outPoint: {
+              id: "WS018111073",
+              _id: "665d37e49636722350bb402d",
+              geometry: {
+                type: "Point",
+                coordinates: [119.22138756579587, 36.68016428771565],
+              },
+              surface: 51.949,
+              depth: 3.049999999999997,
+              diameter: 1,
+            },
+            geometry: {
+              type: "LineString",
+              coordinates: [
+                [119.22202111573402, 36.680165467865436],
+                [119.22138756579587, 36.68016428771565],
+              ],
+            },
+            in_ele: 48.84,
+            out_ele: 48.899,
+            data1: 0.6,
+          },
+        ],
+        upPipelines: [],
+        downPipelines: [
+          {
+            id: "WS0127631",
+            _id: "665d387d9636722350bd3728",
+            code: "WS018111080-WS018111079",
+            shape: "CIRCULAR",
+            inCode: "WS018111080",
+            outCode: "WS018111079",
+            name: "",
+            inPoint: {
+              id: "WS018111080",
+              _id: "665d37e49636722350bb403b",
+              geometry: {
+                type: "Point",
+                coordinates: [119.2258756109258, 36.68016175358268],
+              },
+              surface: 51.387,
+              depth: 2.8999999999999986,
+              diameter: 1,
+            },
+            outPoint: {
+              id: "WS018111079",
+              _id: "665d37e49636722350bb4039",
+              geometry: {
+                type: "Point",
+                coordinates: [119.22519266058495, 36.68016701090977],
+              },
+              surface: 51.078,
+              depth: 2.950000000000003,
+              diameter: 1,
+            },
+            geometry: {
+              type: "LineString",
+              coordinates: [
+                [119.2258756109258, 36.68016175358268],
+                [119.22519266058495, 36.68016701090977],
+              ],
+            },
+            in_ele: 48.717,
+            out_ele: 48.378,
+            data1: 0.6,
+          },
+          {
+            id: "WS0127630",
+            _id: "665d387d9636722350bd3726",
+            code: "WS018111079-WS018111078",
+            shape: "CIRCULAR",
+            inCode: "WS018111079",
+            outCode: "WS018111078",
+            name: "",
+            inPoint: {
+              id: "WS018111079",
+              _id: "665d37e49636722350bb4039",
+              geometry: {
+                type: "Point",
+                coordinates: [119.22519266058495, 36.68016701090977],
+              },
+              surface: 51.078,
+              depth: 2.950000000000003,
+              diameter: 1,
+            },
+            outPoint: {
+              id: "WS018111078",
+              _id: "665d37e49636722350bb4037",
+              geometry: {
+                type: "Point",
+                coordinates: [119.22451788331574, 36.680161052688305],
+              },
+              surface: 51.259,
+              depth: 2.9200000000000017,
+              diameter: 1,
+            },
+            geometry: {
+              type: "LineString",
+              coordinates: [
+                [119.22519266058495, 36.68016701090977],
+                [119.22451788331574, 36.680161052688305],
+              ],
+            },
+            in_ele: 48.378,
+            out_ele: 48.579,
+            data1: 0.6,
+          },
+          {
+            id: "WS0127749",
+            _id: "665d387e9636722350bd37e8",
+            code: "WS018111078-WS018111077",
+            shape: "CIRCULAR",
+            inCode: "WS018111078",
+            outCode: "WS018111077",
+            name: "",
+            inPoint: {
+              id: "WS018111078",
+              _id: "665d37e49636722350bb4037",
+              geometry: {
+                type: "Point",
+                coordinates: [119.22451788331574, 36.680161052688305],
+              },
+              surface: 51.259,
+              depth: 2.9200000000000017,
+              diameter: 1,
+            },
+            outPoint: {
+              id: "WS018111077",
+              _id: "665d37e49636722350bb4035",
+              geometry: {
+                type: "Point",
+                coordinates: [119.22383362762801, 36.680161815338025],
+              },
+              surface: 51.433,
+              depth: 2.770000000000003,
+              diameter: 1,
+            },
+            geometry: {
+              type: "LineString",
+              coordinates: [
+                [119.22451788331574, 36.680161052688305],
+                [119.22383362762801, 36.680161815338025],
+              ],
+            },
+            in_ele: 48.559,
+            out_ele: 48.663,
+            data1: 0.6,
+          },
+          {
+            id: "WS0127750",
+            _id: "665d387e9636722350bd37ea",
+            code: "WS018111077-WS018111076",
+            shape: "CIRCULAR",
+            inCode: "WS018111077",
+            outCode: "WS018111076",
+            name: "",
+            inPoint: {
+              id: "WS018111077",
+              _id: "665d37e49636722350bb4035",
+              geometry: {
+                type: "Point",
+                coordinates: [119.22383362762801, 36.680161815338025],
+              },
+              surface: 51.433,
+              depth: 2.770000000000003,
+              diameter: 1,
+            },
+            outPoint: {
+              id: "WS018111076",
+              _id: "665d37e49636722350bb4033",
+              geometry: {
+                type: "Point",
+                coordinates: [119.22315639328454, 36.68016037238819],
+              },
+              surface: 51.606,
+              depth: 3,
+              diameter: 1,
+            },
+            geometry: {
+              type: "LineString",
+              coordinates: [
+                [119.22383362762801, 36.680161815338025],
+                [119.22315639328454, 36.68016037238819],
+              ],
+            },
+            in_ele: 48.663,
+            out_ele: 48.766,
+            data1: 0.6,
+          },
+          {
+            id: "WS0127629",
+            _id: "665d387d9636722350bd3724",
+            code: "WS018111076-WS018111075",
+            shape: "CIRCULAR",
+            inCode: "WS018111076",
+            outCode: "WS018111075",
+            name: "",
+            inPoint: {
+              id: "WS018111076",
+              _id: "665d37e49636722350bb4033",
+              geometry: {
+                type: "Point",
+                coordinates: [119.22315639328454, 36.68016037238819],
+              },
+              surface: 51.606,
+              depth: 3,
+              diameter: 1,
+            },
+            outPoint: {
+              id: "WS018111075",
+              _id: "665d37e49636722350bb4031",
+              geometry: {
+                type: "Point",
+                coordinates: [119.22261177580658, 36.680164168993294],
+              },
+              surface: 51.641,
+              depth: 3.1299999999999955,
+              diameter: 1,
+            },
+            geometry: {
+              type: "LineString",
+              coordinates: [
+                [119.22315639328454, 36.68016037238819],
+                [119.22261177580658, 36.680164168993294],
+              ],
+            },
+            in_ele: 48.766,
+            out_ele: 48.791,
+            data1: 0.6,
+          },
+          {
+            id: "WS0127747",
+            _id: "665d387d9636722350bd37e4",
+            code: "WS018111075-WS018111074",
+            shape: "CIRCULAR",
+            inCode: "WS018111075",
+            outCode: "WS018111074",
+            name: "",
+            inPoint: {
+              id: "WS018111075",
+              _id: "665d37e49636722350bb4031",
+              geometry: {
+                type: "Point",
+                coordinates: [119.22261177580658, 36.680164168993294],
+              },
+              surface: 51.641,
+              depth: 3.1299999999999955,
+              diameter: 1,
+            },
+            outPoint: {
+              id: "WS018111074",
+              _id: "665d37e49636722350bb402f",
+              geometry: {
+                type: "Point",
+                coordinates: [119.22202111573402, 36.680165467865436],
+              },
+              surface: 51.79,
+              depth: 2.9499999999999957,
+              diameter: 1,
+            },
+            geometry: {
+              type: "LineString",
+              coordinates: [
+                [119.22261177580658, 36.680164168993294],
+                [119.22202111573402, 36.680165467865436],
+              ],
+            },
+            in_ele: 48.791,
+            out_ele: 48.84,
+            data1: 0.6,
+          },
+          {
+            id: "WS0127748",
+            _id: "665d387e9636722350bd37e6",
+            code: "WS018111074-WS018111073",
+            shape: "CIRCULAR",
+            inCode: "WS018111074",
+            outCode: "WS018111073",
+            name: "",
+            inPoint: {
+              id: "WS018111074",
+              _id: "665d37e49636722350bb402f",
+              geometry: {
+                type: "Point",
+                coordinates: [119.22202111573402, 36.680165467865436],
+              },
+              surface: 51.79,
+              depth: 2.9499999999999957,
+              diameter: 1,
+            },
+            outPoint: {
+              id: "WS018111073",
+              _id: "665d37e49636722350bb402d",
+              geometry: {
+                type: "Point",
+                coordinates: [119.22138756579587, 36.68016428771565],
+              },
+              surface: 51.949,
+              depth: 3.049999999999997,
+              diameter: 1,
+            },
+            geometry: {
+              type: "LineString",
+              coordinates: [
+                [119.22202111573402, 36.680165467865436],
+                [119.22138756579587, 36.68016428771565],
+              ],
+            },
+            in_ele: 48.84,
+            out_ele: 48.899,
+            data1: 0.6,
+          },
+        ],
+        connected: true,
+        start: {
+          id: "WS018111080",
+          _id: "665d37e49636722350bb403b",
+          geometry: {
+            type: "Point",
+            coordinates: [119.2258756109258, 36.68016175358268],
+          },
+          surface: 51.387,
+          depth: 2.8999999999999986,
+          diameter: 1,
+        },
+        end: {
+          id: "WS018111073",
+          _id: "665d37e49636722350bb402d",
+          geometry: {
+            type: "Point",
+            coordinates: [119.22138756579587, 36.68016428771565],
+          },
+          surface: 51.949,
+          depth: 3.049999999999997,
+          diameter: 1,
+        },
+      };
+    </script>
+    <script type="text/javascript">
+      // 基于准备好的dom，初始化echarts实例
+      var myChart = echarts.init(document.getElementById("main"));
+
+      drawProfile(connectData);
+
+      // 使用刚指定的配置项和数据显示图表。
+      myChart.setOption(option.chart);
+    </script>
+  </body>
+</html>
