@@ -1,0 +1,12 @@
+.container {
+}
+
+.time-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.time-item {
+
+}

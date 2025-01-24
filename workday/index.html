@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="stylesheet" href="./index.css">
+  <script src="./moment.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="time-wrap">
+      <div class="time-item">
+        开始时间：
+        <input type="text" placeholder="2024-01-01" value="2024-01-01" id="startTime" />
+      </div>
+      <div class="time-item">
+        结束时间：
+        <input type="text" placeholder="2024-12-31" value="2024-12-31" id="endTime" />
+      </div>
+      <div class="time-item">
+        <button onclick="countHandle()">开始计算</button>
+      </div>
+    </div>
+    <hr>
+    <div id="print"></div>
+  </div>
+  <script src="./data.js"></script>
+  <script>
+      // 用于判断的格式化
+      const FormatYYMMDD = 'YYYY-MM-DD';
+      const typeObj = {
+          workday: '工作日',
+          holiday: '休息日',
+      }
+      const startTimeDom = document.querySelector('#startTime');
+      const endTimeDom = document.querySelector('#endTime');
+      const print = document.querySelector('#print');
+
+      function countHandle() {
+          if (!startTimeDom.value || !endTimeDom.value) {
+              alert('请填写日期');
+          }
+
+          const res = [];
+
+          let start = moment(startTimeDom.value);
+          let end = moment(endTimeDom.value);
+
+          const { workday, holiday} = getWorkdayHoliday(start.year(), end.year());
+
+          while (end.diff(start, 'days', true) >= 0) {
+              const format = start.format(FormatYYMMDD);
+
+              if (isWorkday(format, workday, holiday)) {
+                  res.push({
+                      value: format,
+                      type: typeObj.workday,
+                  });
+              } else {
+                  res.push({
+                      value: format,
+                      type: typeObj.holiday,
+                  });
+              }
+
+              start.add(1, 'days');
+          }
+
+          printFn(res);
+          return res;
+      }
+
+      function getWorkdayHoliday(startYear, endYear) {
+          if (!data[startYear] || !data[endYear]) {
+              alert(`暂无${startYear}或${endYear}数据，请维护data.js文件`);
+              throw 'error';
+          }
+
+          const workday = [];
+          const holiday = [];
+
+          for(let i = startYear; i <= endYear; i++) {
+              workday.push(...data[i].workday);
+              holiday.push(...data[i].holiday);
+          }
+
+          return {
+              workday,
+              holiday
+          }
+      }
+
+      // 正常的周末
+      function isWeekDay(dateFormat) {
+          return moment(dateFormat).day() === 6 || moment(dateFormat).day() === 0;
+      }
+
+      function isWorkday(dateFormat, workday, holiday) {
+          if (workday.includes(dateFormat)) {
+              return true;
+          }
+
+          return !holiday.includes(dateFormat) && !isWeekDay(dateFormat);
+      }
+
+      function printFn(list) {
+          const workdayTotal = list.filter((v) => v.type === typeObj.workday);
+
+          const res = list.reduce((acc, cur) => {
+              if (cur.type === typeObj.workday) {
+                  acc += `<div style="color: red">${typeObj.workday}：${cur.value}</div>`;
+              } else {
+                  acc += `<div style="color: green">${typeObj.holiday}：${cur.value}</div>`;
+              }
+              return acc;
+          }, `<h1>工作日共：${workdayTotal.length}天</h1>`);
+
+          print.innerHTML = res;
+      }
+
+      countHandle();
+  </script>
+</body>
+</html>
