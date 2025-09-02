@@ -1,4 +1,8 @@
 {
+    "plugins": ["html"],
+    "settings": {
+      "html/html-extensions": [".html"] // 指定 HTML 文件扩展名
+    },
     "extends": ["airbnb", "eslint:recommended"],
 //    "parser": "babel-eslint",
     "rules": {
@@ -8,7 +12,7 @@
       "react/prefer-stateless-function" : "off",
       "no-param-reassign": "off",
       "react/require-default-props": "off",
-       "no-console": "off"
+       "no-console": "off",
     },
     "env": {
       "browser": true
