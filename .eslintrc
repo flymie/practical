@@ -1,5 +1,5 @@
 {
-    "extends": "airbnb",
+    "extends": ["airbnb", "eslint:recommended"],
 //    "parser": "babel-eslint",
     "rules": {
       "no-plusplus": "off",
@@ -7,7 +7,8 @@
       "import/no-mutable-exports": "off",
       "react/prefer-stateless-function" : "off",
       "no-param-reassign": "off",
-      "react/require-default-props": "off"
+      "react/require-default-props": "off",
+       "no-console": "off"
     },
     "env": {
       "browser": true
